@@ -1,0 +1,416 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:onboar/FavoriteStoresPage.dart';
+import 'package:onboar/ProductsPage.dart';
+import 'package:onboar/Setting.dart';
+
+class Stores extends StatefulWidget {
+  const Stores({super.key});
+
+  @override
+  State<Stores> createState() => StoresState();
+}
+
+class StoresState extends State<Stores> {
+  late final List<Widget> pages;
+  int selctedindex = 0;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      HomeContent(),
+      Setting(),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar:CurvedNavigationBar(
+        key: _bottomNavigationKey,
+        index: selctedindex,
+        items: const <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.home, size: 27),
+              Text("Home ",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     Icon(Icons.list, size: 27),
+          //     Text("Orders",
+          //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          //   ],
+          // ),
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     Icon(Icons.shopping_cart, size: 27),
+          //     Text("Cart ",
+          //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          //   ],
+          // ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.settings, size: 27),
+              Text("Setting",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     Icon(Icons.settings, size: 27),
+          //     Text("setting ",
+          //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          //   ],
+          // ),
+        ],
+        color: const Color.fromARGB(255, 66, 252, 169),
+        buttonBackgroundColor: Colors.white,
+        animationCurve: Curves.easeInOut,
+        animationDuration: Duration(milliseconds: 600),
+        // backgroundColor: Color.fromARGB(255, 20, 54, 64),
+        onTap: (val) {
+          setState(() {
+            selctedindex = val;
+          });
+        },
+        letIndexChange: (index) => true,
+      ),
+      body: pages[selctedindex], // Display the selected page
+    );
+  }
+}
+
+class HomeContent extends StatefulWidget {
+  @override
+  State<HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  int currentpage = 0 ;
+  final List stores = [
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Apple Watch IP79",
+      "subtitle": "Electronic Smart Watch",
+      "isFavorite": false,
+    },
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Apple Airpods Pro",
+      "subtitle": "Smart , 6 hours straight use",
+      "isFavorite": false,
+    },
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Adidas Sneakers",
+      "subtitle": "Sport comfortable Sneakers",
+      "isFavorite": false,
+    },
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Adidas Sneakers",
+      "subtitle": "Sport comfortable Sneakers",
+      "isFavorite": false,
+    },
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Adidas Sneakers",
+      "subtitle": "Sport comfortable Sneakers",
+      "isFavorite": false,
+    },
+  ];
+
+  List pageviewImage = [
+    "images/image_applications.jpg",
+    "images/image_applications.jpg",
+    "images/image_applications.jpg",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 66, 252, 169),
+        actions: [
+          const SizedBox(width: 20),
+          IconButton(
+            icon: const Icon(
+              Icons.favorite,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              final favoriteStores = stores
+                  .where((store) => store['isFavorite'] as bool)
+                  .toList()
+                  .cast<Map<String, dynamic>>();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      FavoriteStoresPage(favoriteStores: favoriteStores),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 10),
+          Container(
+            width: 20,
+          ),
+          Expanded(
+            child: Container(
+              height: 35,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: InkWell(
+                onTap: () {
+                  showSearch(context: context, delegate: SearchCustom());
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Search for Stores..",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    Icon(Icons.search),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: 50,
+          ),
+        ],
+      ),
+      body: Column(
+        children:[
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            child: CarouselSlider(
+              items:pageviewImage.map((e) =>Container(child: Image.asset(e,),) ,).toList(),
+              options: CarouselOptions(
+                height: 150,
+                initialPage: 0,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                autoPlayInterval: Duration(seconds: 2),
+                enlargeFactor: 0.1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    currentpage = index;
+                  });
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 20,),
+        buildCarouselIndicator(),
+        SizedBox(height: 10,),
+        Expanded(
+          child: ListView.builder(
+            itemCount: stores.length,
+            itemBuilder: (context, index) {
+              var Key = stores.elementAt(index);
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ProductsPage()));
+                },
+                child: Card(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Image.asset(
+                          stores[index]['image'],
+                          height: 125,
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "${stores[index]['title']}",
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.normal,
+                                          color: Color.fromARGB(
+                                              255, 48, 193, 152)),
+                                    ),
+                                    Text(
+                                      "${stores[index]['subtitle']}",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          fontStyle: FontStyle.normal,
+                                          color:
+                                              Color.fromARGB(255, 20, 54, 64)),
+                                    ),
+                                  ],
+                                ),
+                              ))),
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                stores[index]['isFavorite'] =
+                                    !stores[index]['isFavorite'];
+                              });
+                            },
+                            icon: Icon(
+                              stores[index]['isFavorite']
+                                  ? Icons.star
+                                  : Icons.star_border,
+                              size: 30,
+                              color: stores[index]['isFavorite']
+                                  ? Color.fromARGB(255, 246, 206, 28)
+                                  : Color.fromARGB(255, 20, 54, 64),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+    ]
+      ),
+
+    );
+  }
+  buildCarouselIndicator(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for(int i =0;i<pageviewImage.length;i++)
+         Container(
+           margin: EdgeInsets.all(5),
+           width:i==currentpage ?20: 5,
+           height: i==currentpage ?10: 5,
+           decoration: BoxDecoration(
+             color:i==currentpage ? Colors.greenAccent:Colors.black,
+             shape: BoxShape.circle,
+         ),)
+      ],
+    );
+  }
+}
+
+class SearchCustom extends SearchDelegate {
+  List items = [
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Apple Watch IP79",
+      "subtitle": "Electronic Smart Watch",
+      "price": "\$180",
+    },
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Apple Airpods Pro",
+      "subtitle": "Smart , 6 hours straight use",
+      "price": "\$399",
+    },
+    {
+      "image": "images/Nova_Cart.jpg",
+      "title": "Adidas Sneakers",
+      "subtitle": "Sport comfortable Sneakers",
+      "price": "\$157",
+    },
+  ];
+
+  List? sortedItems;
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = "";
+        },
+        icon: const Icon(Icons.cleaning_services),
+      )
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Text(query);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    sortedItems = items
+        .where((element) =>
+            element['title'].toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    return ListView.builder(
+        itemCount: sortedItems!.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+              onTap: () {
+                query = query == "" ? items[index] : sortedItems?[index];
+                showResults(context);
+              },
+              child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(5),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                sortedItems![index]["image"],
+                                height: 50,
+                                width: 70,
+                                fit: BoxFit.fill,
+                                alignment: Alignment.centerLeft,
+                              ),
+                              Text("${sortedItems![index]['title']}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 20, 54, 64),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20)),
+                            ],
+                          ))
+                    ],
+                  )));
+        });
+    // }
+  }
+}
