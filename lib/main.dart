@@ -71,16 +71,15 @@ class OnboardingPageState extends State<OnboardingPage> {
                     pageController.animateToPage(2, duration: Duration(milliseconds: 1500), curve: Curves.easeInOut);
                   },
                   child: Container(
+                    margin: EdgeInsets.only(right: 5,left: 5),
                     alignment: Alignment.center,
-                    width: 100,
+                    width: 90,
                     decoration: BoxDecoration(
                         color: Color.fromARGB(255, 20, 54, 64),
-                        borderRadius: BorderRadius.only(
-                          bottomRight:Radius.circular(30) ,
-                            topRight: Radius.circular(30))),
+                        borderRadius: BorderRadius.circular(40)),
                     height: 65,
                     child:Text("Skip".tr,style:  TextStyle(
-                        fontSize: 22,
+                        fontSize: 19,
                         color: Color.fromARGB(255, 66, 252, 169),)),
                   ),
                 )],

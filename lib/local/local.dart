@@ -30,7 +30,7 @@ class MyLocal implements Translations {
           "Skip":"تخطي",
           "Next":"التالي",
           "SELECT ITEMS":"اختيار المنتج",
-          "ADD TO CART":"إضافة الى سلتك",
+          "ADD TO CART":"أضف الى سلتك",
           "FAST DELIVERY":"توصيل سريع وامن",
           "Get Started":"إبدأ",
           "Back":"السابق",
