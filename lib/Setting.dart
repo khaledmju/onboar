@@ -276,7 +276,7 @@ class AboutUs extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            "About Us",
+            "About Us".tr,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           backgroundColor: const Color.fromARGB(255, 66, 252, 169),
@@ -296,7 +296,7 @@ class AboutUs extends StatelessWidget {
                   boxShadow: [BoxShadow(color: Colors.green, blurRadius: 10)],
                 ),
                 child: Text(
-                  "NOVA CART",
+                  "Nova Cart".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 23,
@@ -323,7 +323,7 @@ class AboutUs extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(7),
                 child: Text(
-                  "The Nova Cart is committed to providing first-class delivery services to its customers around the clock, seven days a week. We challenge ourselves to continuously exceed our customers' expectations by offering innovative solutions to their needs.",
+                  "Nova Dis".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
@@ -345,7 +345,7 @@ class Contact_Us extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 253, 252, 252),
         appBar: AppBar(
           centerTitle: true,
-          title: Text("Contact Us"),
+          title: Text("Contact Us".tr),
           backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         ),
         body: Container(
@@ -363,6 +363,7 @@ class Contact_Us extends StatelessWidget {
                 width: 270,
                 margin: EdgeInsets.all(20),
                 child: Row(
+                  textDirection:TextDirection.ltr ,
                   children: [
                     Container(
                       padding: EdgeInsets.only(left: 10),
@@ -390,6 +391,7 @@ class Contact_Us extends StatelessWidget {
                 width: 270,
                 margin: EdgeInsets.all(20),
                 child: Row(
+                  textDirection:TextDirection.ltr ,
                   children: [
                     Container(
                       padding: EdgeInsets.only(left: 10),
@@ -417,6 +419,7 @@ class Contact_Us extends StatelessWidget {
                 width: 270,
                 margin: EdgeInsets.all(20),
                 child: Row(
+                  textDirection:TextDirection.ltr ,
                   children: [
                     Container(
                       padding: EdgeInsets.only(left: 10),
@@ -428,6 +431,7 @@ class Contact_Us extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(left: 40),
                       child: Text(
+                        textDirection:TextDirection.ltr ,
                         "@Nova Cart",
                         style: TextStyle(
                             fontWeight: FontWeight.w800, fontSize: 15),

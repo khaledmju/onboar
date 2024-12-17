@@ -21,6 +21,9 @@ class MyLocal implements Translations {
           "Products":"المنتجات",
           "Add to Cart" : "إضافة الى السلة",
           "Price":"السعر",
+          "Quantity":"الكمية",
+          "Nova Cart" : "نوفا كارت",
+          "Nova Dis":"تلتزم نوفا كارت بتقديم خدمات توصيل من الدرجة الأولى لعملائها على مدار الساعة وطوال أيام الأسبوع. نتحدى أنفسنا لتجاوز توقعات عملائنا باستمرار من خلال تقديم حلول مبتكرة لاحتياجاتهم.",
         },
         "en": {
           "Setting":"Setting",
@@ -40,6 +43,9 @@ class MyLocal implements Translations {
           "Products":"Products",
           "Add to Cart": "Add to Cart",
           "Price":"Price",
+          "Quantity":"Quantity",
+          "Nova Cart" : "NOVA CART",
+          "Nova Dis":"The Nova Cart is committed to providing first-class delivery services to its customers around the clock, seven days a week. We challenge ourselves to continuously exceed our customers' expectations by offering innovative solutions to their needs.",
         },
       };
 }

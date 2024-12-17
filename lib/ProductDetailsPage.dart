@@ -15,6 +15,10 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPage extends State<ProductDetailsPage> {
+  bool isArabic() {
+    return Get.locale?.languageCode == 'ar';
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,7 +60,9 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(height: 30,),
+                      SizedBox(
+                        height: 30,
+                      ),
                       Image.asset(
                         "${widget.productData['image']}",
                         width: double.infinity,
@@ -93,13 +99,33 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                       SizedBox(height: 10),
                       Container(
                         padding: EdgeInsets.all(10),
-                        child: Text(
-                          "Quantity : ${widget.productData['quantity']}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade800,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          textDirection: isArabic()
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
+                          children: [
+                            Text(
+                              "  ${widget.productData['quantity']}  ",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                            Text(
+                              ":",
+                              style: TextStyle(
+                                  fontSize: 23, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 14,
+                            ),
+                            Text(
+                              "Quantity".tr,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(height: 10),
@@ -107,16 +133,29 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                         padding: EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          textDirection: isArabic()
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
                           children: [
                             Text(
-                              "${widget.productData['price']}",
+                              "  ${widget.productData['price']}  ",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red),
                             ),
-                            SizedBox(width: 14,),
-                            Text("Price".tr,style: TextStyle(fontSize: 20),),
+                            Text(
+                              ":",
+                              style: TextStyle(
+                                  fontSize: 23, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 14,
+                            ),
+                            Text(
+                              "Price".tr,
+                              style: TextStyle(fontSize: 20),
+                            ),
                           ],
                         ),
                       ),
