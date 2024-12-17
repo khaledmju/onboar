@@ -3,9 +3,12 @@ import 'package:get/get.dart';
 import 'package:onboar/AddImageProfile.dart';
 import 'package:onboar/Home.dart';
 import 'package:onboar/Stores.dart';
+import 'package:onboar/local/local.dart';
+import 'package:onboar/local/local_contorller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+SharedPreferences? prefs;
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
@@ -20,6 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // MyLocaleController localController = Get.put(MyLocaleController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NovaCart',
@@ -29,6 +33,8 @@ class MyApp extends StatelessWidget {
       ),
       home: showHome ? Stores() : OnboardingPage(),
       // home: AddImageProfile(),
+      // locale: localController.initlang,
+      // translations: MyLocal(),
     );
   }
 }

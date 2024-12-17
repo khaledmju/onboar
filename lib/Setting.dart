@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onboar/local/local_contorller.dart';
 import 'package:onboar/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,15 +19,11 @@ class Setting extends StatefulWidget {
 }
 
 class SettingState extends State<Setting> {
-  GlobalKey<ScaffoldState> change_language = GlobalKey();
-
-  // String? image_profile=Image_Profile().image_profile;
-  String language = "english";
+  // MyLocaleController LangController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: change_language,
         appBar: AppBar(
           title: const Text("Setting",
               textAlign: TextAlign.center,
@@ -108,62 +105,66 @@ class SettingState extends State<Setting> {
                   ),
                 ),
                 onTap: () {
-                  change_language.currentState!.showBottomSheet(
-                      showDragHandle: true,
-                      (context) => Container(
-                            padding: EdgeInsets.all(10),
-                            height: 200,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(40)),
-                            ),
-                            child: Column(
+                  Get.bottomSheet(Container(
+                    padding: EdgeInsets.all(10),
+                    height: 200,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(40)),
+                    ),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            // LangController.changeLang("ar");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(20),
+                            width: double.infinity,
+                            child: const Row(
                               children: [
-                                InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    margin: EdgeInsets.all(20),
-                                    width: double.infinity,
-                                    child: const Row(
-                                      children: [
-                                        Icon(
-                                          Icons.language,
-                                          size: 25,
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Text(
-                                          "Arabic",
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                Icon(
+                                  Icons.language,
+                                  size: 25,
                                 ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    margin: EdgeInsets.all(20),
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.language,
-                                          size: 25,
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Text(
-                                          "English",
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text( "2",
+                                  style: TextStyle(fontSize: 22),
                                 ),
                               ],
                             ),
-                          ));
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            // LangController.changeLang("en");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(20),
+                            width: double.infinity,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.language,
+                                  size: 25,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "3",
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ));
                 },
               ),
               InkWell(
@@ -256,7 +257,7 @@ class SettingState extends State<Setting> {
               //   }
               // }, child: Text("Change Theme")),
             ],
-            ),
+          ),
         ));
   }
 }
@@ -268,7 +269,10 @@ class AboutUs extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 249, 247, 247),
         appBar: AppBar(
           centerTitle: true,
-          title: Text("About Us",style: TextStyle(fontWeight: FontWeight.bold),),
+          title: Text(
+            "About Us",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         ),
         body: Container(
@@ -288,13 +292,22 @@ class AboutUs extends StatelessWidget {
                 child: Text(
                   "NOVA CART",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 23,  fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
               ),
-              SizedBox(height:20,),
-              Image.asset("images/logo.png",height: 240,),
-              SizedBox(height:20,),
+              SizedBox(
+                height: 20,
+              ),
+              Image.asset(
+                "images/logo.png",
+                height: 240,
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
@@ -313,7 +326,6 @@ class AboutUs extends StatelessWidget {
                   ),
                 ),
               ),
-
             ],
           ),
         ));
@@ -432,6 +444,19 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  File? Slectedimage;
+
+  final imagepicker = ImagePicker();
+
+  uploadImage(ImageSource) async {
+    var pickedImage = await imagepicker.pickImage(source: ImageSource);
+    if (pickedImage != null) {
+      setState(() {
+        Slectedimage = File(pickedImage.path);
+      });
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -452,27 +477,57 @@ class ProfilePageState extends State<ProfilePage> {
       body: Center(
         child: Column(
           children: [
+            // SizedBox(
+            //   height: 50,
+            // ),
+            // CircleAvatar(
+            //   backgroundColor: Colors.grey.shade100,
+            //   backgroundImage: AssetImage("images/logo.png"),
+            //   radius: 75,
+            // ),
             SizedBox(
-              height: 50,
+              height: 70,
             ),
-            CircleAvatar(
-              backgroundColor: Colors.grey.shade100,
-              backgroundImage: AssetImage("images/logo.png"),
-              radius: 75,
+            Stack(
+              fit: StackFit.passthrough,
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.grey.shade50,
+                  radius: 80,
+                  backgroundImage: Slectedimage != null
+                      ? FileImage(Slectedimage!)
+                      : const AssetImage('images/logo.png'),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.greenAccent,
+                    child: IconButton(
+                      onPressed: () {
+                        ShowButtomSheet();
+                      },
+                      icon: Icon(
+                        Icons.photo_camera,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
             SizedBox(
               height: 30,
             ),
             ListTile(
               onTap: () {
-                Get.bottomSheet(
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      width: double.infinity,
-                      height: 200,
-                      color: Colors.white,
-                      child: TextFormField(),
-                    ));
+                Get.bottomSheet(Container(
+                  padding: EdgeInsets.only(top: 20),
+                  width: double.infinity,
+                  height: 200,
+                  color: Colors.white,
+                  child: TextFormField(),
+                ));
               },
               leading: Icon(Icons.perm_identity),
               trailing: Icon(
@@ -492,6 +547,80 @@ class ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
+    );
+  }
+
+  ShowButtomSheet() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          height: 200,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 20, left: 10),
+                  child: Text(
+                    "Chose Image from:",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    uploadImage(ImageSource.gallery);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(20),
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.photo_library_outlined,
+                          size: 25,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Gellary",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    uploadImage(ImageSource.camera);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(20),
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.camera,
+                          size: 25,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "camera",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

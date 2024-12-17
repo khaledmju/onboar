@@ -448,8 +448,8 @@ class _SignUpState extends State<SignUp> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      // Get.offAll(Stores());
-                      Get.offAll(AddImageProfile());
+                      Get.offAll(Stores());
+                      // Get.offAll(AddImageProfile());
                       // setState(() {
                       //   if (formKey.currentState!.validate()) {
                       //     // content = sharedPreferences.setStringList('items', <String>[usernameController.toString(),numberController.toString(),emailController.toString(),passwordController.toString()]);

@@ -190,8 +190,8 @@ class _HomeState extends State<Home> {
                     ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 20, 54, 64),padding: EdgeInsets.symmetric(horizontal: 100)),onPressed: () {
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>det(name: username.text, email: email.text, phone: phone.text) ,));
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Stores()));
-                      // Get.offAll(Stores());
-                      Get.offAll(AddImageProfile());
+                      Get.offAll(Stores());
+                      // Get.offAll(AddImageProfile());
                     }, child: Text("Login",
                         style: TextStyle(
                           fontSize: 20,
