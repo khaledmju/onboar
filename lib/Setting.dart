@@ -9,23 +9,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
 // ignore: must_be_immutable
-class Setting extends StatefulWidget {
-  const Setting({super.key});
 
+class Setting extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return SettingState();
-  }
+  State<Setting> createState() => _SettingState();
 }
 
-class SettingState extends State<Setting> {
-  // MyLocaleController LangController = Get.find();
+class _SettingState extends State<Setting> {
+  MyLocaleController LangController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Setting",
+          title: Text("Setting".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Color.fromARGB(255, 20, 54, 64),
@@ -115,53 +112,57 @@ class SettingState extends State<Setting> {
                     ),
                     child: Column(
                       children: [
-                        InkWell(
+                        GetBuilder<MyLocaleController>(builder:(controller) =>InkWell(
                           onTap: () {
-                            // LangController.changeLang("ar");
+                            LangController.changeLang("ar");
                           },
                           child: Container(
                             margin: EdgeInsets.all(20),
                             width: double.infinity,
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.language,
-                                  size: 25,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text( "2",
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ],
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.language,
+                                    size: 25,
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    "Arabic".tr,
+                                    style: TextStyle(fontSize: 22),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // LangController.changeLang("en");
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(20),
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.language,
-                                  size: 25,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  "3",
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ],
-                            ),
+                        ),),
+                      GetBuilder<MyLocaleController>(builder:(controller) => InkWell(
+                        onTap: () {
+                          LangController.changeLang("en");
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(20),
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.language,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "English".tr,
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ],
                           ),
                         ),
+                      ),),
+
                       ],
                     ),
                   ));

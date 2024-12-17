@@ -9,10 +9,11 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences? prefs;
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
-  final showHome = prefs.getBool('showHome') ?? false;
+  prefs = await SharedPreferences.getInstance();
+  final showHome = prefs?.getBool('showHome') ?? false;
   runApp(MyApp(showHome: showHome));
 }
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MyLocaleController localController = Get.put(MyLocaleController());
+    MyLocaleController localeController = Get.put(MyLocaleController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NovaCart',
@@ -32,9 +33,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: showHome ? Stores() : OnboardingPage(),
-      // home: AddImageProfile(),
-      // locale: localController.initlang,
-      // translations: MyLocal(),
+      locale: localeController.initlang,
+      translations: MyLocal(),
     );
   }
 }
@@ -86,8 +86,10 @@ class OnboardingPageState extends State<OnboardingPage> {
               child: Text(
                 textAlign: TextAlign.center,
                 title,
-                style: TextStyle(fontSize: 23,  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
             Container(
@@ -205,11 +207,11 @@ class OnboardingPageState extends State<OnboardingPage> {
                       onPressed: () => pageController.nextPage(
                           duration: Duration(milliseconds: 500),
                           curve: Curves.easeInOut),
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                            fontSize: 22, color: Color.fromARGB(255, 66, 252, 169),)
-                      )),
+                      child: Text("Next",
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Color.fromARGB(255, 66, 252, 169),
+                          ))),
                 ],
               ),
             ),

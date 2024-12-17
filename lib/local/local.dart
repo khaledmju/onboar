@@ -4,12 +4,14 @@ class MyLocal implements Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         "ar": {
-          "2": "تغير اللغة الى العربية",
-          "3": "تغير اللغة الى الانكليزي",
+          "Setting":"الاعدادات",
+          "Arabic":"عربي",
+          "English":"انكليزي",
         },
         "en": {
-          "2": "change lang to arabic",
-          "3": "change lang to english",
+          "Setting":"Setting",
+          "Arabic":"Arabic",
+          "English":"English",
         },
       };
 }
