@@ -71,11 +71,12 @@ class _SettingState extends State<Setting> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(""),
+                          Text("",style: TextStyle(fontSize: 19,color: Colors.blue),),
                           SizedBox(
                             height: 8,
                           ),
-                          Text("")
+                          Text("",style: TextStyle(fontSize: 19,color: Colors.blue),),
+
                         ],
                       )
                     ],
@@ -91,7 +92,7 @@ class _SettingState extends State<Setting> {
                     child: ListTile(
                       leading: Icon(
                         Icons.language,
-                        color: Colors.blueAccent,
+                        color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "App Language",
@@ -167,6 +168,43 @@ class _SettingState extends State<Setting> {
                     ),
                   ));
                 },
+
+                // onTap: () {
+                //   Get.bottomSheet(
+                //     Container(
+                //       decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(20)),
+                //       height: 200,
+                //       width: double.infinity,
+                //       // color: Colors.white,
+                //       padding: EdgeInsets.all(20),
+                //       child: Column(
+                //         children: [
+                //           Text("bottom sheet"),
+                //           InkWell(
+                //             onTap: () {
+                //
+                //             },
+                //             child: Container(
+                //               child: Row(
+                //                 children: [
+                //                   Icon(Icons.add_a_photo),
+                //                   Text("photo")
+                //                 ],
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //     backgroundColor: Colors.green,
+                //     enterBottomSheetDuration: Duration(seconds: 2),
+                //     exitBottomSheetDuration: Duration(seconds: 1),
+                //     // isDismissible: false,
+                //     shape: RoundedRectangleBorder(
+                //         side: BorderSide(width: 2),
+                //         borderRadius: BorderRadius.circular(20)));
+                // },
               ),
               InkWell(
                   child: Card(
@@ -177,7 +215,7 @@ class _SettingState extends State<Setting> {
                       child: ListTile(
                         leading: Icon(
                           Icons.contact_page,
-                          color: Colors.blueAccent,
+                          color:  Color.fromARGB(255, 48, 193, 152),
                         ),
                         title: Text(
                           "contact us",
@@ -199,7 +237,7 @@ class _SettingState extends State<Setting> {
                     child: ListTile(
                       leading: Icon(
                         Icons.face_unlock_rounded,
-                        color: Colors.blueAccent,
+                        color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "About Us",
@@ -221,7 +259,7 @@ class _SettingState extends State<Setting> {
                     child: const ListTile(
                       leading: Icon(
                         Icons.logout,
-                        color: Colors.blueAccent,
+                        color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "Log Out",

@@ -76,10 +76,10 @@ class StoresState extends State<Stores> {
           // ),
         ],
         color: const Color.fromARGB(255, 66, 252, 169),
-        buttonBackgroundColor: Colors.white,
+        buttonBackgroundColor: Color.fromARGB(255, 66, 252, 169),
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 600),
-        // backgroundColor: Color.fromARGB(255, 20, 54, 64),
+        backgroundColor: Colors.transparent,
         onTap: (val) {
           setState(() {
             selctedindex = val;
@@ -206,7 +206,7 @@ class _HomeContentState extends State<HomeContent> {
                 initialPage: 0,
                 autoPlay: true,
                 enlargeCenterPage: true,
-                autoPlayInterval: Duration(seconds: 2),
+                autoPlayInterval: Duration(seconds: 3),
                 enlargeFactor: 0.1,
                 onPageChanged: (index, reason) {
                   setState(() {

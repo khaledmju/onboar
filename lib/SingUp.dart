@@ -79,8 +79,8 @@ class _SignUpState extends State<SignUp> {
           Center(
             child: Image.asset(
               "images/cs.png",
-              width: 250,
-              height: 250,
+              width: 220,
+              height: 220,
             ),
           ),
           // SizedBox(height: 20,),
@@ -223,55 +223,55 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
-                  // TextFormField(
-                  //   controller: numberController,
-                  //   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  //   cursorColor: Color.fromARGB(255, 20, 54, 64),
-                  //   obscureText: false,
-                  //   keyboardType: TextInputType.number,
-                  //   // onSaved: (val){phoneNumber = val;},
-                  //   decoration: InputDecoration(
-                  //       prefixIcon: const Icon(Icons.perm_identity, size: 30),
-                  //       prefixIconColor:
-                  //       const Color.fromARGB(255, 165, 165, 165),
-                  //       labelText: "User Name",
-                  //       hintStyle: TextStyle(
-                  //           color: const Color.fromARGB(255, 165, 165, 165)),
-                  //       focusedBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(6),
-                  //           borderSide: const BorderSide(
-                  //               color: Color.fromARGB(255, 66, 252, 169))),
-                  //       enabledBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(6),
-                  //           borderSide: const BorderSide(
-                  //               color: Color.fromARGB(255, 20, 54, 64))),
-                  //       errorBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(6),
-                  //           borderSide: const BorderSide(
-                  //               color: Color.fromARGB(255, 255, 23, 7))),
-                  //       focusedErrorBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(6),
-                  //           borderSide: const BorderSide(
-                  //               color: Color.fromARGB(255, 255, 23, 7)))),
-                  //
-                  //   // validator: (val) {
-                  //   //   if (val!.isEmpty) {
-                  //   //     return "Please enter your Phone Number";
-                  //   //   } else {
-                  //   //     if (val.length < 10 || val.length > 10) {
-                  //   //       return "Phone Number must be 10 digits";
-                  //   //     } else if (!val.startsWith('09')) {
-                  //   //       return "Phone Number must be : 09XXXXXXXX";
-                  //   //     } else if (val.hashCode.isNaN) {
-                  //   //       return "Phone Number must ONLY contain numbers";
-                  //   //     }
-                  //   //     return null;
-                  //   //   }
-                  //   // },
-                  // ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: numberController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: Color.fromARGB(255, 20, 54, 64),
+                    obscureText: false,
+                    keyboardType: TextInputType.number,
+                    // onSaved: (val){phoneNumber = val;},
+                    decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.perm_identity, size: 30),
+                        prefixIconColor:
+                        const Color.fromARGB(255, 165, 165, 165),
+                        labelText: "User Name",
+                        hintStyle: TextStyle(
+                            color: const Color.fromARGB(255, 165, 165, 165)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 66, 252, 169))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7)))),
+
+                    // validator: (val) {
+                    //   if (val!.isEmpty) {
+                    //     return "Please enter your Phone Number";
+                    //   } else {
+                    //     if (val.length < 10 || val.length > 10) {
+                    //       return "Phone Number must be 10 digits";
+                    //     } else if (!val.startsWith('09')) {
+                    //       return "Phone Number must be : 09XXXXXXXX";
+                    //     } else if (val.hashCode.isNaN) {
+                    //       return "Phone Number must ONLY contain numbers";
+                    //     }
+                    //     return null;
+                    //   }
+                    // },
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -352,16 +352,12 @@ class _SignUpState extends State<SignUp> {
                             borderRadius: BorderRadius.circular(6),
                             borderSide: const BorderSide(
                                 color: Color.fromARGB(255, 255, 23, 7)))),
-                    // validator: (val) {
-                    //   if (val!.isEmpty) {
-                    //     return "Please enter your Email Address";
-                    //   } else {
-                    //     if (isEmail(val) == false) {
-                    //       return "Email is not valid";
-                    //     }
-                    //   }
-                    //   return null;
-                    // },
+                    validator: (val) {
+                        if (isEmail(val!) == false) {
+                          return "Email is not valid";
+                        }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 20,
