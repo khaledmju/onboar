@@ -63,8 +63,27 @@ class OnboardingPageState extends State<OnboardingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(
-              height: 60,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: () {
+                    pageController.animateToPage(2, duration: Duration(milliseconds: 1500), curve: Curves.easeInOut);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 20, 54, 64),
+                        borderRadius: BorderRadius.only(
+                          bottomRight:Radius.circular(30) ,
+                            topRight: Radius.circular(30))),
+                    height: 65,
+                    child:Text("Skip".tr,style:  TextStyle(
+                        fontSize: 22,
+                        color: Color.fromARGB(255, 66, 252, 169),)),
+                  ),
+                )],
             ),
             Image.asset(
               urlImage,
@@ -130,19 +149,16 @@ class OnboardingPageState extends State<OnboardingPage> {
           children: [
             buildPage(
                 urlImage: "images/9.png",
-                title: "SELECT ITEMS",
-                discr:
-                    "our new service make it easy for you to work anywhere ,there are new features will help you"),
+                title: "SELECT ITEMS".tr,
+                discr: "select item".tr),
             buildPage(
                 urlImage: "images/7.png",
-                title: "ADD TO CART",
-                discr:
-                    "our new service make it easy for you to work anywhere ,there are new features will help you"),
+                title: "ADD TO CART".tr,
+                discr: "add to cart".tr),
             buildPage(
                 urlImage: "images/1.png",
-                title: "FAST DELIVERY",
-                discr:
-                    "our new service make it easy for you to work anywhere ,there are new features will help you"),
+                title: "FAST DELIVERY".tr,
+                discr:"fast delivery".tr),
           ],
         ),
       ),
@@ -165,7 +181,7 @@ class OnboardingPageState extends State<OnboardingPage> {
                     ));
                   },
                   child: Text(
-                    "Get Started ",
+                    "Get Started".tr,
                     style: TextStyle(
                       fontSize: 22,
                       color: Color.fromARGB(255, 66, 252, 169),
@@ -183,9 +199,12 @@ class OnboardingPageState extends State<OnboardingPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                      onPressed: () => pageController.jumpToPage(2),
+                      // onPressed: () => pageController.animateToPage(2, duration: Duration(milliseconds: 1500), curve: Curves.easeInOut),
+                      onPressed: () => pageController.previousPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeInOut),
                       child: Text(
-                        "Skip",
+                        "Back".tr,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
@@ -207,7 +226,7 @@ class OnboardingPageState extends State<OnboardingPage> {
                       onPressed: () => pageController.nextPage(
                           duration: Duration(milliseconds: 500),
                           curve: Curves.easeInOut),
-                      child: Text("Next",
+                      child: Text("Next".tr,
                           style: TextStyle(
                             fontSize: 22,
                             color: Color.fromARGB(255, 66, 252, 169),
