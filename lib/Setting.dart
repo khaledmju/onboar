@@ -8,8 +8,6 @@ import 'package:onboar/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
-// ignore: must_be_immutable
-
 class Setting extends StatefulWidget {
   @override
   State<Setting> createState() => _SettingState();
@@ -95,7 +93,7 @@ class _SettingState extends State<Setting> {
                         color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
-                        "App Language",
+                        "App Language".tr,
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       trailing: Icon(Icons.chevron_right),
@@ -169,42 +167,7 @@ class _SettingState extends State<Setting> {
                   ));
                 },
 
-                // onTap: () {
-                //   Get.bottomSheet(
-                //     Container(
-                //       decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(20)),
-                //       height: 200,
-                //       width: double.infinity,
-                //       // color: Colors.white,
-                //       padding: EdgeInsets.all(20),
-                //       child: Column(
-                //         children: [
-                //           Text("bottom sheet"),
-                //           InkWell(
-                //             onTap: () {
-                //
-                //             },
-                //             child: Container(
-                //               child: Row(
-                //                 children: [
-                //                   Icon(Icons.add_a_photo),
-                //                   Text("photo")
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //     backgroundColor: Colors.green,
-                //     enterBottomSheetDuration: Duration(seconds: 2),
-                //     exitBottomSheetDuration: Duration(seconds: 1),
-                //     // isDismissible: false,
-                //     shape: RoundedRectangleBorder(
-                //         side: BorderSide(width: 2),
-                //         borderRadius: BorderRadius.circular(20)));
-                // },
+
               ),
               InkWell(
                   child: Card(
@@ -218,7 +181,7 @@ class _SettingState extends State<Setting> {
                           color:  Color.fromARGB(255, 48, 193, 152),
                         ),
                         title: Text(
-                          "contact us",
+                          "Contact Us".tr,
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                         trailing: Icon(Icons.chevron_right),
@@ -240,7 +203,7 @@ class _SettingState extends State<Setting> {
                         color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
-                        "About Us",
+                        "About Us".tr,
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       trailing: Icon(Icons.chevron_right_rounded),
@@ -256,13 +219,13 @@ class _SettingState extends State<Setting> {
                   child: Container(
                     height: 70,
                     padding: EdgeInsets.only(top: 8),
-                    child: const ListTile(
+                    child: ListTile(
                       leading: Icon(
                         Icons.logout,
                         color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
-                        "Log Out",
+                        "Log Out".tr,
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       trailing: Icon(Icons.chevron_right),
@@ -276,7 +239,11 @@ class _SettingState extends State<Setting> {
                     descTextStyle:
                         TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
                     dialogBorderRadius: BorderRadius.circular(20),
-                    desc: 'Are you sure you want to log out?',
+                    desc: 'Are you sure you want to log out?'.tr,
+                    btnCancelText: "Cancel".tr,
+                    btnOkText: "Ok".tr,
+                    btnOkColor: Colors.green,
+                    btnCancelColor: Colors.red,
                     btnCancelOnPress: () {},
                     btnOkOnPress: () async {
                       final prefs = await SharedPreferences.getInstance();

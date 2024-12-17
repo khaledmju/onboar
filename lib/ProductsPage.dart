@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_common/get_reset.dart';
 import 'package:onboar/ProductDetailsPage.dart';
 // import 'ProductDetailsPage.dart';
+import 'package:onboar/local/local_contorller.dart';
+
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -37,7 +41,7 @@ class _ProductsPage extends State<ProductsPage> {
     return Scaffold(
 
         appBar: AppBar(
-            title : const Text("Products" , textAlign: TextAlign.center,
+            title :  Text("Products".tr , textAlign: TextAlign.center,
                 style : TextStyle(color : Color.fromARGB(255, 20, 54, 64) ,fontSize: 26 , fontWeight: FontWeight.bold , fontStyle: FontStyle.normal)),
             centerTitle: true,
             backgroundColor: const Color.fromARGB(255, 66, 252, 169),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_common/get_reset.dart';
 
 import 'ProductsPage.dart';
 
@@ -103,12 +105,19 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                       SizedBox(height: 10),
                       Container(
                         padding: EdgeInsets.all(10),
-                        child: Text(
-                          "Price : ${widget.productData['price']}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${widget.productData['price']}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red),
+                            ),
+                            SizedBox(width: 14,),
+                            Text("Price".tr,style: TextStyle(fontSize: 20),),
+                          ],
                         ),
                       ),
                     ],
@@ -121,7 +130,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                             backgroundColor:
                                 const Color.fromARGB(255, 20, 54, 64),
                             padding: EdgeInsets.symmetric(horizontal: 40)),
-                        child: Text("Add to Cart",
+                        child: Text("Add to Cart".tr,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,

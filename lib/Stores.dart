@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:onboar/FavoriteStoresPage.dart';
 import 'package:onboar/ProductsPage.dart';
 import 'package:onboar/Setting.dart';
+import 'package:onboar/local/local_contorller.dart';
 
 class Stores extends StatefulWidget {
   const Stores({super.key});
@@ -30,15 +31,15 @@ class StoresState extends State<Stores> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar:CurvedNavigationBar(
+      bottomNavigationBar: GetBuilder<MyLocaleController>(builder: (controller) => CurvedNavigationBar(
         key: _bottomNavigationKey,
         index: selctedindex,
-        items: const <Widget>[
+        items:  <Widget>[
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.home, size: 27),
-              Text("Home ",
+              Text("Home".tr,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
@@ -62,7 +63,7 @@ class StoresState extends State<Stores> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.settings, size: 27),
-              Text("Setting",
+              Text("Setting".tr,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
@@ -86,7 +87,7 @@ class StoresState extends State<Stores> {
           });
         },
         letIndexChange: (index) => true,
-      ),
+      ),),
       body: pages[selctedindex], // Display the selected page
     );
   }
@@ -181,7 +182,7 @@ class _HomeContentState extends State<HomeContent> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      "Search for Stores..",
+                      "Search for Stores..".tr,
                       style: TextStyle(fontSize: 17),
                     ),
                     Icon(Icons.search),

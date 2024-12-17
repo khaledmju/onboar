@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:onboar/ProductsPage.dart';
+import 'package:onboar/local/local_contorller.dart';
 
 class FavoriteStoresPage extends StatelessWidget {
   final List<Map<String, dynamic>> favoriteStores;
@@ -11,17 +12,17 @@ class FavoriteStoresPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Favorite Stores"),
+        title: Text("Favorite Stores".tr),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
       ),
       body: favoriteStores.isEmpty
-          ? const Center(
-              child: Text(
-                "No favorite stores yet!",
-                style: TextStyle(fontSize: 18, color: Colors.red),
-              ),
-            )
+          ? Center(
+            child: Text(
+              "No favorite stores yet!".tr,
+              style: TextStyle(fontSize: 18, color: Colors.red),
+            ),
+          )
           : ListView.builder(
               itemCount: favoriteStores.length,
               itemBuilder: (context, index) {
