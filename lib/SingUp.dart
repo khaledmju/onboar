@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 final TextEditingController firstNameController = TextEditingController();
 final TextEditingController lastNameController = TextEditingController();
+final TextEditingController UserNameController = TextEditingController();
 final TextEditingController numberController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
@@ -62,7 +63,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        title: const Text("Sing Up",
+        title:  Text("Sing Up".tr,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
@@ -135,7 +136,7 @@ class _SignUpState extends State<SignUp> {
                                   const Icon(Icons.perm_identity, size: 30),
                               prefixIconColor:
                                   const Color.fromARGB(255, 165, 165, 165),
-                              labelText: "First Name",
+                              labelText: "First Name".tr,
                               hintStyle: TextStyle(
                                   color: const Color.fromARGB(
                                       255, 165, 165, 165)),
@@ -157,18 +158,18 @@ class _SignUpState extends State<SignUp> {
                               focusedErrorBorder:
                                   OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color.fromARGB(255, 255, 23, 7)))),
 
-                          // validator: (val) {
-                          //   if (val!.isEmpty) {
-                          //     return "Please enter your First Name";
-                          //   } else {
-                          //     if (val.length < 3) {
-                          //       return "First Name must be longer than 3 characters";
-                          //     } else if (val.length > 20) {
-                          //       return "First Name must be shorter than 20 characters";
-                          //     }
-                          //   }
-                          //   return null;
-                          // },
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please enter your First Name".tr;
+                            } else {
+                              if (val.length < 3) {
+                                return "First Name must be longer than 3 characters".tr;
+                              } else if (val.length > 20) {
+                                return "First Name must be shorter than 20 characters".tr;
+                              }
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(left: 10, right: 10)),
@@ -187,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                                   size: 30),
                               prefixIconColor:
                                   const Color.fromARGB(255, 165, 165, 165),
-                              labelText: "Last Name",
+                              labelText: "Last Name".tr,
                               hintStyle: TextStyle(
                                   color: const Color.fromARGB(
                                       255, 165, 165, 165)),
@@ -207,18 +208,18 @@ class _SignUpState extends State<SignUp> {
                                       const BorderSide(color: Color.fromARGB(255, 255, 23, 7))),
                               focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color.fromARGB(255, 255, 23, 7)))),
 
-                          // validator: (val) {
-                          //   if (val!.isEmpty) {
-                          //     return "Please enter your Last Name";
-                          //   } else {
-                          //     if (val.length < 3) {
-                          //       return "Last Name must be longer than 3 characters";
-                          //     } else if (val.length > 20) {
-                          //       return "Last Name must be shorter than 20 characters";
-                          //     }
-                          //   }
-                          //   return null;
-                          // },
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please enter your Last Name".tr;
+                            } else {
+                              if (val.length < 3) {
+                                return "Last Name must be longer than 3 characters".tr;
+                              } else if (val.length > 20) {
+                                return "Last Name must be shorter than 20 characters".tr;
+                              }
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
@@ -227,7 +228,7 @@ class _SignUpState extends State<SignUp> {
                     height: 20,
                   ),
                   TextFormField(
-                    controller: numberController,
+                    controller: UserNameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: Color.fromARGB(255, 20, 54, 64),
                     obscureText: false,
@@ -237,7 +238,7 @@ class _SignUpState extends State<SignUp> {
                         prefixIcon: const Icon(Icons.perm_identity, size: 30),
                         prefixIconColor:
                         const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "User Name",
+                        labelText: "User Name".tr,
                         hintStyle: TextStyle(
                             color: const Color.fromARGB(255, 165, 165, 165)),
                         focusedBorder: OutlineInputBorder(
@@ -264,9 +265,9 @@ class _SignUpState extends State<SignUp> {
                     //     if (val.length < 10 || val.length > 10) {
                     //       return "Phone Number must be 10 digits";
                     //     } else if (!val.startsWith('09')) {
-                    //       return "Phone Number must be : 09XXXXXXXX";
+                    //       return "Phone Number must be : 09XXXXXXXX".tr;
                     //     } else if (val.hashCode.isNaN) {
-                    //       return "Phone Number must ONLY contain numbers";
+                    //       return "Phone Number must ONLY contain numbers".tr;
                     //     }
                     //     return null;
                     //   }
@@ -286,7 +287,7 @@ class _SignUpState extends State<SignUp> {
                         prefixIcon: const Icon(Icons.phone, size: 30),
                         prefixIconColor:
                             const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "Number",
+                        labelText: "Number".tr,
                         hintStyle: TextStyle(
                             color: const Color.fromARGB(255, 165, 165, 165)),
                         focusedBorder: OutlineInputBorder(
@@ -306,20 +307,20 @@ class _SignUpState extends State<SignUp> {
                             borderSide: const BorderSide(
                                 color: Color.fromARGB(255, 255, 23, 7)))),
 
-                    // validator: (val) {
-                    //   if (val!.isEmpty) {
-                    //     return "Please enter your Phone Number";
-                    //   } else {
-                    //     if (val.length < 10 || val.length > 10) {
-                    //       return "Phone Number must be 10 digits";
-                    //     } else if (!val.startsWith('09')) {
-                    //       return "Phone Number must be : 09XXXXXXXX";
-                    //     } else if (val.hashCode.isNaN) {
-                    //       return "Phone Number must ONLY contain numbers";
-                    //     }
-                    //     return null;
-                    //   }
-                    // },
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter your Phone Number";
+                      } else {
+                        if (val.length < 10 || val.length > 10) {
+                          return "Phone Number must be 10 digits".tr;
+                        } else if (!val.startsWith('09')) {
+                          return "Phone Number must be : 09XXXXXXXX".tr;
+                        } else if (val.hashCode.isNaN) {
+                          return "Phone Number must ONLY contain numbers".tr;
+                        }
+                        return null;
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -333,7 +334,7 @@ class _SignUpState extends State<SignUp> {
                         prefixIcon: const Icon(Icons.mail_outlined, size: 30),
                         prefixIconColor:
                             const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "Email Address",
+                        labelText: "Email Address".tr,
                         hintStyle: TextStyle(
                             color: const Color.fromARGB(255, 165, 165, 165)),
                         focusedBorder: OutlineInputBorder(
@@ -354,7 +355,7 @@ class _SignUpState extends State<SignUp> {
                                 color: Color.fromARGB(255, 255, 23, 7)))),
                     validator: (val) {
                         if (isEmail(val!) == false) {
-                          return "Email is not valid";
+                          return "Email is not valid".tr;
                         }
                       return null;
                     },
@@ -375,7 +376,7 @@ class _SignUpState extends State<SignUp> {
                             const Icon(Icons.lock_outline_rounded, size: 30),
                         prefixIconColor:
                             const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "Password",
+                        labelText: "Password".tr,
                         hintStyle: TextStyle(
                             color: const Color.fromARGB(255, 165, 165, 165)),
                         suffixIcon: IconButton(
@@ -404,21 +405,21 @@ class _SignUpState extends State<SignUp> {
                             borderRadius: BorderRadius.circular(6),
                             borderSide: const BorderSide(
                                 color: Color.fromARGB(255, 255, 23, 7)))),
-                    // validator: (val) {
-                    //   if (val!.isEmpty) {
-                    //     return "Please enter your Password";
-                    //   } else {
-                    //     if (val.length < 8) {
-                    //       return "Password must be at least 8 characters";
-                    //     }
-                    //     return null;
-                    //   }
-                    // },
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter your Password".tr;
+                      } else {
+                        if (val.length < 8) {
+                          return "Password must be at least 8 characters".tr;
+                        }
+                        return null;
+                      }
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Already have an account? ",
+                       Text("Already have an account?".tr,
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
@@ -431,7 +432,7 @@ class _SignUpState extends State<SignUp> {
                                 builder: (context) => Home()));
                           });
                         },
-                        child: const Text("Log In",
+                        child:  Text("Log In".tr,
                             style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
@@ -444,25 +445,25 @@ class _SignUpState extends State<SignUp> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      Get.offAll(Stores());
+                      // Get.offAll(Stores());
                       // Get.offAll(AddImageProfile());
-                      // setState(() {
-                      //   if (formKey.currentState!.validate()) {
-                      //     // content = sharedPreferences.setStringList('items', <String>[usernameController.toString(),numberController.toString(),emailController.toString(),passwordController.toString()]);
-                      //     // User user = User(content.indexOf(0) as String,content.indexOf(1) as String,content.indexOf(2) as String,content.indexOf(3) as String);
-                      //     // sharedPreferences.setStringList('user',json.encode(user.toJson()));
-                      //
-                      //     // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>  Start_Application()));
-                      //   } else {
-                      //     ErrorHint("Please fill the Text Fields correctly");
-                      //   }
-                      // });
+                      setState(() {
+                        if (formKey.currentState!.validate()) {
+                          // content = sharedPreferences.setStringList('items', <String>[usernameController.toString(),numberController.toString(),emailController.toString(),passwordController.toString()]);
+                          // User user = User(content.indexOf(0) as String,content.indexOf(1) as String,content.indexOf(2) as String,content.indexOf(3) as String);
+                          // sharedPreferences.setStringList('user',json.encode(user.toJson()));
+                          Get.offAll(Stores());
+                          // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>  Start_Application()));
+                        } else {
+                          ErrorHint("Please fill the Text Fields correctly");
+                        }
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
                             const Color.fromARGB(255, 20, 54, 64),
                         padding: EdgeInsets.symmetric(horizontal: 100)),
-                    child: const Text("Sign Up",
+                    child:  Text( "Sing Up".tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
