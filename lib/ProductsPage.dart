@@ -1,9 +1,11 @@
+// ignore_for_file: unused_import, file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
-import 'package:onboar/ProductDetailsPage.dart';
+import 'ProductDetailsPage.dart';
 // import 'ProductDetailsPage.dart';
-import 'package:onboar/local/local_contorller.dart';
+import 'local/local_controller.dart';
 
 
 class ProductsPage extends StatefulWidget {
@@ -23,7 +25,7 @@ class _ProductsPage extends State<ProductsPage> {
       "price" : "\$180",},
     {
       "image": "images/logo.png",
-      "title" : "Apple Airpods Pro",
+      "title" : "Apple Air pods Pro",
       "subtitle" : "Smart , 6 hours straight use",
       "quantity" : "15",
       "price" : "\$399",},
@@ -42,7 +44,7 @@ class _ProductsPage extends State<ProductsPage> {
 
         appBar: AppBar(
             title :  Text("Products".tr , textAlign: TextAlign.center,
-                style : TextStyle(color : Color.fromARGB(255, 20, 54, 64) ,fontSize: 26 , fontWeight: FontWeight.bold , fontStyle: FontStyle.normal)),
+                style : const TextStyle(color : Color.fromARGB(255, 20, 54, 64) ,fontSize: 26 , fontWeight: FontWeight.bold , fontStyle: FontStyle.normal)),
             centerTitle: true,
             backgroundColor: const Color.fromARGB(255, 66, 252, 169),
             elevation: 4,
@@ -76,7 +78,7 @@ class _ProductsPage extends State<ProductsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Quantity : ",style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64) )),
+                            const Text("Quantity : ",style : TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64) )),
                             Text(products[i]["quantity"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64) )),
                           ],),
                         Text(products[i]["price"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 48, 193, 152))),
@@ -100,7 +102,7 @@ class SearchCustom extends SearchDelegate {
     },
     {
       "image": "images/logo.png",
-      "title": "Apple Airpods Pro",
+      "title": "Apple Air pods Pro",
       "subtitle": "Smart , 6 hours straight use",
       "price": "\$399",
     },

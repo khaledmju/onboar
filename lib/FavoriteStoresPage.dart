@@ -1,7 +1,9 @@
+// ignore_for_file: file_names, unused_import
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onboar/ProductsPage.dart';
-import 'package:onboar/local/local_contorller.dart';
+import 'ProductsPage.dart';
+import 'local/local_controller.dart';
 
 class FavoriteStoresPage extends StatelessWidget {
   final List<Map<String, dynamic>> favoriteStores;
@@ -20,7 +22,7 @@ class FavoriteStoresPage extends StatelessWidget {
           ? Center(
             child: Text(
               "No favorite stores yet!".tr,
-              style: TextStyle(fontSize: 18, color: Colors.red),
+              style: const TextStyle(fontSize: 18, color: Colors.red),
             ),
           )
           : ListView.builder(
@@ -28,7 +30,7 @@ class FavoriteStoresPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final store = favoriteStores[index];
                 return InkWell(
-                  onTap: () => Get.to(ProductsPage()),
+                  onTap: () => Get.to(const ProductsPage()),
                   child: Card(
                     child: ListTile(
                       leading: Image.asset(

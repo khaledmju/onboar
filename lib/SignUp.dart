@@ -1,16 +1,18 @@
+// ignore_for_file: file_names, unused_import, non_constant_identifier_names, prefer_typing_uninitialized_variables
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onboar/AddImageProfile.dart';
-import 'package:onboar/Home.dart';
-import 'package:onboar/Stores.dart';
+import 'AddImageProfile.dart';
+import 'Home.dart';
+import 'Stores.dart';
 import 'package:image_picker/image_picker.dart';
 
 
 final TextEditingController firstNameController = TextEditingController();
 final TextEditingController lastNameController = TextEditingController();
-final TextEditingController UserNameController = TextEditingController();
+final TextEditingController userNameController = TextEditingController();
 final TextEditingController numberController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
@@ -23,15 +25,15 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  File? Slectedimage;
+  File? selectedImage;
 
-  final imagepicker = ImagePicker();
+  final imagePicker = ImagePicker();
 
   uploadImage(ImageSource) async {
-    var pickedImage = await imagepicker.pickImage(source: ImageSource);
+    var pickedImage = await imagePicker.pickImage(source: ImageSource);
     if (pickedImage != null) {
       setState(() {
-        Slectedimage = File(pickedImage.path);
+        selectedImage = File(pickedImage.path);
       });
     } else {}
   }
@@ -65,7 +67,7 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
         title:  Text("Sing Up".tr,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -91,8 +93,8 @@ class _SignUpState extends State<SignUp> {
           //     CircleAvatar(
           //       backgroundColor: Colors.grey.shade100,
           //       radius: 80,
-          //       backgroundImage: Slectedimage != null
-          //           ? FileImage(Slectedimage!)
+          //       backgroundImage: selectedImage != null
+          //           ? FileImage(selectedImage!)
           //           : const AssetImage('images/logo.png'),
           //     ),
           //     Positioned(
@@ -102,7 +104,7 @@ class _SignUpState extends State<SignUp> {
           //         backgroundColor: Colors.greenAccent,
           //         child: IconButton(
           //           onPressed: () {
-          //             ShowButtomSheet();
+          //             ShowBottomSheet();
           //           },
           //           icon: Icon(
           //             Icons.photo_camera,
@@ -115,7 +117,7 @@ class _SignUpState extends State<SignUp> {
           // ),
           // SizedBox(height: 30,),
           Container(
-            margin: EdgeInsets.only(bottom: 20,left: 20,right: 20),
+            margin: const EdgeInsets.only(bottom: 20,left: 20,right: 20),
             child: Form(
               key : formKey,
               child: Column(
@@ -127,7 +129,7 @@ class _SignUpState extends State<SignUp> {
                           controller: firstNameController,
                           autovalidateMode:
                               AutovalidateMode.onUserInteraction,
-                          cursorColor: Color.fromARGB(255, 20, 54, 64),
+                          cursorColor: const Color.fromARGB(255, 20, 54, 64),
                           obscureText: false,
                           keyboardType: TextInputType.name,
                           // onSaved: (val){username = val;},
@@ -137,8 +139,8 @@ class _SignUpState extends State<SignUp> {
                               prefixIconColor:
                                   const Color.fromARGB(255, 165, 165, 165),
                               labelText: "First Name".tr,
-                              hintStyle: TextStyle(
-                                  color: const Color.fromARGB(
+                              hintStyle: const TextStyle(
+                                  color: Color.fromARGB(
                                       255, 165, 165, 165)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
@@ -172,13 +174,13 @@ class _SignUpState extends State<SignUp> {
                           },
                         ),
                       ),
-                      Padding(padding: EdgeInsets.only(left: 10, right: 10)),
+                      const Padding(padding: EdgeInsets.only(left: 10, right: 10)),
                       Expanded(
                         child: TextFormField(
                           controller: lastNameController,
                           autovalidateMode:
                               AutovalidateMode.onUserInteraction,
-                          cursorColor: Color.fromARGB(255, 20, 54, 64),
+                          cursorColor: const Color.fromARGB(255, 20, 54, 64),
                           obscureText: false,
                           keyboardType: TextInputType.name,
                           // onSaved: (val){username = val;},
@@ -189,8 +191,8 @@ class _SignUpState extends State<SignUp> {
                               prefixIconColor:
                                   const Color.fromARGB(255, 165, 165, 165),
                               labelText: "Last Name".tr,
-                              hintStyle: TextStyle(
-                                  color: const Color.fromARGB(
+                              hintStyle: const TextStyle(
+                                  color: Color.fromARGB(
                                       255, 165, 165, 165)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
@@ -228,9 +230,9 @@ class _SignUpState extends State<SignUp> {
                     height: 20,
                   ),
                   TextFormField(
-                    controller: UserNameController,
+                    controller: userNameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: Color.fromARGB(255, 20, 54, 64),
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
                     obscureText: false,
                     keyboardType: TextInputType.number,
                     // onSaved: (val){phoneNumber = val;},
@@ -239,8 +241,8 @@ class _SignUpState extends State<SignUp> {
                         prefixIconColor:
                         const Color.fromARGB(255, 165, 165, 165),
                         labelText: "User Name".tr,
-                        hintStyle: TextStyle(
-                            color: const Color.fromARGB(255, 165, 165, 165)),
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(6),
                             borderSide: const BorderSide(
@@ -279,7 +281,7 @@ class _SignUpState extends State<SignUp> {
                   TextFormField(
                     controller: numberController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: Color.fromARGB(255, 20, 54, 64),
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
                     obscureText: false,
                     keyboardType: TextInputType.number,
                     // onSaved: (val){phoneNumber = val;},
@@ -288,8 +290,8 @@ class _SignUpState extends State<SignUp> {
                         prefixIconColor:
                             const Color.fromARGB(255, 165, 165, 165),
                         labelText: "Number".tr,
-                        hintStyle: TextStyle(
-                            color: const Color.fromARGB(255, 165, 165, 165)),
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(6),
                             borderSide: const BorderSide(
@@ -328,15 +330,15 @@ class _SignUpState extends State<SignUp> {
                   TextFormField(
                     controller: emailController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: Color.fromARGB(255, 20, 54, 64),
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.mail_outlined, size: 30),
                         prefixIconColor:
                             const Color.fromARGB(255, 165, 165, 165),
                         labelText: "Email Address".tr,
-                        hintStyle: TextStyle(
-                            color: const Color.fromARGB(255, 165, 165, 165)),
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(6),
                             borderSide: const BorderSide(
@@ -366,7 +368,7 @@ class _SignUpState extends State<SignUp> {
                   TextFormField(
                     controller: passwordController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: Color.fromARGB(255, 20, 54, 64),
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
                     maxLength: 35,
                     obscureText: isobs,
                     obscuringCharacter: '*',
@@ -377,8 +379,8 @@ class _SignUpState extends State<SignUp> {
                         prefixIconColor:
                             const Color.fromARGB(255, 165, 165, 165),
                         labelText: "Password".tr,
-                        hintStyle: TextStyle(
-                            color: const Color.fromARGB(255, 165, 165, 165)),
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -386,8 +388,8 @@ class _SignUpState extends State<SignUp> {
                             });
                           },
                           icon: isobs
-                              ? Icon(Icons.remove_red_eye)
-                              : Icon(Icons.visibility_off),
+                              ? const Icon(Icons.remove_red_eye)
+                              : const Icon(Icons.visibility_off),
                         ),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(6),
@@ -420,7 +422,7 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                        Text("Already have an account?".tr,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,
@@ -433,7 +435,7 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                         child:  Text("Log In".tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400)),
@@ -452,7 +454,7 @@ class _SignUpState extends State<SignUp> {
                           // content = sharedPreferences.setStringList('items', <String>[usernameController.toString(),numberController.toString(),emailController.toString(),passwordController.toString()]);
                           // User user = User(content.indexOf(0) as String,content.indexOf(1) as String,content.indexOf(2) as String,content.indexOf(3) as String);
                           // sharedPreferences.setStringList('user',json.encode(user.toJson()));
-                          Get.offAll(Stores());
+                          Get.offAll(const Stores());
                           // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>  Start_Application()));
                         } else {
                           ErrorHint("Please fill the Text Fields correctly");
@@ -462,9 +464,9 @@ class _SignUpState extends State<SignUp> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
                             const Color.fromARGB(255, 20, 54, 64),
-                        padding: EdgeInsets.symmetric(horizontal: 100)),
+                        padding: const EdgeInsets.symmetric(horizontal: 100)),
                     child:  Text( "Sing Up".tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,

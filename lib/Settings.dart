@@ -1,19 +1,23 @@
+// ignore_for_file: file_names, non_constant_identifier_names, avoid_unnecessary_containers, use_build_context_synchronously, camel_case_types
+
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onboar/local/local_contorller.dart';
-import 'package:onboar/main.dart';
+import 'local/local_controller.dart';
+import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
-class Setting extends StatefulWidget {
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
   @override
-  State<Setting> createState() => _SettingState();
+  State<Settings> createState() => _SettingState();
 }
 
-class _SettingState extends State<Setting> {
+class _SettingState extends State<Settings> {
   MyLocaleController LangController = Get.find();
 
   @override
@@ -22,7 +26,7 @@ class _SettingState extends State<Setting> {
         appBar: AppBar(
           title: Text("Setting".tr,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Color.fromARGB(255, 20, 54, 64),
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -37,7 +41,7 @@ class _SettingState extends State<Setting> {
             children: [
               InkWell(
                 onTap: () {
-                  Get.to(ProfilePage());
+                  Get.to(const ProfilePage());
                 },
                 child: Container(
                   decoration: const BoxDecoration(
@@ -51,22 +55,22 @@ class _SettingState extends State<Setting> {
                             spreadRadius: 2)
                       ]),
                   height: 100,
-                  margin: EdgeInsets.only(bottom: 10, top: 2),
+                  margin: const EdgeInsets.only(bottom: 10, top: 2),
                   child: Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.grey.shade100,
-                        backgroundImage: AssetImage("images/logo.png"),
+                        backgroundImage: const AssetImage("images/logo.png"),
                         radius: 45,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 30,
                         height: 30,
                       ),
-                      Column(
+                      const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("",style: TextStyle(fontSize: 19,color: Colors.blue),),
@@ -83,26 +87,26 @@ class _SettingState extends State<Setting> {
               ),
               InkWell(
                 child: Card(
-                  margin: EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
                   child: Container(
                     height: 70,
-                    padding: EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 8),
                     child: ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.language,
                         color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "App Language".tr,
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      trailing: Icon(Icons.chevron_right),
+                      trailing: const Icon(Icons.chevron_right),
                     ),
                   ),
                 ),
                 onTap: () {
                   Get.bottomSheet(Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     height: 200,
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -116,21 +120,21 @@ class _SettingState extends State<Setting> {
                             LangController.changeLang("ar");
                           },
                           child: Container(
-                            margin: EdgeInsets.all(20),
+                            margin: const EdgeInsets.all(20),
                             width: double.infinity,
                             child: Container(
                               child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.language,
                                     size: 25,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Text(
                                     "Arabic".tr,
-                                    style: TextStyle(fontSize: 22),
+                                    style: const TextStyle(fontSize: 22),
                                   ),
                                 ],
                               ),
@@ -142,20 +146,20 @@ class _SettingState extends State<Setting> {
                           LangController.changeLang("en");
                         },
                         child: Container(
-                          margin: EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(20),
                           width: double.infinity,
                           child: Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.language,
                                 size: 25,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               Text(
                                 "English".tr,
-                                style: TextStyle(fontSize: 22),
+                                style: const TextStyle(fontSize: 22),
                               ),
                             ],
                           ),
@@ -171,64 +175,64 @@ class _SettingState extends State<Setting> {
               ),
               InkWell(
                   child: Card(
-                    margin: EdgeInsets.all(8),
+                    margin: const EdgeInsets.all(8),
                     child: Container(
                       height: 70,
-                      padding: EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.only(top: 8),
                       child: ListTile(
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.contact_page,
                           color:  Color.fromARGB(255, 48, 193, 152),
                         ),
                         title: Text(
                           "Contact Us".tr,
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
-                        trailing: Icon(Icons.chevron_right),
+                        trailing: const Icon(Icons.chevron_right),
                       ),
                     ),
                   ),
                   onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => Contact_Us()),
+                        MaterialPageRoute(builder: (context) => const Contact_Us()),
                       )),
               InkWell(
                 child: Card(
-                  margin: EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
                   child: Container(
                     height: 70,
-                    padding: EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 8),
                     child: ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.face_unlock_rounded,
                         color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "About Us".tr,
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      trailing: Icon(Icons.chevron_right_rounded),
+                      trailing: const Icon(Icons.chevron_right_rounded),
                     ),
                   ),
                 ),
                 onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => AboutUs())),
+                    .push(MaterialPageRoute(builder: (context) => const AboutUs())),
               ),
               InkWell(
                 child: Card(
-                  margin: EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
                   child: Container(
                     height: 70,
-                    padding: EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 8),
                     child: ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.logout,
                         color:  Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "Log Out".tr,
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      trailing: Icon(Icons.chevron_right),
+                      trailing: const Icon(Icons.chevron_right),
                     ),
                   ),
                 ),
@@ -237,7 +241,7 @@ class _SettingState extends State<Setting> {
                     context: context,
                     dialogType: DialogType.question,
                     descTextStyle:
-                        TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                        const TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
                     dialogBorderRadius: BorderRadius.circular(20),
                     desc: 'Are you sure you want to log out?'.tr,
                     btnCancelText: "Cancel".tr,
@@ -269,6 +273,8 @@ class _SettingState extends State<Setting> {
 }
 
 class AboutUs extends StatelessWidget {
+  const AboutUs({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -277,12 +283,12 @@ class AboutUs extends StatelessWidget {
           centerTitle: true,
           title: Text(
             "About Us".tr,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         ),
         body: Container(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -292,40 +298,40 @@ class AboutUs extends StatelessWidget {
                 width: 200,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(255, 20, 54, 64),
-                  boxShadow: [BoxShadow(color: Colors.green, blurRadius: 10)],
+                  color: const Color.fromARGB(255, 20, 54, 64),
+                  boxShadow: const [BoxShadow(color: Colors.green, blurRadius: 10)],
                 ),
                 child: Text(
                   "Nova Cart".tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Image.asset(
                 "images/logo.png",
                 height: 240,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(255, 20, 54, 64),
-                  boxShadow: [BoxShadow(color: Colors.green, blurRadius: 12)],
+                  color: const Color.fromARGB(255, 20, 54, 64),
+                  boxShadow: const [BoxShadow(color: Colors.green, blurRadius: 12)],
                 ),
-                padding: EdgeInsets.all(7),
+                padding: const EdgeInsets.all(7),
                 child: Text(
                   "Nova Dis".tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 66, 252, 169),
@@ -339,6 +345,8 @@ class AboutUs extends StatelessWidget {
 }
 
 class Contact_Us extends StatelessWidget {
+  const Contact_Us({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -352,7 +360,7 @@ class Contact_Us extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 20),
+                margin: const EdgeInsets.only(bottom: 20),
                 child: Image.asset("images/mmm.png"),
               ),
               Container(
@@ -361,20 +369,20 @@ class Contact_Us extends StatelessWidget {
                     color: Colors.greenAccent),
                 height: 55,
                 width: 270,
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 child: Row(
                   textDirection:TextDirection.ltr ,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Icon(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const Icon(
                         Icons.phone,
                         size: 35,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 48),
-                      child: Text(
+                      padding: const EdgeInsets.only(left: 48),
+                      child: const Text(
                         "0964652593",
                         style: TextStyle(
                             fontWeight: FontWeight.w800, fontSize: 15),
@@ -389,20 +397,20 @@ class Contact_Us extends StatelessWidget {
                     color: Colors.greenAccent),
                 height: 60,
                 width: 270,
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 child: Row(
                   textDirection:TextDirection.ltr ,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Icon(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const Icon(
                         Icons.email,
                         size: 35,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 40),
-                      child: Text(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: const Text(
                         "admin@nova_cart.net",
                         style: TextStyle(
                             fontWeight: FontWeight.w800, fontSize: 15),
@@ -417,20 +425,20 @@ class Contact_Us extends StatelessWidget {
                     color: Colors.greenAccent),
                 height: 60,
                 width: 270,
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 child: Row(
                   textDirection:TextDirection.ltr ,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Icon(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const Icon(
                         Icons.facebook,
                         size: 35,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 40),
-                      child: Text(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: const Text(
                         textDirection:TextDirection.ltr ,
                         "@Nova Cart",
                         style: TextStyle(
@@ -447,6 +455,8 @@ class Contact_Us extends StatelessWidget {
 }
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return ProfilePageState();
@@ -454,15 +464,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  File? Slectedimage;
+  File? selectedImage;
 
-  final imagepicker = ImagePicker();
+  final imagePicker = ImagePicker();
 
   uploadImage(ImageSource) async {
-    var pickedImage = await imagepicker.pickImage(source: ImageSource);
+    var pickedImage = await imagePicker.pickImage(source: ImageSource);
     if (pickedImage != null) {
       setState(() {
-        Slectedimage = File(pickedImage.path);
+        selectedImage = File(pickedImage.path);
       });
     } else {}
   }
@@ -495,7 +505,7 @@ class ProfilePageState extends State<ProfilePage> {
             //   backgroundImage: AssetImage("images/logo.png"),
             //   radius: 75,
             // ),
-            SizedBox(
+            const SizedBox(
               height: 70,
             ),
             Stack(
@@ -504,8 +514,8 @@ class ProfilePageState extends State<ProfilePage> {
                 CircleAvatar(
                   backgroundColor: Colors.grey.shade50,
                   radius: 80,
-                  backgroundImage: Slectedimage != null
-                      ? FileImage(Slectedimage!)
+                  backgroundImage: selectedImage != null
+                      ? FileImage(selectedImage!)
                       : const AssetImage('images/logo.png'),
                 ),
                 Positioned(
@@ -515,9 +525,9 @@ class ProfilePageState extends State<ProfilePage> {
                     backgroundColor: Colors.greenAccent,
                     child: IconButton(
                       onPressed: () {
-                        ShowButtomSheet();
+                        ShowBottomSheet();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.photo_camera,
                         size: 25,
                       ),
@@ -526,30 +536,30 @@ class ProfilePageState extends State<ProfilePage> {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             ListTile(
               onTap: () {
                 Get.bottomSheet(Container(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 20),
                   width: double.infinity,
                   height: 200,
                   color: Colors.white,
                   child: TextFormField(),
                 ));
               },
-              leading: Icon(Icons.perm_identity),
-              trailing: Icon(
+              leading: const Icon(Icons.perm_identity),
+              trailing: const Icon(
                 Icons.edit,
                 color: Colors.green,
               ),
-              title: Text(
+              title: const Text(
                 "name",
                 style: TextStyle(color: Colors.grey),
               ),
               isThreeLine: true,
-              subtitle: Text(
+              subtitle: const Text(
                 "User Name",
                 style: TextStyle(fontSize: 18),
               ),
@@ -560,11 +570,11 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  ShowButtomSheet() {
+  ShowBottomSheet() {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           width: double.infinity,
           height: 200,
           child: SingleChildScrollView(
@@ -572,8 +582,8 @@ class ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 20, left: 10),
-                  child: Text(
+                  padding: const EdgeInsets.only(top: 20, left: 10),
+                  child: const Text(
                     "Chose Image from:",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -583,9 +593,9 @@ class ProfilePageState extends State<ProfilePage> {
                     uploadImage(ImageSource.gallery);
                   },
                   child: Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.photo_library_outlined,
@@ -595,7 +605,7 @@ class ProfilePageState extends State<ProfilePage> {
                           width: 20,
                         ),
                         Text(
-                          "Gellary",
+                          "Gallery",
                           style: TextStyle(fontSize: 20),
                         ),
                       ],
@@ -607,9 +617,9 @@ class ProfilePageState extends State<ProfilePage> {
                     uploadImage(ImageSource.camera);
                   },
                   child: Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.camera,

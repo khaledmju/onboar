@@ -1,10 +1,12 @@
+// ignore_for_file: unused_import, use_key_in_widget_constructors, avoid_unnecessary_containers, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onboar/AddImageProfile.dart';
-import 'package:onboar/Home.dart';
-import 'package:onboar/Stores.dart';
-import 'package:onboar/local/local.dart';
-import 'package:onboar/local/local_contorller.dart';
+import 'AddImageProfile.dart';
+import 'Home.dart';
+import 'Stores.dart';
+import 'local/local.dart';
+import 'local/local_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: showHome ? Stores() : OnboardingPage(),
+      home: showHome ? const Stores() : OnboardingPage(),
       locale: localeController.initlang,
       translations: MyLocal(),
     );
@@ -68,17 +70,17 @@ class OnboardingPageState extends State<OnboardingPage> {
               children: [
                 InkWell(
                   onTap: () {
-                    pageController.animateToPage(2, duration: Duration(milliseconds: 1500), curve: Curves.easeInOut);
+                    pageController.animateToPage(2, duration: const Duration(milliseconds: 1500), curve: Curves.easeInOut);
                   },
                   child: Container(
-                    margin: EdgeInsets.only(right: 5,left: 5),
+                    margin: const EdgeInsets.only(right: 5,left: 5),
                     alignment: Alignment.center,
                     width: 90,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 20, 54, 64),
+                        color: const Color.fromARGB(255, 20, 54, 64),
                         borderRadius: BorderRadius.circular(40)),
                     height: 65,
-                    child:Text("Skip".tr,style:  TextStyle(
+                    child:Text("Skip".tr,style:  const TextStyle(
                         fontSize: 19,
                         color: Color.fromARGB(255, 66, 252, 169),)),
                   ),
@@ -89,7 +91,7 @@ class OnboardingPageState extends State<OnboardingPage> {
               height: 250,
               fit: BoxFit.cover,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -98,30 +100,30 @@ class OnboardingPageState extends State<OnboardingPage> {
               width: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color.fromARGB(255, 20, 54, 64),
-                boxShadow: [BoxShadow(color: Colors.green, blurRadius: 10)],
+                color: const Color.fromARGB(255, 20, 54, 64),
+                boxShadow: const [BoxShadow(color: Colors.green, blurRadius: 10)],
               ),
               child: Text(
                 textAlign: TextAlign.center,
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color.fromARGB(255, 20, 54, 64),
-                boxShadow: [BoxShadow(color: Colors.green, blurRadius: 12)],
+                color: const Color.fromARGB(255, 20, 54, 64),
+                boxShadow: const [BoxShadow(color: Colors.green, blurRadius: 12)],
               ),
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 discr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 66, 252, 169),
@@ -137,7 +139,7 @@ class OnboardingPageState extends State<OnboardingPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: Container(
-        padding: EdgeInsets.only(bottom: 80),
+        padding: const EdgeInsets.only(bottom: 80),
         child: PageView(
           onPageChanged: (value) {
             setState(() {
@@ -165,7 +167,7 @@ class OnboardingPageState extends State<OnboardingPage> {
           ? Container(
               width: double.infinity,
               // margin: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 20, 54, 64),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
@@ -181,30 +183,30 @@ class OnboardingPageState extends State<OnboardingPage> {
                   },
                   child: Text(
                     "Get Started".tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       color: Color.fromARGB(255, 66, 252, 169),
                     ),
                   )),
             )
           : Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 20, 54, 64),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30))),
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
                       // onPressed: () => pageController.animateToPage(2, duration: Duration(milliseconds: 1500), curve: Curves.easeInOut),
                       onPressed: () => pageController.previousPage(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.easeInOut),
                       child: Text(
                         "Back".tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
                           color: Color.fromARGB(255, 66, 252, 169),
@@ -214,19 +216,19 @@ class OnboardingPageState extends State<OnboardingPage> {
                     controller: pageController,
                     count: 3,
                     onDotClicked: (index) => pageController.animateToPage(index,
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut),
-                    effect: WormEffect(
+                    effect: const WormEffect(
                       spacing: 15,
                       activeDotColor: Color.fromARGB(255, 66, 252, 169),
                     ),
                   ),
                   TextButton(
                       onPressed: () => pageController.nextPage(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.easeInOut),
                       child: Text("Next".tr,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 22,
                             color: Color.fromARGB(255, 66, 252, 169),
                           ))),

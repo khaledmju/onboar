@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
@@ -33,7 +35,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
               ),
               title: Text("${widget.productData['title']}",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color.fromARGB(255, 20, 54, 64),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -54,13 +56,13 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
               width: double.infinity,
               child: ListView(
                 scrollDirection: Axis.vertical,
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Image.asset(
@@ -69,9 +71,9 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                         height: 200,
                         fit: BoxFit.fitHeight,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         // decoration: BoxDecoration(
                         //   color : const Color.fromARGB(255, 66, 252, 169),
                         //   border: Border.all(width: 2),
@@ -79,26 +81,26 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                         // ),
                         child: Text(
                           "${widget.productData['title']}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 20, 54, 64)),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Text(
                           "${widget.productData['subtitle']}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
-                              color: const Color.fromARGB(255, 48, 193, 152)),
+                              color: Color.fromARGB(255, 48, 193, 152)),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           textDirection: isArabic()
@@ -113,24 +115,24 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                                 color: Colors.grey.shade800,
                               ),
                             ),
-                            Text(
+                            const Text(
                               ":",
                               style: TextStyle(
                                   fontSize: 23, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 14,
                             ),
                             Text(
                               "Quantity".tr,
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           textDirection: isArabic()
@@ -139,38 +141,38 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                           children: [
                             Text(
                               "  ${widget.productData['price']}  ",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red),
                             ),
-                            Text(
+                            const Text(
                               ":",
                               style: TextStyle(
                                   fontSize: 23, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 14,
                             ),
                             Text(
                               "Price".tr,
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Center(
                     child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 20, 54, 64),
-                            padding: EdgeInsets.symmetric(horizontal: 40)),
+                            padding: const EdgeInsets.symmetric(horizontal: 40)),
                         child: Text("Add to Cart".tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,

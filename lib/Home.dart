@@ -1,10 +1,12 @@
+// ignore_for_file: file_names, unused_import, use_key_in_widget_constructors, prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
-import 'package:onboar/AddImageProfile.dart';
-import 'package:onboar/SingUp.dart';
-import 'package:onboar/main.dart';
+import 'AddImageProfile.dart';
+import 'SignUp.dart';
+import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-import 'package:onboar/Stores.dart';
+import 'Stores.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -37,7 +39,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         title: Text("Log In".tr , textAlign: TextAlign.center,
-            style : TextStyle(color : Color.fromARGB(255, 20, 54, 64) ,fontSize: 26 , fontWeight: FontWeight.bold , fontStyle: FontStyle.normal)),
+            style : const TextStyle(color : Color.fromARGB(255, 20, 54, 64) ,fontSize: 26 , fontWeight: FontWeight.bold , fontStyle: FontStyle.normal)),
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         elevation: 4,
         centerTitle: true,
@@ -58,7 +60,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               child: Form(
                 key: formKey,
                 child: Column(
@@ -66,15 +68,15 @@ class _HomeState extends State<Home> {
                     TextFormField(
                       controller: emailController,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      cursorColor: Color.fromARGB(255, 20, 54, 64),
+                      cursorColor: const Color.fromARGB(255, 20, 54, 64),
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.mail_outlined, size: 30),
                           prefixIconColor:
                           const Color.fromARGB(255, 165, 165, 165),
                           labelText: "Email Address".tr,
-                          hintStyle: TextStyle(
-                              color: const Color.fromARGB(255, 165, 165, 165)),
+                          hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 165, 165, 165)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(6),
                               borderSide: const BorderSide(
@@ -109,7 +111,7 @@ class _HomeState extends State<Home> {
                     TextFormField(
                       controller: passwordController,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      cursorColor: Color.fromARGB(255, 20, 54, 64),
+                      cursorColor: const Color.fromARGB(255, 20, 54, 64),
                       maxLength: 35,
                       obscureText : isobs,
                       obscuringCharacter: '*',
@@ -123,7 +125,7 @@ class _HomeState extends State<Home> {
                                 setState(() {
                                   isobs = ! isobs;
                                 });
-                              }, icon: isobs ?  Icon(Icons.remove_red_eye) : Icon(Icons.visibility_off),),
+                              }, icon: isobs ?  const Icon(Icons.remove_red_eye) : const Icon(Icons.visibility_off),),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(6),
                               borderSide: const BorderSide(color : Color.fromARGB(255, 66, 252, 169))
@@ -160,16 +162,16 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("you dont have an account?".tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
                                 fontStyle: FontStyle.normal,
                                 color: Color.fromARGB(255, 20, 54, 64))),
                         TextButton(
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp(),));
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignUp(),));
                             },
-                            child:  Text("Sing Up".tr,style: TextStyle(
+                            child:  Text("Sing Up".tr,style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400))),
@@ -179,13 +181,13 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 20, 54, 64),padding: EdgeInsets.symmetric(horizontal: 100)),
+                    ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 20, 54, 64),padding: const EdgeInsets.symmetric(horizontal: 100)),
                         onPressed: () {
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>det(name: username.text, email: email.text, phone: phone.text) ,));
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Stores()));
                       setState(() {
                         if(formKey.currentState!.validate()){
-                          Get.offAll(Stores());
+                          Get.offAll(const Stores());
                         }
                         else {
                           "Please fill the Text Fields correctly".tr;
@@ -193,7 +195,7 @@ class _HomeState extends State<Home> {
                       });
 
                     }, child: Text("Log In".tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,

@@ -1,11 +1,13 @@
+// ignore_for_file: unused_import, file_names, use_key_in_widget_constructors, avoid_unnecessary_containers, non_constant_identifier_names, unused_local_variable
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onboar/FavoriteStoresPage.dart';
-import 'package:onboar/ProductsPage.dart';
-import 'package:onboar/Setting.dart';
-import 'package:onboar/local/local_contorller.dart';
+import 'FavoriteStoresPage.dart';
+import 'ProductsPage.dart';
+import 'Settings.dart';
+import 'local/local_controller.dart';
 
 class Stores extends StatefulWidget {
   const Stores({super.key});
@@ -16,7 +18,7 @@ class Stores extends StatefulWidget {
 
 class StoresState extends State<Stores> {
   late final List<Widget> pages;
-  int selctedindex = 0;
+  int selectedIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
@@ -24,7 +26,7 @@ class StoresState extends State<Stores> {
     super.initState();
     pages = [
       HomeContent(),
-      Setting(),
+      const Settings(),
     ];
   }
 
@@ -33,14 +35,14 @@ class StoresState extends State<Stores> {
     return Scaffold(
       bottomNavigationBar: GetBuilder<MyLocaleController>(builder: (controller) => CurvedNavigationBar(
         key: _bottomNavigationKey,
-        index: selctedindex,
+        index: selectedIndex,
         items:  <Widget>[
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.home, size: 27),
+              const Icon(Icons.home, size: 27),
               Text("Home".tr,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
           // Column(
@@ -62,9 +64,9 @@ class StoresState extends State<Stores> {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.settings, size: 27),
+              const Icon(Icons.settings, size: 27),
               Text("Setting".tr,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
           // Column(
@@ -77,18 +79,18 @@ class StoresState extends State<Stores> {
           // ),
         ],
         color: const Color.fromARGB(255, 66, 252, 169),
-        buttonBackgroundColor: Color.fromARGB(255, 66, 252, 169),
+        buttonBackgroundColor: const Color.fromARGB(255, 66, 252, 169),
         animationCurve: Curves.easeInOut,
-        animationDuration: Duration(milliseconds: 600),
+        animationDuration: const Duration(milliseconds: 600),
         backgroundColor: Colors.transparent,
         onTap: (val) {
           setState(() {
-            selctedindex = val;
+            selectedIndex = val;
           });
         },
         letIndexChange: (index) => true,
       ),),
-      body: pages[selctedindex], // Display the selected page
+      body: pages[selectedIndex], // Display the selected page
     );
   }
 }
@@ -99,7 +101,7 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  int currentpage = 0 ;
+  int currentPage = 0 ;
   final List stores = [
     {
       "image": "images/Nova_Cart.jpg",
@@ -109,7 +111,7 @@ class _HomeContentState extends State<HomeContent> {
     },
     {
       "image": "images/Nova_Cart.jpg",
-      "title": "Apple Airpods Pro",
+      "title": "Apple Air pods Pro",
       "subtitle": "Smart , 6 hours straight use",
       "isFavorite": false,
     },
@@ -183,9 +185,9 @@ class _HomeContentState extends State<HomeContent> {
                   children: [
                     Text(
                       "Search for Stores..".tr,
-                      style: TextStyle(fontSize: 17),
+                      style: const TextStyle(fontSize: 17),
                     ),
-                    Icon(Icons.search),
+                    const Icon(Icons.search),
                   ],
                 ),
               ),
@@ -199,7 +201,7 @@ class _HomeContentState extends State<HomeContent> {
       body: Column(
         children:[
           Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10),
             child: CarouselSlider(
               items:pageviewImage.map((e) =>Container(child: Image.asset(e,),) ,).toList(),
               options: CarouselOptions(
@@ -207,19 +209,19 @@ class _HomeContentState extends State<HomeContent> {
                 initialPage: 0,
                 autoPlay: true,
                 enlargeCenterPage: true,
-                autoPlayInterval: Duration(seconds: 3),
+                autoPlayInterval: const Duration(seconds: 3),
                 enlargeFactor: 0.1,
                 onPageChanged: (index, reason) {
                   setState(() {
-                    currentpage = index;
+                    currentPage = index;
                   });
                 },
               ),
             ),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
         buildCarouselIndicator(),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         Expanded(
           child: ListView.builder(
             itemCount: stores.length,
@@ -228,7 +230,7 @@ class _HomeContentState extends State<HomeContent> {
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => ProductsPage()));
+                      MaterialPageRoute(builder: (context) => const ProductsPage()));
                 },
                 child: Card(
                   color: Colors.white,
@@ -260,7 +262,7 @@ class _HomeContentState extends State<HomeContent> {
                                     ),
                                     Text(
                                       "${stores[index]['subtitle']}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
                                           fontStyle: FontStyle.normal,
@@ -285,8 +287,8 @@ class _HomeContentState extends State<HomeContent> {
                                   : Icons.star_border,
                               size: 30,
                               color: stores[index]['isFavorite']
-                                  ? Color.fromARGB(255, 246, 206, 28)
-                                  : Color.fromARGB(255, 20, 54, 64),
+                                  ? const Color.fromARGB(255, 246, 206, 28)
+                                  : const Color.fromARGB(255, 20, 54, 64),
                             ),
                           ),
                         ],
@@ -309,11 +311,11 @@ class _HomeContentState extends State<HomeContent> {
       children: [
         for(int i =0;i<pageviewImage.length;i++)
          Container(
-           margin: EdgeInsets.all(5),
-           width:i==currentpage ?20: 5,
-           height: i==currentpage ?10: 5,
+           margin: const EdgeInsets.all(5),
+           width:i==currentPage ?20: 5,
+           height: i==currentPage ?10: 5,
            decoration: BoxDecoration(
-             color:i==currentpage ? Colors.greenAccent:Colors.black,
+             color:i==currentPage ? Colors.greenAccent:Colors.black,
              shape: BoxShape.circle,
          ),)
       ],
@@ -331,7 +333,7 @@ class SearchCustom extends SearchDelegate {
     },
     {
       "image": "images/Nova_Cart.jpg",
-      "title": "Apple Airpods Pro",
+      "title": "Apple Air pods Pro",
       "subtitle": "Smart , 6 hours straight use",
       "price": "\$399",
     },

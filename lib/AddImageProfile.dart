@@ -1,9 +1,11 @@
+// ignore_for_file: file_names, use_key_in_widget_constructors, non_constant_identifier_names
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:onboar/Stores.dart';
+import 'Stores.dart';
 
 class AddImageProfile extends StatefulWidget {
   @override
@@ -15,15 +17,15 @@ class AddImageProfile extends StatefulWidget {
 class AddImageProfileState extends State<AddImageProfile> {
   TextEditingController usernameController = TextEditingController();
 
-  File? Slectedimage;
+  File? selectedImage;
 
-  final imagepicker = ImagePicker();
+  final imagePicker = ImagePicker();
 
   uploadImage(ImageSource) async {
-    var pickedImage = await imagepicker.pickImage(source: ImageSource);
+    var pickedImage = await imagePicker.pickImage(source: ImageSource);
     if (pickedImage != null) {
       setState(() {
-        Slectedimage = File(pickedImage.path);
+        selectedImage = File(pickedImage.path);
       });
     } else {}
   }
@@ -43,15 +45,15 @@ class AddImageProfileState extends State<AddImageProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 70,),
+            const SizedBox(height: 70,),
             Stack(
               fit: StackFit.passthrough,
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.grey.shade50,
                   radius: 80,
-                  backgroundImage: Slectedimage != null
-                      ? FileImage(Slectedimage!)
+                  backgroundImage: selectedImage != null
+                      ? FileImage(selectedImage!)
                       : const AssetImage('images/logo.png'),
                 ),
                 Positioned(
@@ -61,9 +63,9 @@ class AddImageProfileState extends State<AddImageProfile> {
                     backgroundColor: Colors.greenAccent,
                     child: IconButton(
                       onPressed: () {
-                        ShowButtomSheet();
+                        ShowBottomSheet();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.photo_camera,
                         size: 25,
                       ),
@@ -72,20 +74,20 @@ class AddImageProfileState extends State<AddImageProfile> {
                 )
               ],
             ),
-            SizedBox(height: 60,),
+            const SizedBox(height: 60,),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 20,horizontal: 35),
+              padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 35),
               child: TextFormField(
                 // controller: emailController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                cursorColor: Color.fromARGB(255, 20, 54, 64),
+                cursorColor: const Color.fromARGB(255, 20, 54, 64),
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.perm_identity, size: 30),
                     prefixIconColor: const Color.fromARGB(255, 165, 165, 165),
                     labelText: "User Name",
-                    hintStyle: TextStyle(
-                        color: const Color.fromARGB(255, 165, 165, 165)),
+                    hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 165, 165, 165)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                         borderSide: const BorderSide(
@@ -109,34 +111,34 @@ class AddImageProfileState extends State<AddImageProfile> {
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  backgroundColor: Color.fromARGB(255, 20, 54, 64),
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  backgroundColor: const Color.fromARGB(255, 20, 54, 64),
                 ),
                 onPressed: () {
                 },
-                child: Icon(Icons.location_on_outlined,color: Color.fromARGB(255, 66, 252, 169),)),
+                child: const Icon(Icons.location_on_outlined,color: Color.fromARGB(255, 66, 252, 169),)),
             const SizedBox(
               height: 30,
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  backgroundColor: Color.fromARGB(255, 20, 54, 64),
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  backgroundColor: const Color.fromARGB(255, 20, 54, 64),
                 ),
                 onPressed: () {
-                  Get.offAll(Stores());
+                  Get.offAll(const Stores());
                 },
-                child: Icon(Icons.arrow_forward_sharp,color: Color.fromARGB(255, 66, 252, 169),))
+                child: const Icon(Icons.arrow_forward_sharp,color: Color.fromARGB(255, 66, 252, 169),))
           ],
         ),
       ),
     );
   }
-  ShowButtomSheet() {
+  ShowBottomSheet() {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           width: double.infinity,
           height: 200,
           child: SingleChildScrollView(
@@ -144,8 +146,8 @@ class AddImageProfileState extends State<AddImageProfile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 20, left: 10),
-                  child: Text(
+                  padding: const EdgeInsets.only(top: 20, left: 10),
+                  child: const Text(
                     "Chose Image from:",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -155,9 +157,9 @@ class AddImageProfileState extends State<AddImageProfile> {
                     uploadImage(ImageSource.gallery);
                   },
                   child: Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.photo_library_outlined,
@@ -167,7 +169,7 @@ class AddImageProfileState extends State<AddImageProfile> {
                           width: 20,
                         ),
                         Text(
-                          "Gellary",
+                          "Gallery",
                           style: TextStyle(fontSize: 20),
                         ),
                       ],
@@ -179,9 +181,9 @@ class AddImageProfileState extends State<AddImageProfile> {
                     uploadImage(ImageSource.camera);
                   },
                   child: Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.camera,
