@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'Cart.dart';
 import 'FavoriteStoresPage.dart';
 import 'ProductsPage.dart';
 import 'Settings.dart';
@@ -26,6 +27,7 @@ class StoresState extends State<Stores> {
     super.initState();
     pages = [
       HomeContent(),
+      Cart(),
       const Settings(),
     ];
   }
@@ -53,14 +55,14 @@ class StoresState extends State<Stores> {
           //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           //   ],
           // ),
-          // Column(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     Icon(Icons.shopping_cart, size: 27),
-          //     Text("Cart ",
-          //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-          //   ],
-          // ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.shopping_cart, size: 27),
+              Text("Cart".tr,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+            ],
+          ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [

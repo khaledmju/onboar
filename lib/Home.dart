@@ -182,7 +182,7 @@ class _HomeState extends State<Home> {
                       height: 10,
                     ),
                     ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 20, 54, 64),padding: const EdgeInsets.symmetric(horizontal: 100)),
-                        onPressed: () {
+                        onPressed: ()async {
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>det(name: username.text, email: email.text, phone: phone.text) ,));
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Stores()));
                       setState(() {
@@ -193,6 +193,8 @@ class _HomeState extends State<Home> {
                           "Please fill the Text Fields correctly".tr;
                         }
                       });
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool('showHome', true);
 
                     }, child: Text("Log In".tr,
                         style: const TextStyle(

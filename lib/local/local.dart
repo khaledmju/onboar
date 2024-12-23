@@ -63,6 +63,7 @@ class MyLocal implements Translations {
           "Email is not valid":"البريد الإلكتروني غير صالح",
           "Please enter your Password":"أدخل كلمة المرور",
           "Password must be at least 8 characters":"كلمة المرور يجب أن تكون على الأقل 8 أحرف",
+          "Cart":"السلة",
         },
         "en": {
           "Setting":"Setting",
@@ -122,6 +123,7 @@ class MyLocal implements Translations {
           "Email is not valid":"Email is not valid",
           "Please enter your Password":"Please enter your Password",
           "Password must be at least 8 characters":"Password must be at least 8 characters",
+          "Cart":"Cart",
         },
       };
 }

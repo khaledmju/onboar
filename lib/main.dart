@@ -175,8 +175,6 @@ class OnboardingPageState extends State<OnboardingPage> {
               height: 65,
               child: TextButton(
                   onPressed: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.setBool('showHome', true);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => Home(),
                     ));
