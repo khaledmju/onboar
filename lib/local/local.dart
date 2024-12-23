@@ -64,6 +64,7 @@ class MyLocal implements Translations {
           "Please enter your Password":"أدخل كلمة المرور",
           "Password must be at least 8 characters":"كلمة المرور يجب أن تكون على الأقل 8 أحرف",
           "Cart":"السلة",
+          "Orders":"الطلبات",
         },
         "en": {
           "Setting":"Setting",
@@ -124,6 +125,7 @@ class MyLocal implements Translations {
           "Please enter your Password":"Please enter your Password",
           "Password must be at least 8 characters":"Password must be at least 8 characters",
           "Cart":"Cart",
+          "Orders":"Orders",
         },
       };
 }

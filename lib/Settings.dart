@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'Home.dart';
+import 'Stores.dart';
 import 'local/local_controller.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,12 +75,17 @@ class _SettingState extends State<Settings> {
                       const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("",style: TextStyle(fontSize: 19,color: Colors.blue),),
+                          Text(
+                            "",
+                            style: TextStyle(fontSize: 19, color: Colors.blue),
+                          ),
                           SizedBox(
                             height: 8,
                           ),
-                          Text("",style: TextStyle(fontSize: 19,color: Colors.blue),),
-
+                          Text(
+                            "",
+                            style: TextStyle(fontSize: 19, color: Colors.blue),
+                          ),
                         ],
                       )
                     ],
@@ -94,7 +101,7 @@ class _SettingState extends State<Settings> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.language,
-                        color:  Color.fromARGB(255, 48, 193, 152),
+                        color: Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "App Language".tr,
@@ -115,14 +122,44 @@ class _SettingState extends State<Settings> {
                     ),
                     child: Column(
                       children: [
-                        GetBuilder<MyLocaleController>(builder:(controller) =>InkWell(
-                          onTap: () {
-                            LangController.changeLang("ar");
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.all(20),
-                            width: double.infinity,
+                        GetBuilder<MyLocaleController>(
+                          builder: (controller) => InkWell(
+                            onTap: () {
+                              LangController.changeLang("ar");
+                              Get.offAll(Stores());
+                            },
                             child: Container(
+                              margin: const EdgeInsets.all(20),
+                              width: double.infinity,
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.language,
+                                      size: 25,
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      "Arabic".tr,
+                                      style: const TextStyle(fontSize: 22),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        GetBuilder<MyLocaleController>(
+                          builder: (controller) => InkWell(
+                            onTap: () {
+                              LangController.changeLang("en");
+                              Get.offAll(Stores());
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(20),
+                              width: double.infinity,
                               child: Row(
                                 children: [
                                   const Icon(
@@ -133,45 +170,18 @@ class _SettingState extends State<Settings> {
                                     width: 20,
                                   ),
                                   Text(
-                                    "Arabic".tr,
+                                    "English".tr,
                                     style: const TextStyle(fontSize: 22),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                        ),),
-                      GetBuilder<MyLocaleController>(builder:(controller) => InkWell(
-                        onTap: () {
-                          LangController.changeLang("en");
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(20),
-                          width: double.infinity,
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.language,
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "English".tr,
-                                style: const TextStyle(fontSize: 22),
-                              ),
-                            ],
-                          ),
                         ),
-                      ),),
-
                       ],
                     ),
                   ));
                 },
-
-
               ),
               InkWell(
                   child: Card(
@@ -182,7 +192,7 @@ class _SettingState extends State<Settings> {
                       child: ListTile(
                         leading: const Icon(
                           Icons.contact_page,
-                          color:  Color.fromARGB(255, 48, 193, 152),
+                          color: Color.fromARGB(255, 48, 193, 152),
                         ),
                         title: Text(
                           "Contact Us".tr,
@@ -193,7 +203,8 @@ class _SettingState extends State<Settings> {
                     ),
                   ),
                   onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const Contact_Us()),
+                        MaterialPageRoute(
+                            builder: (context) => const Contact_Us()),
                       )),
               InkWell(
                 child: Card(
@@ -204,7 +215,7 @@ class _SettingState extends State<Settings> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.face_unlock_rounded,
-                        color:  Color.fromARGB(255, 48, 193, 152),
+                        color: Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "About Us".tr,
@@ -214,8 +225,8 @@ class _SettingState extends State<Settings> {
                     ),
                   ),
                 ),
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => const AboutUs())),
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const AboutUs())),
               ),
               InkWell(
                 child: Card(
@@ -226,7 +237,7 @@ class _SettingState extends State<Settings> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.logout,
-                        color:  Color.fromARGB(255, 48, 193, 152),
+                        color: Color.fromARGB(255, 48, 193, 152),
                       ),
                       title: Text(
                         "Log Out".tr,
@@ -240,8 +251,8 @@ class _SettingState extends State<Settings> {
                   AwesomeDialog(
                     context: context,
                     dialogType: DialogType.question,
-                    descTextStyle:
-                        const TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                    descTextStyle: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.w400),
                     dialogBorderRadius: BorderRadius.circular(20),
                     desc: 'Are you sure you want to log out?'.tr,
                     btnCancelText: "Cancel".tr,
@@ -299,7 +310,9 @@ class AboutUs extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: const Color.fromARGB(255, 20, 54, 64),
-                  boxShadow: const [BoxShadow(color: Colors.green, blurRadius: 10)],
+                  boxShadow: const [
+                    BoxShadow(color: Colors.green, blurRadius: 10)
+                  ],
                 ),
                 child: Text(
                   "Nova Cart".tr,
@@ -325,7 +338,9 @@ class AboutUs extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: const Color.fromARGB(255, 20, 54, 64),
-                  boxShadow: const [BoxShadow(color: Colors.green, blurRadius: 12)],
+                  boxShadow: const [
+                    BoxShadow(color: Colors.green, blurRadius: 12)
+                  ],
                 ),
                 padding: const EdgeInsets.all(7),
                 child: Text(
@@ -371,7 +386,7 @@ class Contact_Us extends StatelessWidget {
                 width: 270,
                 margin: const EdgeInsets.all(20),
                 child: Row(
-                  textDirection:TextDirection.ltr ,
+                  textDirection: TextDirection.ltr,
                   children: [
                     Container(
                       padding: const EdgeInsets.only(left: 10),
@@ -399,7 +414,7 @@ class Contact_Us extends StatelessWidget {
                 width: 270,
                 margin: const EdgeInsets.all(20),
                 child: Row(
-                  textDirection:TextDirection.ltr ,
+                  textDirection: TextDirection.ltr,
                   children: [
                     Container(
                       padding: const EdgeInsets.only(left: 10),
@@ -427,7 +442,7 @@ class Contact_Us extends StatelessWidget {
                 width: 270,
                 margin: const EdgeInsets.all(20),
                 child: Row(
-                  textDirection:TextDirection.ltr ,
+                  textDirection: TextDirection.ltr,
                   children: [
                     Container(
                       padding: const EdgeInsets.only(left: 10),
@@ -439,7 +454,7 @@ class Contact_Us extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.only(left: 40),
                       child: const Text(
-                        textDirection:TextDirection.ltr ,
+                        textDirection: TextDirection.ltr,
                         "@Nova Cart",
                         style: TextStyle(
                             fontWeight: FontWeight.w800, fontSize: 15),

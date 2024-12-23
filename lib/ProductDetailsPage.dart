@@ -23,9 +23,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+    return  Scaffold(
           appBar: AppBar(
               leading: IconButton(
                 onPressed: () {
@@ -181,6 +179,6 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                   )
                 ],
               )),
-        ));
+        );
   }
 }
