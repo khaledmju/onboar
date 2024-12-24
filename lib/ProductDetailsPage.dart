@@ -17,6 +17,7 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPage extends State<ProductDetailsPage> {
+  int count=0;
   bool isArabic() {
     return Get.locale?.languageCode == 'ar';
   }
@@ -162,9 +163,33 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                     ],
                   ),
                   const SizedBox(height: 10),
+                  Center(child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton( onPressed: count > 0
+                          ? () {
+                        // Decrement logic
+                        setState(() {
+                          count--;
+                        });
+                      }
+                          : null,icon:Icon(Icons.remove_circle_outline,color: Colors.red,size: 30,)),
+                      Text("$count",style: TextStyle(fontSize: 25,),),
+                      IconButton(onPressed:() {
+                        // Increment logic
+                        setState(() {
+                          count++;
+                        });
+                      } ,icon:Icon(Icons.add_circle_outline,color: const Color.fromARGB(255, 66, 252, 169),size: 30,)),
+                    ],
+                  ),),
                   Center(
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: count > 0
+                            ? () {
+                          // Add to cart logic
+                        }
+                            : null,
                         style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 20, 54, 64),

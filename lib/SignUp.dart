@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'AddImageProfile.dart';
 import 'Home.dart';
 import 'Stores.dart';
@@ -460,6 +461,8 @@ class _SignUpState extends State<SignUp> {
                           ErrorHint("Please fill the Text Fields correctly");
                         }
                       });
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool('showHome', true);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor:

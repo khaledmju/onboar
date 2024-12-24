@@ -65,6 +65,12 @@ class MyLocal implements Translations {
           "Password must be at least 8 characters":"كلمة المرور يجب أن تكون على الأقل 8 أحرف",
           "Cart":"السلة",
           "Orders":"الطلبات",
+          "Confirm":"تأكيد",
+          "Confirm Purchase":"تأكيد الشراء",
+          'Are you sure you want to confirm this purchase?':'هل انت متأكد أنك تريد إتمام عملية الشراء؟',
+          "Your order has been sent. Awaiting confirmation from a driver.":"تم ارسال طلبك, انتظر موافقة السائق",
+          "Total Price":"السعر الكلي ",
+          "Total price":"السعر الكلي : ",
         },
         "en": {
           "Setting":"Setting",
@@ -126,6 +132,12 @@ class MyLocal implements Translations {
           "Password must be at least 8 characters":"Password must be at least 8 characters",
           "Cart":"Cart",
           "Orders":"Orders",
+          "Confirm":"Confirm",
+          "Confirm Purchase":"Confirm Purchase",
+          'Are you sure you want to confirm this purchase?':'Are you sure you want to confirm this purchase?',
+          "Your order has been sent. Awaiting confirmation from a driver.":"Your order has been sent. Awaiting confirmation from a driver.",
+          "Total Price":"Total Price",
+          "Total price":"Total Price :",
         },
       };
 }
