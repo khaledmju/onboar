@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
 import 'ProductDetailsPage.dart';
+
 // import 'ProductDetailsPage.dart';
 import 'local/local_controller.dart';
-
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -14,37 +14,44 @@ class ProductsPage extends StatefulWidget {
   @override
   State<ProductsPage> createState() => _ProductsPage();
 }
-class _ProductsPage extends State<ProductsPage> {
 
+class _ProductsPage extends State<ProductsPage> {
   final List products = [
     {
       "image": "images/logo.png",
-      "title" : "Apple Watch IP79",
+      "title": "Apple Watch IP79",
       "subtitle": "Electronic Smart Watch",
-      "quantity" : "15",
-      "price" : "\$180",},
+      "quantity": "15",
+      "price": "\$180",
+    },
     {
       "image": "images/logo.png",
-      "title" : "Apple Air pods Pro",
-      "subtitle" : "Smart , 6 hours straight use",
-      "quantity" : "15",
-      "price" : "\$399",},
+      "title": "Apple Air pods Pro",
+      "subtitle": "Smart , 6 hours straight use",
+      "quantity": "15",
+      "price": "\$399",
+    },
     {
       "image": "images/logo.png",
-      "title" : "Adidas Sneakers",
-      "subtitle" : "Sport comfortable Sneakers",
-      "quantity" : "15",
-      "price" : "\$157",},
+      "title": "Adidas Sneakers",
+      "subtitle": "Sport comfortable Sneakers",
+      "quantity": "15",
+      "price": "\$157",
+    },
   ];
   final Set<int> favoriteIndices = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         appBar: AppBar(
-            title :  Text("Products".tr , textAlign: TextAlign.center,
-                style : const TextStyle(color : Color.fromARGB(255, 20, 54, 64) ,fontSize: 26 , fontWeight: FontWeight.bold , fontStyle: FontStyle.normal)),
+            title: Text("Products".tr,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 20, 54, 64),
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.normal)),
             centerTitle: true,
             backgroundColor: const Color.fromARGB(255, 66, 252, 169),
             elevation: 4,
@@ -55,53 +62,83 @@ class _ProductsPage extends State<ProductsPage> {
                     showSearch(context: context, delegate: SearchCustom());
                   },
                   icon: const Icon(Icons.search)),
-
-            ]
-        ),
+            ]),
         body: GridView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2 , mainAxisExtent: 290) ,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, mainAxisExtent: 277),
             itemCount: products.length,
-            itemBuilder : (context , i){
+            itemBuilder: (context, i) {
               return InkWell(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailsPage(productData: products[i])));
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            ProductDetailsPage(productData: products[i])));
                   },
-
-                  child : Card(
+                  child: Card(
                     child: Column(
                       children: [
-                        Image.asset(products[i]["image"] , height: 150, width:1000 , fit : BoxFit.cover ),
-                        Text(products[i]["title"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64))),
-                        Text(products[i]["subtitle"],style : const TextStyle(fontWeight : FontWeight.w300 , fontSize : 14)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (favoriteIndices.contains(i)) {
+                                    favoriteIndices
+                                        .remove(i); // Remove from favorites
+                                  } else {
+                                    favoriteIndices.add(i); // Add to favorites
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                favoriteIndices.contains(i)
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: favoriteIndices.contains(i)
+                                    ? Colors.red
+                                    : Colors
+                                        .grey, // Change color based on favorite status
+                              ),
+                            ),
+                          ],
+                        ),
+                        Image.asset(products[i]["image"],
+                            height: 120, width: 1000, fit: BoxFit.cover),
+                        Text(products[i]["title"],
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        Text(products[i]["subtitle"],
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w300, fontSize: 14)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Quantity : ",style : TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64) )),
-                            Text(products[i]["quantity"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64) )),
-                          ],),
-                        Text(products[i]["price"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 48, 193, 152))),
-                        IconButton(                    onPressed: () {
-                          setState(() {
-                            if (favoriteIndices.contains(i)) {
-                              favoriteIndices.remove(i);  // Remove from favorites
-                            } else {
-                              favoriteIndices.add(i);  // Add to favorites
-                            }
-                          });
-                        },
-                          icon: Icon(
-                            favoriteIndices.contains(i) ? Icons.favorite : Icons.favorite_border,
-                            color: favoriteIndices.contains(i) ? Colors.red : Colors.grey,  // Change color based on favorite status
-                          ),
+                            const Text("Quantity : ",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 20, 54, 64))),
+                            Text(products[i]["quantity"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 20, 54, 64))),
+                          ],
                         ),
-                      ],),)
-              );
-            }
-        )
-    );
-
+                        Text(products[i]["price"],
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 48, 193, 152))),
+                      ],
+                    ),
+                  ));
+            }));
   }
 }
 
@@ -160,7 +197,7 @@ class SearchCustom extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     sortedItems = items
         .where((element) =>
-        element['title'].toLowerCase().contains(query.toLowerCase()))
+            element['title'].toLowerCase().contains(query.toLowerCase()))
         .toList();
     return ListView.builder(
         itemCount: sortedItems!.length,
