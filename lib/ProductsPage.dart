@@ -36,7 +36,7 @@ class _ProductsPage extends State<ProductsPage> {
       "quantity" : "15",
       "price" : "\$157",},
   ];
-
+  final Set<int> favoriteIndices = {};
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class _ProductsPage extends State<ProductsPage> {
         body: GridView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2 , mainAxisExtent: 240) ,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2 , mainAxisExtent: 290) ,
             itemCount: products.length,
             itemBuilder : (context , i){
               return InkWell(
@@ -82,6 +82,20 @@ class _ProductsPage extends State<ProductsPage> {
                             Text(products[i]["quantity"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 20, 54, 64) )),
                           ],),
                         Text(products[i]["price"],style : const TextStyle(fontWeight : FontWeight.bold , fontSize : 14 , color : Color.fromARGB(255, 48, 193, 152))),
+                        IconButton(                    onPressed: () {
+                          setState(() {
+                            if (favoriteIndices.contains(i)) {
+                              favoriteIndices.remove(i);  // Remove from favorites
+                            } else {
+                              favoriteIndices.add(i);  // Add to favorites
+                            }
+                          });
+                        },
+                          icon: Icon(
+                            favoriteIndices.contains(i) ? Icons.favorite : Icons.favorite_border,
+                            color: favoriteIndices.contains(i) ? Colors.red : Colors.grey,  // Change color based on favorite status
+                          ),
+                        ),
                       ],),)
               );
             }
