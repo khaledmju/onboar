@@ -5,7 +5,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Cart.dart';
-import 'FavoriteStoresPage.dart';
+import 'FavoritesPage.dart';
 import 'ProductsPage.dart';
 import 'Settings.dart';
 import 'local/local_controller.dart';
@@ -27,6 +27,7 @@ class StoresState extends State<Stores> {
     super.initState();
     pages = [
       HomeContent(),
+      FavoritesPage(),
       Cart(),
       const Settings(),
     ];
@@ -55,6 +56,14 @@ class StoresState extends State<Stores> {
           //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           //   ],
           // ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.favorite, size: 27),
+              Text("Favorite",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+            ],
+          ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -150,26 +159,6 @@ class _HomeContentState extends State<HomeContent> {
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         actions: [
           const SizedBox(width: 20),
-          IconButton(
-            icon: const Icon(
-              Icons.favorite,
-              color: Colors.red,
-            ),
-            onPressed: () {
-              final favoriteStores = stores
-                  .where((store) => store['isFavorite'] as bool)
-                  .toList()
-                  .cast<Map<String, dynamic>>();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      FavoriteStoresPage(favoriteStores: favoriteStores),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 10),
           Container(
             width: 20,
           ),

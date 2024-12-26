@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'AddImageProfile.dart';
+import 'FavoritesController.dart';
 import 'Home.dart';
 import 'Stores.dart';
 import 'local/local.dart';
@@ -17,6 +18,7 @@ Future main() async {
   prefs = await SharedPreferences.getInstance();
   final showHome = prefs?.getBool('showHome') ?? false;
   runApp(MyApp(showHome: showHome));
+  Get.put(FavoritesController());
 }
 
 class MyApp extends StatelessWidget {
