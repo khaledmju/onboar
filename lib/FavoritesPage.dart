@@ -22,20 +22,26 @@ class FavoritesPage extends StatelessWidget {
         if (favoritesController.favoriteProducts.isEmpty) {
           return const Center(child: Text("No favorite products yet."));
         }
-
-        return ListView.builder(
+        return GridView.builder(
           itemCount: favoritesController.favoriteProducts.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, mainAxisExtent: 220),
           itemBuilder: (context, index) {
             final product = favoritesController.favoriteProducts[index];
-            return ListTile(
-              leading: Image.asset(product["image"], width: 50, height: 50),
-              title: Text(product["title"]),
-              subtitle: Text(product["subtitle"]),
-              trailing: Text(product["price"]),
+            return InkWell(
               onTap: () {
-                // Navigate to product details page or perform other actions
                 Get.to(() => ProductDetailsPage(productData: product));
               },
+              child: Card(
+                child: Column(
+                  children: [
+                    Image.asset(product["image"], width: 1000, height: 120,fit: BoxFit.cover,),
+                    Text(product["title"]),
+                    Text(product["subtitle"]),
+                    Text(product["price"]),
+                  ],
+                ),
+              ),
             );
           },
         );

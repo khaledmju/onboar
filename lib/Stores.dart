@@ -56,7 +56,7 @@ class StoresState extends State<Stores> {
           //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           //   ],
           // ),
-          Column(
+          const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.favorite, size: 27),
@@ -67,7 +67,7 @@ class StoresState extends State<Stores> {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.shopping_cart, size: 27),
+              const Icon(Icons.shopping_cart, size: 27),
               Text("Cart".tr,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             ],
@@ -118,31 +118,26 @@ class _HomeContentState extends State<HomeContent> {
       "image": "images/Nova_Cart.jpg",
       "title": "Apple Watch IP79",
       "subtitle": "Electronic Smart Watch",
-      "isFavorite": false,
     },
     {
       "image": "images/Nova_Cart.jpg",
       "title": "Apple Air pods Pro",
       "subtitle": "Smart , 6 hours straight use",
-      "isFavorite": false,
     },
     {
       "image": "images/Nova_Cart.jpg",
       "title": "Adidas Sneakers",
       "subtitle": "Sport comfortable Sneakers",
-      "isFavorite": false,
     },
     {
       "image": "images/Nova_Cart.jpg",
       "title": "Adidas Sneakers",
       "subtitle": "Sport comfortable Sneakers",
-      "isFavorite": false,
     },
     {
       "image": "images/Nova_Cart.jpg",
       "title": "Adidas Sneakers",
       "subtitle": "Sport comfortable Sneakers",
-      "isFavorite": false,
     },
   ];
 
@@ -263,27 +258,6 @@ class _HomeContentState extends State<HomeContent> {
                                   ],
                                 ),
                               ))),
-                      Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                stores[index]['isFavorite'] =
-                                    !stores[index]['isFavorite'];
-                              });
-                            },
-                            icon: Icon(
-                              stores[index]['isFavorite']
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              size: 30,
-                              color: stores[index]['isFavorite']
-                                  ? const Color.fromARGB(255, 246, 206, 28)
-                                  : const Color.fromARGB(255, 20, 54, 64),
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
