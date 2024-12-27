@@ -58,6 +58,11 @@ class _ProductsPage extends State<ProductsPage> {
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         elevation: 4,
         shadowColor: const Color.fromARGB(255, 48, 193, 152),
+        actions: [
+          IconButton(onPressed: () {
+            showSearch(context: context, delegate: SearchCustom());
+          }, icon: Icon(Icons.search))
+        ],
       ),
       body: GridView.builder(
         shrinkWrap: true,
