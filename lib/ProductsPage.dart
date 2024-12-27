@@ -17,21 +17,21 @@ class _ProductsPage extends State<ProductsPage> {
       "title": "Apple Watch IP79",
       "subtitle": "Electronic Smart Watch",
       "quantity": "15",
-      "price": "\$180",
+      "price": "180\$",
     },
     {
       "image": "images/logo.png",
       "title": "Apple Air pods Pro",
       "subtitle": "Smart , 6 hours straight use",
       "quantity": "15",
-      "price": "\$399",
+      "price": "399\$",
     },
     {
       "image": "images/logo.png",
       "title": "Adidas Sneakers",
       "subtitle": "Sport comfortable Sneakers",
       "quantity": "15",
-      "price": "\$157",
+      "price": "157\$",
     },
   ];
 
