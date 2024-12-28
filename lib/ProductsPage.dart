@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'FavoritesController.dart';
 import 'ProductDetailsPage.dart';
+import 'Stores.dart';
 
 class ProductsPage extends StatefulWidget {
-  const ProductsPage({super.key});
+  final List<Map<String, dynamic>> products;
+
+  const ProductsPage({super.key, required this.products});
+
 
   @override
   State<ProductsPage> createState() => _ProductsPage();
@@ -47,6 +51,9 @@ class _ProductsPage extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () {
+          Get.offAll(Stores());
+        }, icon: Icon(Icons.home)),
         title: Text("Products".tr,
             textAlign: TextAlign.center,
             style: const TextStyle(

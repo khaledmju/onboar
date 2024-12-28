@@ -222,8 +222,9 @@ class _HomeContentState extends State<HomeContent> {
               var Key = stores.elementAt(index);
               return InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const ProductsPage()));
+                  // Navigator.of(context).pushReplacement(
+                  //     MaterialPageRoute(builder: (context) => const ProductsPage(products: [],)));
+                  Get.offAll( ProductsPage(products: [],));
                 },
                 child: Card(
                   color: Colors.white,
@@ -296,7 +297,7 @@ class _HomeContentState extends State<HomeContent> {
 }
 
 class SearchCustom extends SearchDelegate {
-  List items = [
+  final List items = [
     {
       "image": "images/Nova_Cart.jpg",
       "title": "Apple Watch IP79",
@@ -343,49 +344,46 @@ class SearchCustom extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text(query);
+    return Container();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     sortedItems = items
         .where((element) =>
-            element['title'].toLowerCase().contains(query.toLowerCase()))
+        element['title'].toLowerCase().contains(query.toLowerCase()))
         .toList();
     return ListView.builder(
-        itemCount: sortedItems!.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-              onTap: () {
-                query = query == "" ? items[index] : sortedItems?[index];
-                showResults(context);
-              },
-              child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.all(5),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                sortedItems![index]["image"],
-                                height: 50,
-                                width: 70,
-                                fit: BoxFit.fill,
-                                alignment: Alignment.centerLeft,
-                              ),
-                              Text("${sortedItems![index]['title']}",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 20, 54, 64),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20)),
-                            ],
-                          ))
-                    ],
-                  )));
-        });
-    // }
+      itemCount: sortedItems!.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            // Navigate to the ProductsPage with the selected product
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ProductsPage(
+                products: [sortedItems![index]],
+              ),
+            ));
+          },
+          child: Container(
+            color: Colors.white,
+            child: ListTile(
+              leading: Image.asset(
+                sortedItems![index]["image"],
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover,
+              ),
+              title: Text(
+                sortedItems![index]["title"],
+                style: const TextStyle(fontSize: 16),
+              ),
+              subtitle: Text(sortedItems![index]["subtitle"]),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
+
