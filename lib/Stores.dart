@@ -359,7 +359,12 @@ class SearchCustom extends SearchDelegate {
         return InkWell(
           onTap: () {
             // Navigate to the ProductsPage with the selected product
-            Navigator.of(context).push(MaterialPageRoute(
+            // Navigator.of(context).push(MaterialPageRoute(
+            //   builder: (context) => ProductsPage(
+            //     products: [sortedItems![index]],
+            //   ),
+            // ));
+            Navigator.pushReplacement(context,MaterialPageRoute(
               builder: (context) => ProductsPage(
                 products: [sortedItems![index]],
               ),
