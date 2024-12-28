@@ -66,7 +66,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        title:  Text("Sing Up".tr,
+        title:  Text("Sign Up".tr,
             textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
@@ -235,7 +235,6 @@ class _SignUpState extends State<SignUp> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color.fromARGB(255, 20, 54, 64),
                     obscureText: false,
-                    keyboardType: TextInputType.number,
                     // onSaved: (val){phoneNumber = val;},
                     decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.perm_identity, size: 30),
@@ -312,7 +311,7 @@ class _SignUpState extends State<SignUp> {
 
                     validator: (val) {
                       if (val!.isEmpty) {
-                        return "Please enter your Phone Number";
+                        return "Please enter your Phone Number".tr;
                       } else {
                         if (val.length < 10 || val.length > 10) {
                           return "Phone Number must be 10 digits".tr;
@@ -468,7 +467,7 @@ class _SignUpState extends State<SignUp> {
                         backgroundColor:
                             const Color.fromARGB(255, 20, 54, 64),
                         padding: const EdgeInsets.symmetric(horizontal: 100)),
-                    child:  Text( "Sing Up".tr,
+                    child:  Text( "Sign Up".tr,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,

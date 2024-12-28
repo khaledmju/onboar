@@ -502,7 +502,7 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Profile",
+        title:  Text("Profile".tr,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
@@ -603,9 +603,9 @@ class ProfilePageState extends State<ProfilePage> {
               children: [
                 Container(
                   padding: const EdgeInsets.only(top: 20, left: 10),
-                  child: const Text(
-                    "Chose Image from:",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  child:  Text(
+                    "Chose Image from:".tr,
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 InkWell(
@@ -615,7 +615,7 @@ class ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(
                           Icons.photo_library_outlined,
@@ -625,7 +625,7 @@ class ProfilePageState extends State<ProfilePage> {
                           width: 20,
                         ),
                         Text(
-                          "Gallery",
+                          "Gallery".tr,
                           style: TextStyle(fontSize: 20),
                         ),
                       ],
@@ -639,7 +639,7 @@ class ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(
                           Icons.camera,
@@ -649,7 +649,7 @@ class ProfilePageState extends State<ProfilePage> {
                           width: 20,
                         ),
                         Text(
-                          "camera",
+                          "Camera".tr,
                           style: TextStyle(fontSize: 20),
                         ),
                       ],

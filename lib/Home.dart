@@ -171,7 +171,7 @@ class _HomeState extends State<Home> {
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignUp(),));
                             },
-                            child:  Text("Sing Up".tr,style: const TextStyle(
+                            child:  Text("Sign Up".tr,style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400))),
