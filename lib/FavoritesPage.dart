@@ -10,8 +10,8 @@ class FavoritesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Favorite Products",
+        title: Text(
+          "Favorite Products".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -20,7 +20,7 @@ class FavoritesPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Obx(() {
         if (favoritesController.favoriteProducts.isEmpty) {
-          return const Center(child: Text("No favorite products yet."));
+          return  Center(child: Text("No favorite products yet!".tr));
         }
         return GridView.builder(
           itemCount: favoritesController.favoriteProducts.length,

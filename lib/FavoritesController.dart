@@ -32,4 +32,9 @@ class FavoritesController extends GetxController {
       favoriteProducts.value = savedData.map((item) => jsonDecode(item) as Map<String, dynamic>).toList();
     }
   }
+  Future<void> clearFavorites() async {
+    favoriteProducts.clear();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('favorites');
+  }
 }

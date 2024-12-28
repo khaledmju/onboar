@@ -71,6 +71,9 @@ class MyLocal implements Translations {
           "Your order has been sent. Awaiting confirmation from a driver.":"تم ارسال طلبك, انتظر موافقة السائق",
           "Total Price":"السعر الكلي ",
           "Total price":"السعر الكلي : ",
+          "Favorite":"المفضلة",
+          "Favorite Products":"المنتجات المفضلة",
+          "No favorite products yet!":"لا يوجد منتجات مفضلة حاليا!",
         },
         "en": {
           "Setting":"Setting",
@@ -104,7 +107,7 @@ class MyLocal implements Translations {
           "Get Started":"Get Started",
           "Back":"Back",
           "Log In":"Log In",
-          "Sing Up":"Sing Up",
+          "Sing Up":"Sign Up",
           "you dont have an account?":"you dont have an account?",
           "Already have an account?":"Already have an account?",
           "Password":"Password",
@@ -138,6 +141,9 @@ class MyLocal implements Translations {
           "Your order has been sent. Awaiting confirmation from a driver.":"Your order has been sent. Awaiting confirmation from a driver.",
           "Total Price":"Total Price",
           "Total price":"Total Price :",
+          "Favorite":"Favorite",
+          "Favorite Products":"Favorite Products",
+          "No favorite products yet!":"No favorite products yet!",
         },
       };
 }

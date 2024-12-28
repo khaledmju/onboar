@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'FavoritesController.dart';
 import 'Home.dart';
 import 'Stores.dart';
 import 'local/local_controller.dart';
@@ -263,6 +264,10 @@ class _SettingState extends State<Settings> {
                     btnOkOnPress: () async {
                       final prefs = await SharedPreferences.getInstance();
                       prefs.setBool('showHome', false);
+
+                      final favoritesController = Get.find<FavoritesController>();
+                      await favoritesController.clearFavorites();
+
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => OnboardingPage(),
                       ));

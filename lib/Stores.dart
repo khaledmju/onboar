@@ -57,11 +57,11 @@ class StoresState extends State<Stores> {
           //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           //   ],
           // ),
-          const Column(
+           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.favorite, size: 27),
-              Text("Favorite",
+              Text("Favorite".tr,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
