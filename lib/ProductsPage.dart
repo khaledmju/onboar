@@ -203,42 +203,55 @@ class SearchCustom extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     sortedItems = items
         .where((element) =>
-            element['title'].toLowerCase().contains(query.toLowerCase()))
+        element['title'].toLowerCase().contains(query.toLowerCase()))
         .toList();
     return ListView.builder(
-        itemCount: sortedItems!.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-              onTap: () {
-                query = query == "" ? items[index] : sortedItems?[index];
-                showResults(context);
-              },
-              child: Container(
-                  color: Colors.white,
-                  child: Column(
+      itemCount: sortedItems!.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailsPage(
+                  productData: sortedItems![index],
+                ),
+              ),
+            );
+          },
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  child: Row(
                     children: [
-                      Container(
-                          padding: const EdgeInsets.all(5),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                sortedItems![index]["image"],
-                                height: 50,
-                                width: 70,
-                                fit: BoxFit.fill,
-                                alignment: Alignment.centerLeft,
-                              ),
-                              Text("${sortedItems![index]['title']}",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 20, 54, 64),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20)),
-                            ],
-                          ))
+                      Image.asset(
+                        sortedItems![index]["image"],
+                        height: 50,
+                        width: 70,
+                        fit: BoxFit.fill,
+                        alignment: Alignment.centerLeft,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        "${sortedItems![index]['title']}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 20, 54, 64),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                      ),
                     ],
-                  )));
-        });
-    // }
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
