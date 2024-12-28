@@ -383,7 +383,6 @@ class SearchCustom extends SearchDelegate {
                 sortedItems![index]["title"],
                 style: const TextStyle(fontSize: 16),
               ),
-              subtitle: Text(sortedItems![index]["subtitle"]),
             ),
           ),
         );

@@ -449,19 +449,20 @@ class _SignUpState extends State<SignUp> {
                     onPressed: () async {
                       // Get.offAll(Stores());
                       // Get.offAll(AddImageProfile());
-                      setState(() {
+                      setState(() async {
                         if (formKey.currentState!.validate()) {
                           // content = sharedPreferences.setStringList('items', <String>[usernameController.toString(),numberController.toString(),emailController.toString(),passwordController.toString()]);
                           // User user = User(content.indexOf(0) as String,content.indexOf(1) as String,content.indexOf(2) as String,content.indexOf(3) as String);
                           // sharedPreferences.setStringList('user',json.encode(user.toJson()));
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setBool('showHome', true);
                           Get.offAll(const Stores());
                           // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>  Start_Application()));
                         } else {
                           ErrorHint("Please fill the Text Fields correctly");
                         }
                       });
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('showHome', true);
+
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor:

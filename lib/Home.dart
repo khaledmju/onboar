@@ -185,16 +185,17 @@ class _HomeState extends State<Home> {
                         onPressed: ()async {
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>det(name: username.text, email: email.text, phone: phone.text) ,));
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Stores()));
-                      setState(() {
+                      setState(() async {
                         if(formKey.currentState!.validate()){
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setBool('showHome', true);
                           Get.offAll(const Stores());
                         }
                         else {
                           "Please fill the Text Fields correctly".tr;
                         }
                       });
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('showHome', true);
+
 
                     }, child: Text("Log In".tr,
                         style: const TextStyle(
