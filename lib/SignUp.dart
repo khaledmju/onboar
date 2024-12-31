@@ -482,7 +482,7 @@ class _SignUpState extends State<SignUp> {
                               print("SharedPreferences error: $e");
                             }
 
-                            Get.offAll(const Stores());
+                            Get.offAll(()=> Stores());
                           } else {
                             print("Failed to sign up: ${response.reasonPhrase}");
                             ErrorHint("Failed to sign up: ${response.reasonPhrase}");
