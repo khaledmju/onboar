@@ -1,9 +1,11 @@
 // ignore_for_file: file_names, unused_import, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddImageProfile.dart';
 import 'Home.dart';
@@ -447,35 +449,67 @@ class _SignUpState extends State<SignUp> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      // Get.offAll(Stores());
-                      // Get.offAll(AddImageProfile());
-                      setState(() async {
-                        if (formKey.currentState!.validate()) {
-                          // content = sharedPreferences.setStringList('items', <String>[usernameController.toString(),numberController.toString(),emailController.toString(),passwordController.toString()]);
-                          // User user = User(content.indexOf(0) as String,content.indexOf(1) as String,content.indexOf(2) as String,content.indexOf(3) as String);
-                          // sharedPreferences.setStringList('user',json.encode(user.toJson()));
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setBool('showHome', true);
-                          Get.offAll(const Stores());
-                          // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>  Start_Application()));
-                        } else {
-                          ErrorHint("Please fill the Text Fields correctly");
-                        }
-                      });
+                      if (formKey.currentState!.validate()) {
+                        try {
+                          final response = await post(
+                            Uri.parse("http://novacart.test/api/signup"),
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: jsonEncode({
+                              "firstName": firstNameController.text,
+                              "lastName": lastNameController.text,
+                              "userName": userNameController.text,
+                              "number": numberController.text,
+                              "email": emailController.text,
+                              "logo": "http://",
+                              "location": "location",
+                              "password": passwordController.text,
+                            }),
+                          );
 
+                          print("Response status: ${response.statusCode}");
+                          print("Response body: ${response.body}");
+
+                          if (response.statusCode == 200) {
+                            var responseBody = jsonDecode(response.body);
+                            print("Success: $responseBody");
+
+                            try {
+                              final prefs = await SharedPreferences.getInstance();
+                              prefs.setBool('showHome', true);
+                            } catch (e) {
+                              print("SharedPreferences error: $e");
+                            }
+
+                            Get.offAll(const Stores());
+                          } else {
+                            print("Failed to sign up: ${response.reasonPhrase}");
+                            ErrorHint("Failed to sign up: ${response.reasonPhrase}");
+                          }
+                        } catch (e) {
+                          print("Error: $e");
+                          ErrorHint("An error occurred. Please try again later.");
+                        }
+                      } else {
+                        ErrorHint("Please fill the Text Fields correctly");
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 20, 54, 64),
-                        padding: const EdgeInsets.symmetric(horizontal: 100)),
-                    child:  Text( "Sign Up".tr,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal,
-                          color: Color.fromARGB(255, 66, 252, 169),
-                        )),
+                      backgroundColor: const Color.fromARGB(255, 20, 54, 64),
+                      padding: const EdgeInsets.symmetric(horizontal: 100),
+                    ),
+                    child: Text(
+                      "Sign Up".tr,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal,
+                        color: Color.fromARGB(255, 66, 252, 169),
+                      ),
+                    ),
                   ),
+
                 ],
               ),
             ),
