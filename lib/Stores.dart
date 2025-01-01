@@ -33,7 +33,6 @@ class StoresState extends State<Stores> {
       const Settings(),
     ];
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

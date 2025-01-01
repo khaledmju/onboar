@@ -12,14 +12,6 @@ import 'Home.dart';
 import 'Stores.dart';
 import 'package:image_picker/image_picker.dart';
 
-
-final TextEditingController firstNameController = TextEditingController();
-final TextEditingController lastNameController = TextEditingController();
-final TextEditingController userNameController = TextEditingController();
-final TextEditingController numberController = TextEditingController();
-final TextEditingController emailController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
-
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -28,6 +20,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   File? selectedImage;
 
   final imagePicker = ImagePicker();
@@ -68,7 +66,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        title:  Text("Sign Up".tr,
+        title: Text("Sign Up".tr,
             textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
@@ -89,40 +87,10 @@ class _SignUpState extends State<SignUp> {
               height: 220,
             ),
           ),
-          // SizedBox(height: 20,),
-          // Stack(
-          //   fit: StackFit.passthrough,
-          //   children: [
-          //     CircleAvatar(
-          //       backgroundColor: Colors.grey.shade100,
-          //       radius: 80,
-          //       backgroundImage: selectedImage != null
-          //           ? FileImage(selectedImage!)
-          //           : const AssetImage('images/logo.png'),
-          //     ),
-          //     Positioned(
-          //       bottom: 0,
-          //       child: CircleAvatar(
-          //         radius: 25,
-          //         backgroundColor: Colors.greenAccent,
-          //         child: IconButton(
-          //           onPressed: () {
-          //             ShowBottomSheet();
-          //           },
-          //           icon: Icon(
-          //             Icons.photo_camera,
-          //             size: 25,
-          //           ),
-          //         ),
-          //       ),
-          //     )
-          //   ],
-          // ),
-          // SizedBox(height: 30,),
           Container(
-            margin: const EdgeInsets.only(bottom: 20,left: 20,right: 20),
+            margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
             child: Form(
-              key : formKey,
+              key: formKey,
               child: Column(
                 children: [
                   Row(
@@ -130,8 +98,7 @@ class _SignUpState extends State<SignUp> {
                       Expanded(
                         child: TextFormField(
                           controller: firstNameController,
-                          autovalidateMode:
-                              AutovalidateMode.onUserInteraction,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           cursorColor: const Color.fromARGB(255, 20, 54, 64),
                           obscureText: false,
                           keyboardType: TextInputType.name,
@@ -143,8 +110,7 @@ class _SignUpState extends State<SignUp> {
                                   const Color.fromARGB(255, 165, 165, 165),
                               labelText: "First Name".tr,
                               hintStyle: const TextStyle(
-                                  color: Color.fromARGB(
-                                      255, 165, 165, 165)),
+                                  color: Color.fromARGB(255, 165, 165, 165)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                   borderSide: const BorderSide(
@@ -153,36 +119,38 @@ class _SignUpState extends State<SignUp> {
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                   borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 20, 54, 64))),
+                                      color: Color.fromARGB(255, 20, 54, 64))),
                               errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                   borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 255, 23, 7))),
-                              focusedErrorBorder:
-                                  OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color.fromARGB(255, 255, 23, 7)))),
+                                      color: Color.fromARGB(255, 255, 23, 7))),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 255, 23, 7)))),
 
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "Please enter your First Name".tr;
                             } else {
                               if (val.length < 3) {
-                                return "First Name must be longer than 3 characters".tr;
+                                return "First Name must be longer than 3 characters"
+                                    .tr;
                               } else if (val.length > 20) {
-                                return "First Name must be shorter than 20 characters".tr;
+                                return "First Name must be shorter than 20 characters"
+                                    .tr;
                               }
                             }
                             return null;
                           },
                         ),
                       ),
-                      const Padding(padding: EdgeInsets.only(left: 10, right: 10)),
+                      const Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10)),
                       Expanded(
                         child: TextFormField(
                           controller: lastNameController,
-                          autovalidateMode:
-                              AutovalidateMode.onUserInteraction,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           cursorColor: const Color.fromARGB(255, 20, 54, 64),
                           obscureText: false,
                           keyboardType: TextInputType.name,
@@ -195,8 +163,7 @@ class _SignUpState extends State<SignUp> {
                                   const Color.fromARGB(255, 165, 165, 165),
                               labelText: "Last Name".tr,
                               hintStyle: const TextStyle(
-                                  color: Color.fromARGB(
-                                      255, 165, 165, 165)),
+                                  color: Color.fromARGB(255, 165, 165, 165)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                   borderSide: const BorderSide(
@@ -205,22 +172,26 @@ class _SignUpState extends State<SignUp> {
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                   borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 20, 54, 64))),
+                                      color: Color.fromARGB(255, 20, 54, 64))),
                               errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 255, 23, 7))),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
                                   borderSide:
-                                      const BorderSide(color: Color.fromARGB(255, 255, 23, 7))),
-                              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color.fromARGB(255, 255, 23, 7)))),
+                                      const BorderSide(color: Color.fromARGB(255, 255, 23, 7)))),
 
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "Please enter your Last Name".tr;
                             } else {
                               if (val.length < 3) {
-                                return "Last Name must be longer than 3 characters".tr;
+                                return "Last Name must be longer than 3 characters"
+                                    .tr;
                               } else if (val.length > 20) {
-                                return "Last Name must be shorter than 20 characters".tr;
+                                return "Last Name must be shorter than 20 characters"
+                                    .tr;
                               }
                             }
                             return null;
@@ -241,7 +212,7 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.perm_identity, size: 30),
                         prefixIconColor:
-                        const Color.fromARGB(255, 165, 165, 165),
+                            const Color.fromARGB(255, 165, 165, 165),
                         labelText: "User Name".tr,
                         hintStyle: const TextStyle(
                             color: Color.fromARGB(255, 165, 165, 165)),
@@ -358,9 +329,9 @@ class _SignUpState extends State<SignUp> {
                             borderSide: const BorderSide(
                                 color: Color.fromARGB(255, 255, 23, 7)))),
                     validator: (val) {
-                        if (isEmail(val!) == false) {
-                          return "Email is not valid".tr;
-                        }
+                      if (isEmail(val!) == false) {
+                        return "Email is not valid".tr;
+                      }
                       return null;
                     },
                   ),
@@ -423,7 +394,7 @@ class _SignUpState extends State<SignUp> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Text("Already have an account?".tr,
+                      Text("Already have an account?".tr,
                           style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
@@ -436,7 +407,7 @@ class _SignUpState extends State<SignUp> {
                                 builder: (context) => Home()));
                           });
                         },
-                        child:  Text("Log In".tr,
+                        child: Text("Log In".tr,
                             style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
@@ -470,26 +441,56 @@ class _SignUpState extends State<SignUp> {
 
                           print("Response status: ${response.statusCode}");
                           print("Response body: ${response.body}");
-
+                          var responseBody = jsonDecode(response.body);
                           if (response.statusCode == 200) {
-                            var responseBody = jsonDecode(response.body);
-                            print("Success: $responseBody");
+                              print("Success: $responseBody");
+                              final prefs =
+                              await SharedPreferences.getInstance();
+                              await prefs.setBool('showHome', true);
+                              Get.offAll(() => Stores());
 
-                            try {
-                              final prefs = await SharedPreferences.getInstance();
-                              prefs.setBool('showHome', true);
-                            } catch (e) {
-                              print("SharedPreferences error: $e");
+                          } else {
+                            print(
+                                "Failed to sign up: ${response.reasonPhrase}");
+                            Map<String, String> fieldLabels = {
+                              "email": "Email",
+                              "userName": "Username",
+                              "number": "Number"
+                            };
+                            String errorMessage = "";
+                            responseBody["errors"]?.forEach((key, value) {
+                              if (value.isNotEmpty) {
+                                errorMessage = "${fieldLabels[key]} is ${value.first}";
+                              }
+                            });
+
+                            if (errorMessage.isNotEmpty) {
+                              Get.snackbar(
+                                padding: EdgeInsets.all(30),
+                                "Error",
+                                "",
+                                titleText: Text("Error",style: TextStyle(fontSize: 22,color: Colors.yellow),),
+                                messageText: Text(
+                                  errorMessage,
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.red,
+                                icon: const Icon(
+                                  Icons.warning_amber,
+                                  color: Colors.yellow,
+                                  size: 40,
+                                ),
+                              );
                             }
 
-                            Get.offAll(()=> Stores());
-                          } else {
-                            print("Failed to sign up: ${response.reasonPhrase}");
-                            ErrorHint("Failed to sign up: ${response.reasonPhrase}");
+                            ErrorHint(
+                                "Failed to sign up: ${response.reasonPhrase}");
                           }
                         } catch (e) {
                           print("Error: $e");
-                          ErrorHint("An error occurred. Please try again later.");
+                          ErrorHint(
+                              "An error occurred. Please try again later.");
                         }
                       } else {
                         ErrorHint("Please fill the Text Fields correctly");
@@ -509,7 +510,6 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
