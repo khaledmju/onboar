@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'AddImageProfile.dart';
 import 'FavoritesController.dart';
-import 'Home.dart';
+import 'LogIn.dart';
 import 'Stores.dart';
 import 'local/local.dart';
 import 'local/local_controller.dart';

@@ -6,7 +6,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'FavoritesController.dart';
-import 'Home.dart';
+import 'LogIn.dart';
 import 'Stores.dart';
 import 'local/local_controller.dart';
 import 'main.dart';

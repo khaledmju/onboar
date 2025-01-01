@@ -105,17 +105,21 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(6),
                               borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 255, 23, 7)))),
-                      // validator: (val){
-                      //   if(val!.isEmpty){
-                      //     return "Please enter your Email Address".tr;
-                      //   }
-                      //   else{
-                      //     if(isEmail(val)==false){
-                      //       return "Email is not valid".tr;
-                      //     }
-                      //   }
-                      //   return null;
-                      // },
+
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Please enter your Phone Number".tr;
+                        } else {
+                          if (val.length < 10 || val.length > 10) {
+                            return "Phone Number must be 10 digits".tr;
+                          } else if (!val.startsWith('09')) {
+                            return "Phone Number must be : 09XXXXXXXX".tr;
+                          } else if (val.hashCode.isNaN) {
+                            return "Phone Number must ONLY contain numbers".tr;
+                          }
+                          return null;
+                        }
+                      },
                     ),
                     const SizedBox(
                       height: 20,

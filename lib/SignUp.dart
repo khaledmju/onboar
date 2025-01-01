@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddImageProfile.dart';
-import 'Home.dart';
+import 'LogIn.dart';
 import 'Stores.dart';
 import 'package:image_picker/image_picker.dart';
 
