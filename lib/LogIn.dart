@@ -18,6 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController numberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   var isobs;
 
@@ -110,9 +111,6 @@ class _HomeState extends State<Home> {
                         if (val!.isEmpty) {
                           return "Please enter your Phone Number".tr;
                         } else {
-                          // if (val.length < 10 || val.length > 10) {
-                          //   return "Phone Number must be 10 digits".tr;
-                          // }
                           if (!val.startsWith('09')) {
                             return "Phone Number must be : 09XXXXXXXX".tr;
                           }else if (val.length < 10 || val.length > 10) {
@@ -122,6 +120,46 @@ class _HomeState extends State<Home> {
                           }
                           return null;
                         }
+                      },
+                    ), const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      controller: emailController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.mail_outlined, size: 30),
+                          prefixIconColor:
+                          const Color.fromARGB(255, 165, 165, 165),
+                          labelText: "Email Address".tr,
+                          hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 165, 165, 165)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 66, 252, 169))),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 20, 54, 64))),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 255, 23, 7))),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 255, 23, 7)))),
+                      validator: (val){
+                        if(val == null || val.isEmpty){
+                          return null;
+                        }
+                          if(isEmail(val)==false){
+                            return "Email is not valid".tr;
+                          }
+                        return null;
                       },
                     ),
                     const SizedBox(
@@ -219,6 +257,7 @@ class _HomeState extends State<Home> {
                               headers: {'Content-Type': 'application/json'},
                               body: jsonEncode({
                                 "number": numberController.text,
+                                "email":emailController.text,
                                 "password": passwordController.text,
                               }),
                             ).timeout(Duration(seconds: 30));
@@ -261,7 +300,12 @@ class _HomeState extends State<Home> {
                             }
                           }
                         } else {
-                          ErrorHint("Please fill the Text Fields correctly");
+                          Get.snackbar(
+                            "Validation Error",
+                            "Please fill the text fields correctly.",
+                            backgroundColor: Colors.red,
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
                         }
                       },
                       child: Text(
