@@ -110,10 +110,13 @@ class _HomeState extends State<Home> {
                         if (val!.isEmpty) {
                           return "Please enter your Phone Number".tr;
                         } else {
-                          if (val.length < 10 || val.length > 10) {
-                            return "Phone Number must be 10 digits".tr;
-                          } else if (!val.startsWith('09')) {
+                          // if (val.length < 10 || val.length > 10) {
+                          //   return "Phone Number must be 10 digits".tr;
+                          // }
+                          if (!val.startsWith('09')) {
                             return "Phone Number must be : 09XXXXXXXX".tr;
+                          }else if (val.length < 10 || val.length > 10) {
+                            return "Phone Number must be 10 digits".tr;
                           } else if (val.hashCode.isNaN) {
                             return "Phone Number must ONLY contain numbers".tr;
                           }
