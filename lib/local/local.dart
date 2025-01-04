@@ -44,6 +44,7 @@ class MyLocal implements Translations {
           "Email Address":"البريد الإلكتروني",
           "Number":"الهاتف",
           "Phone Number":"رقم الهاتف",
+          "Name":"الاسم",
           "User Name":"اسم المستخدم",
           "Last Name":"الاسم الأخير",
           "First Name":"الاسم الأول",
@@ -51,7 +52,7 @@ class MyLocal implements Translations {
           "Email is not valid":"البريد الإلأكتروني غير صالح",
           "Please enter your Password":"أدخل كلمة المرور",
           "Password must be at least 8 characters":"كلمة المرور يجب انت تكون على الأقل 8 أرقام",
-          "Please fill the Text Fields correctly":"املئ الحقول بشكل صحيح",
+          "Please fill the text fields correctly":"املئ الحقول بشكل صحيح",
           "Please enter your First Name":"أدخل الاسم الأول",
           "Please enter your Last Name":"أدخل الاسم الأخير",
           "First Name must be longer than 3 characters":"الاسم الأول يجب أن يكون أطول من 3 أحرف",
@@ -83,7 +84,8 @@ class MyLocal implements Translations {
           "Payment Method":"طرق الدفع",
           "Please enter your User Name":"ادخل اسم المستخدم",
           "User Name must be longer than 3 characters":"اسم المستخدم يجب أن يكون أطول من 3 أحرف",
-          "User Name must be shorter than 20 characters":"اسم المستخدم يجب أن يكون أقصر من 20 حرف"
+          "User Name must be shorter than 20 characters":"اسم المستخدم يجب أن يكون أقصر من 20 حرف",
+          "Validation Error":"خطأ",
         },
         "en": {
           "Setting":"Setting",
@@ -130,7 +132,7 @@ class MyLocal implements Translations {
           "Email is not valid":"Email is not valid",
           "Please enter your Password":"Please enter your Password",
           "Password must be at least 8 characters":"Password must be at least 8 characters",
-          "Please fill the Text Fields correctly": "Please fill the Text Fields correctly",
+          "Please fill the text fields correctly": "Please fill the Text Fields correctly",
           "Please enter your First Name":"Please enter your First Name",
           "Please enter your Last Name":"Please enter your Last Name",
           "First Name must be longer than 3 characters":"First Name must be longer than 3 characters",
@@ -164,6 +166,8 @@ class MyLocal implements Translations {
           "Please enter your User Name":"Please enter your User Name",
           "User Name must be longer than 3 characters":"User Name must be longer than 3 characters",
           "User Name must be shorter than 20 characters":"User Name must be shorter than 20 characters",
+          "Validation Error":"Validation Error",
+          "Name":"Name"
         },
       };
 }

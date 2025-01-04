@@ -492,8 +492,8 @@ class _SignUpState extends State<SignUp> {
                         }
                       } else {
                         Get.snackbar(
-                          "Validation Error",
-                          "Please fill the text fields correctly.",
+                          "Validation Error".tr,
+                          "Please fill the text fields correctly".tr,
                           backgroundColor: Colors.red,
                           snackPosition: SnackPosition.BOTTOM,
                         );

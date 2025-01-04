@@ -21,13 +21,26 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingState extends State<Settings> {
+  File? profileImage;
   MyLocaleController LangController = Get.find();
 @override
   void initState() {
-  print(prefs!.getString("t"));
-  print(prefs!.getString("n"));
+  loadProfileImage();
+  print(prefs!.getString("token"));
     super.initState();
   }
+  Future<void> loadProfileImage() async {
+    String? imagePath = prefs!.getString("profileImage");
+    if (imagePath != null) {
+      setState(() {
+        profileImage = File(imagePath);
+      });
+    }
+  }
+  String? token = prefs!.getString("token");
+  String? userName = prefs!.getString("userName");
+  String? email = prefs!.getString("email");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,19 +91,19 @@ class _SettingState extends State<Settings> {
                         width: 30,
                         height: 30,
                       ),
-                      const Column(
+                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "",
+                            userName!,
+                            style: TextStyle(fontSize: 19, color: Colors.blue),
+                          ),
+                          Text(
+                            email!,
                             style: TextStyle(fontSize: 19, color: Colors.blue),
                           ),
                           SizedBox(
                             height: 8,
-                          ),
-                          Text(
-                            "",
-                            style: TextStyle(fontSize: 19, color: Colors.blue),
                           ),
                         ],
                       )
@@ -499,8 +512,28 @@ class ProfilePageState extends State<ProfilePage> {
       setState(() {
         selectedImage = File(pickedImage.path);
       });
+      await prefs!.setString("profileImage", pickedImage.path);
     } else {}
   }
+
+  Future <void> loadImage() async{
+    String? imagePath = prefs!.getString("profileImage");
+    if(imagePath!= null){
+      setState(() {
+        selectedImage = File(imagePath);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    loadImage();
+    super.initState();
+  }
+
+  String? number = prefs!.getString("number");
+  String? firstName = prefs!.getString("firstName");
+  String? lastName = prefs!.getString("lastName");
 
   @override
   Widget build(BuildContext context) {
@@ -518,18 +551,13 @@ class ProfilePageState extends State<ProfilePage> {
         elevation: 4,
         centerTitle: true,
         shadowColor: const Color.fromARGB(255, 48, 193, 152),
+        leading:IconButton(onPressed: () {
+          Get.offAll(Settings());
+        }, icon: Icon(Icons.arrow_back)) ,
       ),
       body: Center(
         child: Column(
           children: [
-            // SizedBox(
-            //   height: 50,
-            // ),
-            // CircleAvatar(
-            //   backgroundColor: Colors.grey.shade100,
-            //   backgroundImage: AssetImage("images/logo.png"),
-            //   radius: 75,
-            // ),
             const SizedBox(
               height: 70,
             ),
@@ -565,27 +593,37 @@ class ProfilePageState extends State<ProfilePage> {
               height: 30,
             ),
             ListTile(
-              onTap: () {
-                Get.bottomSheet(Container(
-                  padding: const EdgeInsets.only(top: 20),
-                  width: double.infinity,
-                  height: 200,
-                  color: Colors.white,
-                  child: TextFormField(),
-                ));
-              },
               leading: const Icon(Icons.perm_identity),
-              trailing: const Icon(
-                Icons.edit,
-                color: Colors.green,
-              ),
-              title: const Text(
-                "name",
+              title:  Text(
+                "Name".tr,
                 style: TextStyle(color: Colors.grey),
               ),
-              isThreeLine: true,
-              subtitle: const Text(
-                "User Name",
+              subtitle:  Row(
+                children: [
+                  Text(
+                    firstName!,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(width:5,),
+                  Text(
+                    lastName!,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Divider(height: 10,color: Colors.black26,),
+            ListTile(
+              leading: const Icon(Icons.phone),
+              title: Text(
+                "Phone Number".tr,
+                style: TextStyle(color: Colors.grey),
+              ),
+              subtitle:  Text(
+                number!,
                 style: TextStyle(fontSize: 18),
               ),
             ),
@@ -622,11 +660,11 @@ class ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     child:  Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.photo_library_outlined,
                           size: 25,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         Text(

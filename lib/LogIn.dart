@@ -267,8 +267,12 @@ class _HomeState extends State<Home> {
                                 print("Success: $responseBody");
                                 await prefs!.setBool('showHome', true);
                                 // print(responseBody["token"]);
-                               await prefs!.setString("t", responseBody["token"]);
-                              await prefs!.setString("n", responseBody["user"]["location"]) ;
+                               await prefs!.setString("token", responseBody["token"]);
+                              await prefs!.setString("userName", responseBody["user"]["userName"]) ;
+                              await prefs!.setString("number", responseBody["user"]["number"]) ;
+                              await prefs!.setString("firstName", responseBody["user"]["firstName"]) ;
+                              await prefs!.setString("lastName", responseBody["user"]["lastName"]) ;
+                              await prefs!.setString("email", responseBody["user"]["email"]) ;
                                 Get.offAll(() => Stores());
                               } else {
                                 Get.snackbar(
@@ -302,8 +306,8 @@ class _HomeState extends State<Home> {
                           }
                         } else {
                           Get.snackbar(
-                            "Validation Error",
-                            "Please fill the text fields correctly.",
+                            "Validation Error".tr,
+                            "Please fill the text fields correctly".tr,
                             backgroundColor: Colors.red,
                             snackPosition: SnackPosition.BOTTOM,
                           );
