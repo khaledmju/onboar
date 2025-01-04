@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
+import 'package:onboar/PaymentMethod.dart';
 
 import 'ProductsPage.dart';
 
@@ -278,52 +279,64 @@ class CartState extends State<Cart> {
                     //         fontStyle: FontStyle.normal)),
                     SizedBox(height: 20),
                     Center(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            setState((){
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.question,
-                                animType: AnimType.scale,
-                                descTextStyle:
-                                const TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
-                                dialogBorderRadius: BorderRadius.circular(20),
-                                desc: 'Are you sure you want to confirm this purchase?'.tr,
-                                btnCancelText: "Cancel".tr,
-                                btnOkText: "Confirm".tr,
-                                btnOkColor: Color.fromARGB(255, 66, 252, 169),
-                                btnCancelColor: Colors.red,
-                                btnCancelOnPress: () {},
-                                btnOkOnPress: () {
-                                  Get.snackbar(
-                                    padding: EdgeInsets.only(top: 20,left: 20,right: 20),
-                                    backgroundColor: Colors.red,
-                                    "",
-                                    "",
-                                    icon: Icon(Icons.warning_amber,color: Colors.yellow,size: 30,),
-                                    duration: const Duration(milliseconds: 5000),
-                                    titleText: Center(
-                                      child: Text("Your order has been sent. Awaiting confirmation from a driver.".tr,textAlign: TextAlign.center,style: TextStyle(
-                                              color: Color.fromARGB(255, 20, 54, 64),fontSize: 16,
-                                            )),
-                                    ),
-                                  );
-                                },
-                              ).show();
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                              const Color.fromARGB(255, 20, 54, 64),
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 40)),
-                          child: Text("Confirm Purchase".tr,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                fontStyle: FontStyle.normal,
-                                color: Color.fromARGB(255, 66, 252, 169),
-                              ))),
+                      // child: ElevatedButton(
+                      //     onPressed: () {
+                      //       setState((){
+                      //         AwesomeDialog(
+                      //           context: context,
+                      //           dialogType: DialogType.question,
+                      //           animType: AnimType.scale,
+                      //           descTextStyle:
+                      //           const TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                      //           dialogBorderRadius: BorderRadius.circular(20),
+                      //           desc: 'Are you sure you want to confirm this purchase?'.tr,
+                      //           btnCancelText: "Cancel".tr,
+                      //           btnOkText: "Confirm".tr,
+                      //           btnOkColor: Color.fromARGB(255, 66, 252, 169),
+                      //           btnCancelColor: Colors.red,
+                      //           btnCancelOnPress: () {},
+                      //           btnOkOnPress: () {
+                      //             Get.snackbar(
+                      //               padding: EdgeInsets.only(top: 20,left: 20,right: 20),
+                      //               backgroundColor: Colors.red,
+                      //               "",
+                      //               "",
+                      //               icon: Icon(Icons.warning_amber,color: Colors.yellow,size: 30,),
+                      //               duration: const Duration(milliseconds: 5000),
+                      //               titleText: Center(
+                      //                 child: Text("Your order has been sent. Awaiting confirmation from a driver.".tr,textAlign: TextAlign.center,style: TextStyle(
+                      //                         color: Color.fromARGB(255, 20, 54, 64),fontSize: 16,
+                      //                       )),
+                      //               ),
+                      //             );
+                      //           },
+                      //         ).show();
+                      //       });
+                      //     },
+                      //     style: ElevatedButton.styleFrom(
+                      //         backgroundColor:
+                      //         const Color.fromARGB(255, 20, 54, 64),
+                      //         padding:
+                      //         const EdgeInsets.symmetric(horizontal: 40)),
+                      //     child: Text("Confirm Purchase".tr,
+                      //         style: const TextStyle(
+                      //           fontSize: 20,
+                      //           fontWeight: FontWeight.w400,
+                      //           fontStyle: FontStyle.normal,
+                      //           color: Color.fromARGB(255, 66, 252, 169),
+                      //         ))),
+                      child: ElevatedButton(onPressed: () {
+                        Get.to(PaymentMethod());
+                      },  style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                          const Color.fromARGB(255, 20, 54, 64),
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 40)),child: Text("Buy Now", style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal,
+                        color: Color.fromARGB(255, 66, 252, 169),
+                      ))),
                     )
                   ],),)
               ]))

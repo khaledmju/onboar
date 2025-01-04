@@ -43,6 +43,7 @@ class MyLocal implements Translations {
           "Password":"كلمة المرور",
           "Email Address":"البريد الإلكتروني",
           "Number":"الهاتف",
+          "Phone Number":"رقم الهاتف",
           "User Name":"اسم المستخدم",
           "Last Name":"الاسم الأخير",
           "First Name":"الاسم الأول",
@@ -79,6 +80,10 @@ class MyLocal implements Translations {
           "Camera":"الكاميرا",
           "Profile":"الملف الشخصي",
           "Please enter your Phone Number":"ادخل رقم الهاتف الخاص بك",
+          "Payment Method":"طرق الدفع",
+          "Please enter your User Name":"ادخل اسم المستخدم",
+          "User Name must be longer than 3 characters":"اسم المستخدم يجب أن يكون أطول من 3 أحرف",
+          "User Name must be shorter than 20 characters":"اسم المستخدم يجب أن يكون أقصر من 20 حرف"
         },
         "en": {
           "Setting":"Setting",
@@ -154,6 +159,11 @@ class MyLocal implements Translations {
           "Camera":"Camera",
           "Profile":"Profile",
           "Please enter your Phone Number":"Please enter your Phone Number",
+          "Payment Method":"Payment Method",
+          "Phone Number":"Phone Number",
+          "Please enter your User Name":"Please enter your User Name",
+          "User Name must be longer than 3 characters":"User Name must be longer than 3 characters",
+          "User Name must be shorter than 20 characters":"User Name must be shorter than 20 characters",
         },
       };
 }

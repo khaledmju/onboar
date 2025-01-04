@@ -233,20 +233,18 @@ class _SignUpState extends State<SignUp> {
                             borderSide: const BorderSide(
                                 color: Color.fromARGB(255, 255, 23, 7)))),
 
-                    // validator: (val) {
-                    //   if (val!.isEmpty) {
-                    //     return "Please enter your Phone Number";
-                    //   } else {
-                    //     if (val.length < 10 || val.length > 10) {
-                    //       return "Phone Number must be 10 digits";
-                    //     } else if (!val.startsWith('09')) {
-                    //       return "Phone Number must be : 09XXXXXXXX".tr;
-                    //     } else if (val.hashCode.isNaN) {
-                    //       return "Phone Number must ONLY contain numbers".tr;
-                    //     }
-                    //     return null;
-                    //   }
-                    // },
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter your User Name".tr;
+                      } else {
+                        if (val.length < 3) {
+                          return "User Name must be longer than 3 characters".tr;
+                        } else if (val.length > 20) {
+                          return "User Name must be shorter than 20 characters".tr;
+                        }
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -493,7 +491,12 @@ class _SignUpState extends State<SignUp> {
                               "An error occurred. Please try again later.");
                         }
                       } else {
-                        ErrorHint("Please fill the Text Fields correctly");
+                        Get.snackbar(
+                          "Validation Error",
+                          "Please fill the text fields correctly.",
+                          backgroundColor: Colors.red,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(

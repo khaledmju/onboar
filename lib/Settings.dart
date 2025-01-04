@@ -22,7 +22,12 @@ class Settings extends StatefulWidget {
 
 class _SettingState extends State<Settings> {
   MyLocaleController LangController = Get.find();
-
+@override
+  void initState() {
+  print(prefs!.getString("t"));
+  print(prefs!.getString("n"));
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

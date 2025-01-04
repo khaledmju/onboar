@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
                       cursorColor: const Color.fromARGB(255, 20, 54, 64),
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.mail_outlined, size: 30),
+                          prefixIcon: const Icon(Icons.phone, size: 30),
                           prefixIconColor:
                               const Color.fromARGB(255, 165, 165, 165),
                           labelText: "Phone Number".tr,
@@ -265,9 +265,10 @@ class _HomeState extends State<Home> {
                               var responseBody = jsonDecode(response.body);
                               if (responseBody["success"] == "true") {
                                 print("Success: $responseBody");
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                await prefs.setBool('showHome', true);
+                                await prefs!.setBool('showHome', true);
+                                // print(responseBody["token"]);
+                               await prefs!.setString("t", responseBody["token"]);
+                              await prefs!.setString("n", responseBody["user"]["location"]) ;
                                 Get.offAll(() => Stores());
                               } else {
                                 Get.snackbar(
