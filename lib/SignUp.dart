@@ -499,12 +499,12 @@ class _SignUpState extends State<SignUp> {
                               await SharedPreferences.getInstance();
                               await prefs.setBool('showHome', true);
 
-                              await prefs!.setString("token", responseBody["token"]);
-                              await prefs!.setString("userName", responseBody["user"]["userName"]) ;
-                              await prefs!.setString("number", responseBody["user"]["number"]) ;
-                              await prefs!.setString("firstName", responseBody["user"]["firstName"]) ;
-                              await prefs!.setString("lastName", responseBody["user"]["lastName"]) ;
-                              await prefs!.setString("email", responseBody["user"]["email"]) ;
+                              await prefs.setString("token", responseBody["token"]);
+                              await prefs.setString("userName", responseBody["user"]["userName"]) ;
+                              await prefs.setString("number", responseBody["user"]["number"]) ;
+                              await prefs.setString("firstName", responseBody["user"]["firstName"]) ;
+                              await prefs.setString("lastName", responseBody["user"]["lastName"]) ;
+                              await prefs.setString("email", responseBody["user"]["email"]) ;
 
                               Get.offAll(() => Stores());
 
