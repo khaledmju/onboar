@@ -11,12 +11,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 import 'Stores.dart';
 
-class Home extends StatefulWidget {
+class LogIn extends StatefulWidget {
   @override
-  State<Home> createState() => _HomeState();
+  State<LogIn> createState() => _LogInState();
 }
 
-class _HomeState extends State<Home> {
+class _LogInState extends State<LogIn> {
   final TextEditingController numberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

@@ -26,6 +26,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController numberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   File? selectedImage;
 
   final imagePicker = ImagePicker();
@@ -389,6 +390,60 @@ class _SignUpState extends State<SignUp> {
                       }
                     },
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                    maxLength: 35,
+                    obscureText: isobs,
+                    obscuringCharacter: '*',
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                        prefixIcon:
+                        const Icon(Icons.lock_outline_rounded, size: 30),
+                        prefixIconColor:
+                        const Color.fromARGB(255, 165, 165, 165),
+                        labelText: "Confirm Password".tr,
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isobs = !isobs;
+                            });
+                          },
+                          icon: isobs
+                              ? const Icon(Icons.remove_red_eye)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 66, 252, 169))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7)))),
+                    validator: (val) {
+                      if(val == null || val.isEmpty){
+                        return "Please confirm your password";
+                      }if(val != passwordController.text){
+                        return "Passwords do not match";
+                      }
+                      return null;
+                    },
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -400,10 +455,8 @@ class _SignUpState extends State<SignUp> {
                               color: Color.fromARGB(255, 20, 54, 64))),
                       TextButton(
                         onPressed: () {
-                          setState(() {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Home()));
-                          });
+                                builder: (context) => LogIn()));
                         },
                         child: Text("Log In".tr,
                             style: const TextStyle(
@@ -431,8 +484,8 @@ class _SignUpState extends State<SignUp> {
                               "userName": userNameController.text,
                               "number": numberController.text,
                               "email": emailController.text,
-                              "logo": "http://",
                               "location": "location",
+                              "logo":"http://",
                               "password": passwordController.text,
                             }),
                           );
@@ -445,6 +498,14 @@ class _SignUpState extends State<SignUp> {
                               final prefs =
                               await SharedPreferences.getInstance();
                               await prefs.setBool('showHome', true);
+
+                              await prefs!.setString("token", responseBody["token"]);
+                              await prefs!.setString("userName", responseBody["user"]["userName"]) ;
+                              await prefs!.setString("number", responseBody["user"]["number"]) ;
+                              await prefs!.setString("firstName", responseBody["user"]["firstName"]) ;
+                              await prefs!.setString("lastName", responseBody["user"]["lastName"]) ;
+                              await prefs!.setString("email", responseBody["user"]["email"]) ;
+
                               Get.offAll(() => Stores());
 
                           } else {

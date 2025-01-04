@@ -178,7 +178,7 @@ class OnboardingPageState extends State<OnboardingPage> {
               child: TextButton(
                   onPressed: () async {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => Home(),
+                      builder: (context) => LogIn(),
                     ));
                   },
                   child: Text(
