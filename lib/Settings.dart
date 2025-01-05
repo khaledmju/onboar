@@ -1,10 +1,12 @@
 // ignore_for_file: file_names, non_constant_identifier_names, avoid_unnecessary_containers, use_build_context_synchronously, camel_case_types
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'FavoritesController.dart';
 import 'LogIn.dart';
 import 'Stores.dart';
@@ -12,6 +14,8 @@ import 'local/local_controller.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+
+
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -23,12 +27,15 @@ class Settings extends StatefulWidget {
 class _SettingState extends State<Settings> {
   File? profileImage;
   MyLocaleController LangController = Get.find();
-@override
+
+  @override
   void initState() {
-  loadProfileImage();
-  print(prefs!.getString("token"));
+    loadProfileImage();
+    print(prefs!.getString("token"));
+    print(prefs!.getString("password"));
     super.initState();
   }
+
   Future<void> loadProfileImage() async {
     String? imagePath = prefs!.getString("profileImage");
     if (imagePath != null) {
@@ -91,7 +98,7 @@ class _SettingState extends State<Settings> {
                         width: 30,
                         height: 30,
                       ),
-                       Column(
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
@@ -203,6 +210,29 @@ class _SettingState extends State<Settings> {
                 },
               ),
               InkWell(
+                child: Card(
+                  margin: const EdgeInsets.all(8),
+                  child: Container(
+                    height: 70,
+                    padding: const EdgeInsets.only(top: 8),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.password_outlined,
+                        color: Color.fromARGB(255, 48, 193, 152),
+                      ),
+                      title: Text(
+                        "Change Password".tr,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Get.to(() => ChangePassword());
+                },
+              ),
+              InkWell(
                   child: Card(
                     margin: const EdgeInsets.all(8),
                     child: Container(
@@ -283,7 +313,8 @@ class _SettingState extends State<Settings> {
                       final prefs = await SharedPreferences.getInstance();
                       prefs.setBool('showHome', false);
 
-                      final favoritesController = Get.find<FavoritesController>();
+                      final favoritesController =
+                          Get.find<FavoritesController>();
                       await favoritesController.clearFavorites();
 
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -516,9 +547,9 @@ class ProfilePageState extends State<ProfilePage> {
     } else {}
   }
 
-  Future <void> loadImage() async{
+  Future<void> loadImage() async {
     String? imagePath = prefs!.getString("profileImage");
-    if(imagePath!= null){
+    if (imagePath != null) {
       setState(() {
         selectedImage = File(imagePath);
       });
@@ -540,7 +571,7 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-        title:  Text("Profile".tr,
+        title: Text("Profile".tr,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
@@ -551,9 +582,9 @@ class ProfilePageState extends State<ProfilePage> {
         elevation: 4,
         centerTitle: true,
         shadowColor: const Color.fromARGB(255, 48, 193, 152),
-        leading:IconButton(onPressed: () {
-          Get.offAll(Settings());
-        }, icon: Icon(Icons.arrow_back)) ,
+        // leading:IconButton(onPressed: () {
+        //   Get.to(Settings());
+        // }, icon: Icon(Icons.arrow_back)) ,
       ),
       body: Center(
         child: Column(
@@ -594,17 +625,19 @@ class ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               leading: const Icon(Icons.perm_identity),
-              title:  Text(
+              title: Text(
                 "Name".tr,
                 style: TextStyle(color: Colors.grey),
               ),
-              subtitle:  Row(
+              subtitle: Row(
                 children: [
                   Text(
                     firstName!,
                     style: TextStyle(fontSize: 18),
                   ),
-                  SizedBox(width:5,),
+                  SizedBox(
+                    width: 5,
+                  ),
                   Text(
                     lastName!,
                     style: TextStyle(fontSize: 18),
@@ -615,14 +648,17 @@ class ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 10,
             ),
-            Divider(height: 10,color: Colors.black26,),
+            Divider(
+              height: 10,
+              color: Colors.black26,
+            ),
             ListTile(
               leading: const Icon(Icons.phone),
               title: Text(
                 "Phone Number".tr,
                 style: TextStyle(color: Colors.grey),
               ),
-              subtitle:  Text(
+              subtitle: Text(
                 number!,
                 style: TextStyle(fontSize: 18),
               ),
@@ -646,9 +682,10 @@ class ProfilePageState extends State<ProfilePage> {
               children: [
                 Container(
                   padding: const EdgeInsets.only(top: 20, left: 10),
-                  child:  Text(
+                  child: Text(
                     "Chose Image from:".tr,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 InkWell(
@@ -658,7 +695,7 @@ class ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child:  Row(
+                    child: Row(
                       children: [
                         const Icon(
                           Icons.photo_library_outlined,
@@ -682,7 +719,7 @@ class ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     margin: const EdgeInsets.all(20),
                     width: double.infinity,
-                    child:  Row(
+                    child: Row(
                       children: [
                         Icon(
                           Icons.camera,
@@ -705,5 +742,300 @@ class ProfilePageState extends State<ProfilePage> {
         );
       },
     );
+  }
+}
+
+class ChangePassword extends StatefulWidget {
+  @override
+  State<ChangePassword> createState() => ChangePasswordState();
+}
+
+class ChangePasswordState extends State<ChangePassword> {
+  var isobs;
+  GlobalKey<FormState> ChangePasswordFormKey = GlobalKey();
+  final TextEditingController NewPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController OldPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    isobs = true;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+  String? password = prefs!.getString("password");
+
+  Future<void> changePassword() async {
+    String? token = prefs!.getString("token");
+
+    if (token == null) {
+      Get.snackbar(
+        "Error",
+        "User not authenticated.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    try {
+      final response = await put(
+        Uri.parse("http://novacart.test/api/changepassword"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'oldPassword': OldPasswordController.text,
+          'newPassword': NewPasswordController.text,
+        }),
+      );
+
+      print("Response Status: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        print("Success: $responseBody");
+        Get.back();
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to change password. Response: ${response.body}",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      print("Error occurred: $e");
+      Get.snackbar(
+        "Error",
+        "An error occurred. Please check your connection.".tr,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.grey.shade200,
+        appBar: AppBar(
+          title: Text("Change Password".tr,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 20, 54, 64),
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal)),
+          backgroundColor: const Color.fromARGB(255, 66, 252, 169),
+          elevation: 4,
+          centerTitle: true,
+          shadowColor: const Color.fromARGB(255, 48, 193, 152),
+        ),
+        body: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20),
+            child: Form(
+                key: ChangePasswordFormKey,
+                child: Column(children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Image.asset("images/change.png",width: 200,height: 200,fit: BoxFit.cover,),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  TextFormField(
+                    controller: OldPasswordController,
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    maxLength: 35,
+                    obscureText: isobs,
+                    obscuringCharacter: '*',
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                        prefixIcon:
+                            const Icon(Icons.lock_outline_rounded, size: 30),
+                        prefixIconColor:
+                            const Color.fromARGB(255, 165, 165, 165),
+                        labelText: "Old Password".tr,
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isobs = !isobs;
+                            });
+                          },
+                          icon: isobs
+                              ? const Icon(Icons.remove_red_eye)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 66, 252, 169))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7)))),
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please enter your password".tr;
+                      }
+                      if (val != password) {
+                        return "Passwords do not match".tr;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: NewPasswordController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                    maxLength: 35,
+                    obscureText: isobs,
+                    obscuringCharacter: '*',
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                        prefixIcon:
+                            const Icon(Icons.lock_outline_rounded, size: 30),
+                        prefixIconColor:
+                            const Color.fromARGB(255, 165, 165, 165),
+                        labelText: "New Password".tr,
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isobs = !isobs;
+                            });
+                          },
+                          icon: isobs
+                              ? const Icon(Icons.remove_red_eye)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 66, 252, 169))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7)))),
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter your Password".tr;
+                      } else {
+                        if (val.length < 8) {
+                          return "Password must be at least 8 characters".tr;
+                        }
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                    maxLength: 35,
+                    obscureText: isobs,
+                    obscuringCharacter: '*',
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                        prefixIcon:
+                            const Icon(Icons.lock_outline_rounded, size: 30),
+                        prefixIconColor:
+                            const Color.fromARGB(255, 165, 165, 165),
+                        labelText: "Confirm Password".tr,
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isobs = !isobs;
+                            });
+                          },
+                          icon: isobs
+                              ? const Icon(Icons.remove_red_eye)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 66, 252, 169))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7)))),
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Please confirm your password";
+                      }
+                      if (val != NewPasswordController.text) {
+                        return "Passwords do not match";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 20, 54, 64),
+                        padding: const EdgeInsets.symmetric(horizontal: 100)),
+                    onPressed: () async {
+                      if (ChangePasswordFormKey.currentState!.validate()) {
+                        await changePassword();
+                      } else {
+                        Get.snackbar(
+                          "Error".tr,
+                          "Please fill the text fields correctly".tr,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                    },
+                    child: Text("Change Password".tr,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.normal,
+                          color: Color.fromARGB(255, 66, 252, 169),
+                        )),
+                  )
+                ]))));
   }
 }

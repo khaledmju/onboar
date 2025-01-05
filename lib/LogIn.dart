@@ -273,6 +273,7 @@ class _LogInState extends State<LogIn> {
                               await prefs!.setString("firstName", responseBody["user"]["firstName"]) ;
                               await prefs!.setString("lastName", responseBody["user"]["lastName"]) ;
                               await prefs!.setString("email", responseBody["user"]["email"]) ;
+                              await prefs!.setString("password",passwordController.text) ;
                                 Get.offAll(() => Stores());
                               } else {
                                 Get.snackbar(

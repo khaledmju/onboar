@@ -86,6 +86,11 @@ class MyLocal implements Translations {
           "User Name must be longer than 3 characters":"اسم المستخدم يجب أن يكون أطول من 3 أحرف",
           "User Name must be shorter than 20 characters":"اسم المستخدم يجب أن يكون أقصر من 20 حرف",
           "Validation Error":"خطأ",
+          "Change Password":"تغير كلمة السر",
+          "Old Password":"كلمة السر القديمة",
+          "Confirm Password":"تاكيد كلمة السر",
+          "New Password":"كلمة السر الجديدة",
+          "Error":"خطأ",
         },
         "en": {
           "Setting":"Setting",
@@ -167,7 +172,12 @@ class MyLocal implements Translations {
           "User Name must be longer than 3 characters":"User Name must be longer than 3 characters",
           "User Name must be shorter than 20 characters":"User Name must be shorter than 20 characters",
           "Validation Error":"Validation Error",
-          "Name":"Name"
+          "Name":"Name",
+          "Change Password":"Change Password",
+          "Old Password":"Old Password",
+          "New Password":"New Password",
+          "Confirm Password": "Confirm Password",
+          "Error":"Error",
         },
       };
 }
