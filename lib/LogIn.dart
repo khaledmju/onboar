@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:onboar/Driver.dart';
 import 'AddImageProfile.dart';
 import 'SignUp.dart';
 import 'main.dart';
@@ -107,21 +108,24 @@ class _LogInState extends State<LogIn> {
                               borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 255, 23, 7)))),
 
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return "Please enter your Phone Number".tr;
-                        } else {
-                          if (!val.startsWith('09')) {
-                            return "Phone Number must be : 09XXXXXXXX".tr;
-                          }else if (val.length < 10 || val.length > 10) {
-                            return "Phone Number must be 10 digits".tr;
-                          } else if (val.hashCode.isNaN) {
-                            return "Phone Number must ONLY contain numbers".tr;
-                          }
-                          return null;
-                        }
-                      },
-                    ), const SizedBox(
+                      // validator: (val) {
+                      //   if (val!.isEmpty) {
+                      //     return "Please enter your Phone Number".tr;
+                      //   }
+                      //   else {
+                      //     if (!val.startsWith('09')) {
+                      //       return "Phone Number must be : 09XXXXXXXX".tr;
+                      //     }
+                      //     else if (val.length < 10 || val.length > 10) {
+                      //       return "Phone Number must be 10 digits".tr;
+                      //     } else if (val.hashCode.isNaN) {
+                      //       return "Phone Number must ONLY contain numbers".tr;
+                      //     }
+                      //     return null;
+                      //   }
+                      // },
+                    ),
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -132,7 +136,7 @@ class _LogInState extends State<LogIn> {
                       decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.mail_outlined, size: 30),
                           prefixIconColor:
-                          const Color.fromARGB(255, 165, 165, 165),
+                              const Color.fromARGB(255, 165, 165, 165),
                           labelText: "Email Address".tr,
                           hintStyle: const TextStyle(
                               color: Color.fromARGB(255, 165, 165, 165)),
@@ -152,13 +156,13 @@ class _LogInState extends State<LogIn> {
                               borderRadius: BorderRadius.circular(6),
                               borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 255, 23, 7)))),
-                      validator: (val){
-                        if(val == null || val.isEmpty){
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
                           return null;
                         }
-                          if(isEmail(val)==false){
-                            return "Email is not valid".tr;
-                          }
+                        if (isEmail(val) == false) {
+                          return "Email is not valid".tr;
+                        }
                         return null;
                       },
                     ),
@@ -257,7 +261,7 @@ class _LogInState extends State<LogIn> {
                               headers: {'Content-Type': 'application/json'},
                               body: jsonEncode({
                                 "number": numberController.text,
-                                "email":emailController.text,
+                                "email": emailController.text,
                                 "password": passwordController.text,
                               }),
                             ).timeout(Duration(seconds: 30));
@@ -267,18 +271,35 @@ class _LogInState extends State<LogIn> {
                                 print("Success: $responseBody");
                                 await prefs!.setBool('showHome', true);
                                 // print(responseBody["token"]);
-                               await prefs!.setString("token", responseBody["token"]);
-                              await prefs!.setString("userName", responseBody["user"]["userName"]) ;
-                              await prefs!.setString("number", responseBody["user"]["number"]) ;
-                              await prefs!.setString("firstName", responseBody["user"]["firstName"]) ;
-                              await prefs!.setString("lastName", responseBody["user"]["lastName"]) ;
-                              await prefs!.setString("email", responseBody["user"]["email"]) ;
-                              await prefs!.setString("password",passwordController.text) ;
-                                Get.offAll(() => Stores());
+                                await prefs!
+                                    .setString("token", responseBody["token"]);
+                                await prefs!.setString("userName",
+                                    responseBody["user"]["userName"]);
+                                await prefs!.setString(
+                                    "number", responseBody["user"]["number"]);
+                                await prefs!.setString("firstName",
+                                    responseBody["user"]["firstName"]);
+                                await prefs!.setString("lastName",
+                                    responseBody["user"]["lastName"]);
+                                await prefs!.setString(
+                                    "email", responseBody["user"]["email"]);
+                                await prefs!.setString(
+                                    "password", passwordController.text);
+                                if (responseBody["user"]["isDriver"] == 1) {
+                                  await prefs!.setBool("isDriver", true);
+                                  Get.offAll(() => Driver());
+                                } else {
+                                  await prefs!.setBool("isDriver", false);
+                                  Get.offAll(() => Stores());
+                                }
                               } else {
                                 Get.snackbar(
                                   "Error",
-                                  titleText: Text("Error",style: TextStyle(fontSize: 22,color: Colors.yellow),),
+                                  titleText: Text(
+                                    "Error",
+                                    style: TextStyle(
+                                        fontSize: 22, color: Colors.yellow),
+                                  ),
                                   responseBody["reason"],
                                   padding: EdgeInsets.all(30),
                                   messageText: Text(

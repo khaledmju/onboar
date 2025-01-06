@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'AddImageProfile.dart';
+import 'Driver.dart';
 import 'FavoritesController.dart';
 import 'LogIn.dart';
 import 'Stores.dart';
@@ -17,14 +18,16 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
   final showHome = prefs?.getBool('showHome') ?? false;
-  runApp(MyApp(showHome: showHome));
+  final isDriver = prefs?.getBool('isDriver') ?? false;
+  runApp(MyApp(showHome: showHome,isDriver:isDriver));
   Get.put(FavoritesController());
 }
 
 class MyApp extends StatelessWidget {
   final bool showHome;
+  final bool isDriver;
 
-  const MyApp({super.key, required this.showHome});
+  const MyApp({super.key, required this.showHome,required this.isDriver});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: showHome ? const Stores() : OnboardingPage(),
+      home: showHome
+          ? (isDriver ? Driver() : const Stores())
+          : OnboardingPage(),
       locale: localeController.initlang,
       translations: MyLocal(),
     );

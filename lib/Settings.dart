@@ -316,7 +316,7 @@ class _SettingState extends State<Settings> {
                       final favoritesController =
                           Get.find<FavoritesController>();
                       await favoritesController.clearFavorites();
-
+                      prefs.clear();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => OnboardingPage(),
                       ));
