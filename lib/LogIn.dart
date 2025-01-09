@@ -257,7 +257,9 @@ class _LogInState extends State<LogIn> {
                         if (formKey.currentState!.validate()) {
                           try {
                             final response = await post(
-                              Uri.parse("http://novacart.test/api/login"),
+                              // Uri.parse("http://novacart.test/api/login"),
+                              Uri.parse("http://127.0.0.1:8000/api/login"),
+                              // Uri.parse("http://192.168.1.105:8000/api/login"),// this is for phone
                               headers: {'Content-Type': 'application/json'},
                               body: jsonEncode({
                                 "number": numberController.text,
@@ -268,7 +270,6 @@ class _LogInState extends State<LogIn> {
                             if (response.statusCode == 200) {
                               var responseBody = jsonDecode(response.body);
                               if (responseBody["success"] == "true") {
-                                print("Success: $responseBody");
                                 await prefs!.setBool('showHome', true);
                                 // print(responseBody["token"]);
                                 await prefs!
@@ -285,11 +286,15 @@ class _LogInState extends State<LogIn> {
                                     "email", responseBody["user"]["email"]);
                                 await prefs!.setString(
                                     "password", passwordController.text);
+                                await prefs!.setInt(
+                                    "userId", responseBody["user"]["id"]);
                                 if (responseBody["user"]["isDriver"] == 1) {
                                   await prefs!.setBool("isDriver", true);
+                                  print("Success: $responseBody");
                                   Get.offAll(() => Driver());
                                 } else {
                                   await prefs!.setBool("isDriver", false);
+                                  print("Success: $responseBody");
                                   Get.offAll(() => Stores());
                                 }
                               } else {

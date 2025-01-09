@@ -1,11 +1,13 @@
 // ignore_for_file: file_names, non_constant_identifier_names, avoid_unnecessary_containers, use_build_context_synchronously, camel_case_types
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'FavoritesController.dart';
 import 'LogIn.dart';
@@ -14,7 +16,7 @@ import 'local/local_controller.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:path/path.dart';
 
 
 class Settings extends StatefulWidget {
@@ -28,25 +30,56 @@ class _SettingState extends State<Settings> {
   File? profileImage;
   MyLocaleController LangController = Get.find();
 
+  Future<void> logOut() async {
+    var response = await post(Uri.parse("${baseurl}/api/logout"), headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    });
+    print("Response Status: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      var responseBody = jsonDecode(response.body);
+      print("Success: $responseBody");
+    } else {
+      print("meeo");
+    }
+  }
+
   @override
   void initState() {
-    loadProfileImage();
     print(prefs!.getString("token"));
     print(prefs!.getString("password"));
+    print(prefs!.getInt("userId"));
+    fetchProfileImage();
     super.initState();
   }
 
-  Future<void> loadProfileImage() async {
-    String? imagePath = prefs!.getString("profileImage");
-    if (imagePath != null) {
-      setState(() {
-        profileImage = File(imagePath);
-      });
-    }
-  }
+
+  String? profileImageUrl;
   String? token = prefs!.getString("token");
   String? userName = prefs!.getString("userName");
   String? email = prefs!.getString("email");
+  int? userId = prefs!.getInt("userId");
+
+  Future<void> fetchProfileImage() async {
+    final uri = Uri.parse("http://127.0.0.1:8000/getuserimage/$userId");
+    try {
+      final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        setState(() {
+          profileImageUrl = uri.toString();
+        });
+      } else {
+        print("Failed to fetch profile image: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching profile image: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +124,10 @@ class _SettingState extends State<Settings> {
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.grey.shade100,
-                        backgroundImage: const AssetImage("images/logo.png"),
+                        // backgroundImage: const AssetImage("images/logo.png"),
+                        backgroundImage: profileImageUrl != null
+                            ? NetworkImage(profileImageUrl!)
+                            : const AssetImage("images/logo.png"),
                         radius: 45,
                       ),
                       const SizedBox(
@@ -113,7 +149,9 @@ class _SettingState extends State<Settings> {
                             height: 8,
                           ),
                         ],
-                      )
+                      ),
+                      SizedBox(width: 30,),
+                      Icon(Icons.edit)
                     ],
                   ),
                 ),
@@ -310,13 +348,12 @@ class _SettingState extends State<Settings> {
                     btnCancelColor: Colors.red,
                     btnCancelOnPress: () {},
                     btnOkOnPress: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('showHome', false);
+                      logOut();
+                      prefs!.setBool('showHome', false);
 
                       final favoritesController =
                           Get.find<FavoritesController>();
                       await favoritesController.clearFavorites();
-                      prefs.clear();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => OnboardingPage(),
                       ));
@@ -324,13 +361,6 @@ class _SettingState extends State<Settings> {
                   ).show();
                 },
               ),
-              // ElevatedButton(onPressed: () {
-              //   if(Get.isDarkMode){
-              //     Get.changeTheme(ThemeData.light());
-              //   }else{
-              //     Get.changeTheme(ThemeData.dark());
-              //   }
-              // }, child: Text("Change Theme")),
             ],
           ),
         ));
@@ -534,73 +564,111 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   File? selectedImage;
-
   final imagePicker = ImagePicker();
 
-  uploadImage(ImageSource) async {
-    var pickedImage = await imagePicker.pickImage(source: ImageSource);
+  Future<File?> uploadImage(ImageSource source) async {
+    var pickedImage = await imagePicker.pickImage(source: source);
     if (pickedImage != null) {
       setState(() {
         selectedImage = File(pickedImage.path);
       });
       await prefs!.setString("profileImage", pickedImage.path);
-    } else {}
-  }
+      await uploadToBackend(selectedImage!);
+      return File(pickedImage.path); // Return the selected image
 
-  Future<void> loadImage() async {
-    String? imagePath = prefs!.getString("profileImage");
-    if (imagePath != null) {
-      setState(() {
-        selectedImage = File(imagePath);
-      });
+    } else {
+      return null;
     }
   }
 
   @override
   void initState() {
-    loadImage();
+    fetchProfileImage();
     super.initState();
+  }
+
+  Future<void> uploadToBackend(File image) async {
+    final uri = Uri.parse("http://127.0.0.1:8000/api/changelogo");
+
+    var request = http.MultipartRequest('POST', uri);
+    request.fields['userName'] ="$userName";
+    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+    request.headers['Authorization'] = 'Bearer $token';
+
+    try {
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await http.Response.fromStream(response);
+        print("Success: ${json.decode(responseBody.body)}");
+        print("image upload success");
+      } else {
+        print("Failed: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error uploading image: $e");
+    }
+  }
+
+  Future<void> fetchProfileImage() async {
+    final uri = Uri.parse("http://127.0.0.1:8000/getuserimage/$userId");
+    try {
+      final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        setState(() {
+          profileImageUrl = uri.toString();
+        });
+      } else {
+        print("Failed to fetch profile image: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching profile image: $e");
+    }
   }
 
   String? number = prefs!.getString("number");
   String? firstName = prefs!.getString("firstName");
   String? lastName = prefs!.getString("lastName");
+  String? userName = prefs!.getString("userName");
+  String? token = prefs!.getString("token");
+  String? profileImageUrl;
+  int? userId = prefs!.getInt("userId");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Profile".tr,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Color.fromARGB(255, 20, 54, 64),
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.normal)),
+        title: Text(
+          "Profile".tr,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 20, 54, 64),
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.normal,
+          ),
+        ),
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
         elevation: 4,
         centerTitle: true,
-        shadowColor: const Color.fromARGB(255, 48, 193, 152),
-        // leading:IconButton(onPressed: () {
-        //   Get.to(Settings());
-        // }, icon: Icon(Icons.arrow_back)) ,
       ),
       body: Center(
         child: Column(
           children: [
-            const SizedBox(
-              height: 70,
-            ),
+            const SizedBox(height: 70),
             Stack(
               fit: StackFit.passthrough,
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.grey.shade50,
-                  radius: 80,
-                  backgroundImage: selectedImage != null
-                      ? FileImage(selectedImage!)
-                      : const AssetImage('images/logo.png'),
+                    radius: 80,
+                    backgroundImage: profileImageUrl != null
+                        ? NetworkImage(profileImageUrl!) // Show backend image
+                        : selectedImage != null
+                        ? FileImage(selectedImage!) // Show local image
+                        : const AssetImage('images/logo.png'),
                 ),
                 Positioned(
                   bottom: 0,
@@ -609,59 +677,103 @@ class ProfilePageState extends State<ProfilePage> {
                     backgroundColor: Colors.greenAccent,
                     child: IconButton(
                       onPressed: () {
-                        ShowBottomSheet();
+                        Get.bottomSheet(
+                            backgroundColor: Colors.white,
+                            SizedBox(
+                              width: double.infinity,
+                              height: 200,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          top: 20, left: 10),
+                                      child: Text(
+                                        "Choose Image from:".tr,
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        File? image = await uploadImage(
+                                            ImageSource.gallery);
+                                        if (image != null) {
+                                          await uploadToBackend(
+                                              image); // Upload the image after selecting
+                                        }
+                                        Get.back();
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.all(20),
+                                        width: double.infinity,
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                                Icons.photo_library_outlined,
+                                                size: 25),
+                                            const SizedBox(width: 20),
+                                            Text("Gallery".tr,
+                                                style: TextStyle(fontSize: 20)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        File? image = await uploadImage(
+                                            ImageSource.camera);
+                                        if (image != null) {
+                                          await uploadToBackend(
+                                              image); // Upload the image after selecting
+                                        }
+                                        Get.back();
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.all(20),
+                                        width: double.infinity,
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.camera, size: 25),
+                                            const SizedBox(width: 20),
+                                            Text("Camera".tr,
+                                                style: TextStyle(fontSize: 20)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ));
                       },
-                      icon: const Icon(
-                        Icons.photo_camera,
-                        size: 25,
-                      ),
+                      icon: const Icon(Icons.photo_camera, size: 25),
                     ),
                   ),
-                )
+                ),
               ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             ListTile(
               leading: const Icon(Icons.perm_identity),
-              title: Text(
-                "Name".tr,
-                style: TextStyle(color: Colors.grey),
-              ),
+              title: Text("Name".tr, style: TextStyle(color: Colors.grey)),
               subtitle: Row(
                 children: [
-                  Text(
-                    firstName!,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    lastName!,
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  Text(firstName ?? "", style: TextStyle(fontSize: 18)),
+                  SizedBox(width: 5),
+                  Text(lastName ?? "", style: TextStyle(fontSize: 18)),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Divider(
-              height: 10,
-              color: Colors.black26,
-            ),
+            const SizedBox(height: 10),
+            Divider(height: 10, color: Colors.black26),
             ListTile(
               leading: const Icon(Icons.phone),
-              title: Text(
-                "Phone Number".tr,
-                style: TextStyle(color: Colors.grey),
-              ),
-              subtitle: Text(
-                number!,
-                style: TextStyle(fontSize: 18),
-              ),
+              title:
+                  Text("Phone Number".tr, style: TextStyle(color: Colors.grey)),
+              subtitle: Text(number ?? "", style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
@@ -669,80 +781,6 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  ShowBottomSheet() {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          width: double.infinity,
-          height: 200,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 20, left: 10),
-                  child: Text(
-                    "Chose Image from:".tr,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    uploadImage(ImageSource.gallery);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.photo_library_outlined,
-                          size: 25,
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Gallery".tr,
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    uploadImage(ImageSource.camera);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.camera,
-                          size: 25,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Camera".tr,
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
 
 class ChangePassword extends StatefulWidget {
@@ -754,7 +792,8 @@ class ChangePasswordState extends State<ChangePassword> {
   var isobs;
   GlobalKey<FormState> ChangePasswordFormKey = GlobalKey();
   final TextEditingController NewPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController OldPasswordController = TextEditingController();
 
   @override
@@ -767,6 +806,7 @@ class ChangePasswordState extends State<ChangePassword> {
   void dispose() {
     super.dispose();
   }
+
   String? password = prefs!.getString("password");
 
   Future<void> changePassword() async {
@@ -836,206 +876,235 @@ class ChangePasswordState extends State<ChangePassword> {
           shadowColor: const Color.fromARGB(255, 48, 193, 152),
         ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.symmetric(horizontal: 20),
             child: Form(
                 key: ChangePasswordFormKey,
-                child: Column(children: [
-                  SizedBox(
-                    height: 30,
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "images/change.png",
+                            width: 180,
+                            height: 180,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          TextFormField(
+                            controller: OldPasswordController,
+                            cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            maxLength: 35,
+                            obscureText: isobs,
+                            obscuringCharacter: '*',
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                    Icons.lock_outline_rounded,
+                                    size: 30),
+                                prefixIconColor:
+                                    const Color.fromARGB(255, 165, 165, 165),
+                                labelText: "Old Password".tr,
+                                hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 165, 165, 165)),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isobs = !isobs;
+                                    });
+                                  },
+                                  icon: isobs
+                                      ? const Icon(Icons.remove_red_eye)
+                                      : const Icon(Icons.visibility_off),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 66, 252, 169))),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 20, 54, 64))),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 255, 23, 7))),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 255, 23, 7)))),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "Please enter your password".tr;
+                              }
+                              if (val != password) {
+                                return "Passwords do not match".tr;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            controller: NewPasswordController,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                            maxLength: 35,
+                            obscureText: isobs,
+                            obscuringCharacter: '*',
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                    Icons.lock_outline_rounded,
+                                    size: 30),
+                                prefixIconColor:
+                                    const Color.fromARGB(255, 165, 165, 165),
+                                labelText: "New Password".tr,
+                                hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 165, 165, 165)),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isobs = !isobs;
+                                    });
+                                  },
+                                  icon: isobs
+                                      ? const Icon(Icons.remove_red_eye)
+                                      : const Icon(Icons.visibility_off),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 66, 252, 169))),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 20, 54, 64))),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 255, 23, 7))),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 255, 23, 7)))),
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Please enter your Password".tr;
+                              } else {
+                                if (val.length < 8) {
+                                  return "Password must be at least 8 characters"
+                                      .tr;
+                                }
+                                return null;
+                              }
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            controller: confirmPasswordController,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                            maxLength: 35,
+                            obscureText: isobs,
+                            obscuringCharacter: '*',
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                    Icons.lock_outline_rounded,
+                                    size: 30),
+                                prefixIconColor:
+                                    const Color.fromARGB(255, 165, 165, 165),
+                                labelText: "Confirm Password".tr,
+                                hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 165, 165, 165)),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isobs = !isobs;
+                                    });
+                                  },
+                                  icon: isobs
+                                      ? const Icon(Icons.remove_red_eye)
+                                      : const Icon(Icons.visibility_off),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 66, 252, 169))),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 20, 54, 64))),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 255, 23, 7))),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 255, 23, 7)))),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "Please confirm your password";
+                              }
+                              if (val != NewPasswordController.text) {
+                                return "Passwords do not match";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 20, 54, 64),
+                            ),
+                            onPressed: () async {
+                              if (ChangePasswordFormKey.currentState!
+                                  .validate()) {
+                                await changePassword();
+                              } else {
+                                Get.snackbar(
+                                  "Error".tr,
+                                  "Please fill the text fields correctly".tr,
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              }
+                            },
+                            child: Text("Change Password".tr,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.normal,
+                                  color: Color.fromARGB(255, 66, 252, 169),
+                                )),
+                          )
+                        ]),
                   ),
-                  Image.asset("images/change.png",width: 200,height: 200,fit: BoxFit.cover,),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  TextFormField(
-                    controller: OldPasswordController,
-                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    maxLength: 35,
-                    obscureText: isobs,
-                    obscuringCharacter: '*',
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                        prefixIcon:
-                            const Icon(Icons.lock_outline_rounded, size: 30),
-                        prefixIconColor:
-                            const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "Old Password".tr,
-                        hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 165, 165, 165)),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isobs = !isobs;
-                            });
-                          },
-                          icon: isobs
-                              ? const Icon(Icons.remove_red_eye)
-                              : const Icon(Icons.visibility_off),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 66, 252, 169))),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 20, 54, 64))),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 255, 23, 7))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 255, 23, 7)))),
-                    validator: (val) {
-                      if (val == null || val.isEmpty) {
-                        return "Please enter your password".tr;
-                      }
-                      if (val != password) {
-                        return "Passwords do not match".tr;
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: NewPasswordController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
-                    maxLength: 35,
-                    obscureText: isobs,
-                    obscuringCharacter: '*',
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                        prefixIcon:
-                            const Icon(Icons.lock_outline_rounded, size: 30),
-                        prefixIconColor:
-                            const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "New Password".tr,
-                        hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 165, 165, 165)),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isobs = !isobs;
-                            });
-                          },
-                          icon: isobs
-                              ? const Icon(Icons.remove_red_eye)
-                              : const Icon(Icons.visibility_off),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 66, 252, 169))),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 20, 54, 64))),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 255, 23, 7))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 255, 23, 7)))),
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return "Please enter your Password".tr;
-                      } else {
-                        if (val.length < 8) {
-                          return "Password must be at least 8 characters".tr;
-                        }
-                        return null;
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: confirmPasswordController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
-                    maxLength: 35,
-                    obscureText: isobs,
-                    obscuringCharacter: '*',
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                        prefixIcon:
-                            const Icon(Icons.lock_outline_rounded, size: 30),
-                        prefixIconColor:
-                            const Color.fromARGB(255, 165, 165, 165),
-                        labelText: "Confirm Password".tr,
-                        hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 165, 165, 165)),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isobs = !isobs;
-                            });
-                          },
-                          icon: isobs
-                              ? const Icon(Icons.remove_red_eye)
-                              : const Icon(Icons.visibility_off),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 66, 252, 169))),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 20, 54, 64))),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 255, 23, 7))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 255, 23, 7)))),
-                    validator: (val) {
-                      if (val == null || val.isEmpty) {
-                        return "Please confirm your password";
-                      }
-                      if (val != NewPasswordController.text) {
-                        return "Passwords do not match";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 20, 54, 64),
-                        padding: const EdgeInsets.symmetric(horizontal: 100)),
-                    onPressed: () async {
-                      if (ChangePasswordFormKey.currentState!.validate()) {
-                        await changePassword();
-                      } else {
-                        Get.snackbar(
-                          "Error".tr,
-                          "Please fill the text fields correctly".tr,
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
-                      }
-                    },
-                    child: Text("Change Password".tr,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal,
-                          color: Color.fromARGB(255, 66, 252, 169),
-                        )),
-                  )
-                ]))));
+                ))));
   }
 }

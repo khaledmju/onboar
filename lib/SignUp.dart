@@ -12,6 +12,8 @@ import 'LogIn.dart';
 import 'Stores.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'main.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -495,16 +497,15 @@ class _SignUpState extends State<SignUp> {
                           var responseBody = jsonDecode(response.body);
                           if (response.statusCode == 200) {
                               print("Success: $responseBody");
-                              final prefs =
-                              await SharedPreferences.getInstance();
-                              await prefs.setBool('showHome', true);
+                              await prefs!.setBool('showHome', true);
 
-                              await prefs.setString("token", responseBody["token"]);
-                              await prefs.setString("userName", responseBody["user"]["userName"]) ;
-                              await prefs.setString("number", responseBody["user"]["number"]) ;
-                              await prefs.setString("firstName", responseBody["user"]["firstName"]) ;
-                              await prefs.setString("lastName", responseBody["user"]["lastName"]) ;
-                              await prefs.setString("email", responseBody["user"]["email"]) ;
+                              await prefs!.setString("token", responseBody["token"]);
+                              await prefs!.setString("userName", responseBody["user"]["userName"]) ;
+                              await prefs!.setString("number", responseBody["user"]["number"]) ;
+                              await prefs!.setString("firstName", responseBody["user"]["firstName"]) ;
+                              await prefs!.setString("lastName", responseBody["user"]["lastName"]) ;
+                              await prefs!.setString("email", responseBody["user"]["email"]) ;
+                              await prefs!.setInt("userId", responseBody["user"]["id"]);
 
                               Get.offAll(() => Stores());
 

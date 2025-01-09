@@ -11,6 +11,12 @@ class Driver extends StatefulWidget{
   }
 }
 class DriverState extends State<Driver>{
+//   String? driverLogo;
+//   @override
+//   void initState() {
+//     driverLogo = prefs!.getString("driverLogo ");
+//     super.initState();
+//   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +43,36 @@ class DriverState extends State<Driver>{
         elevation: 4,
         shadowColor: const Color.fromARGB(255, 48, 193, 152),
       ),
-      body: Center(child:Text("Driver"),),
-    );
-  }
-
-}
+      body: Center(child:Text("Driver"),),);}}
+//       body: Center(
+//         child: driverLogo != null
+//             ? Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             ClipOval(
+//               child: Image.network(
+//                 driverLogo!,
+//                 height: 150,
+//                 width: 150,
+//                 fit: BoxFit.cover,
+//                 errorBuilder: (context, error, stackTrace) {
+//                   return Icon(
+//                     Icons.account_circle,
+//                     size: 150,
+//                     color: Colors.grey,
+//                   );
+//                 },
+//               ),
+//             ),
+//             const SizedBox(height: 20),
+//             const Text(
+//               "Welcome, Driver!",
+//               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+//             ),
+//           ],
+//         )
+//             : const CircularProgressIndicator(), // Show a loader while retrieving the logo
+//       ),
+//     );
+//   }
+// }
