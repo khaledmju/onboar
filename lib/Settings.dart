@@ -18,7 +18,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
-
 class Settings extends StatefulWidget {
   const Settings({super.key});
 
@@ -55,7 +54,6 @@ class _SettingState extends State<Settings> {
     super.initState();
   }
 
-
   String? profileImageUrl;
   String? token = prefs!.getString("token");
   String? userName = prefs!.getString("userName");
@@ -73,6 +71,7 @@ class _SettingState extends State<Settings> {
         setState(() {
           profileImageUrl = uri.toString();
         });
+        await prefs!.setString('profileImageUrl', profileImageUrl!);
       } else {
         print("Failed to fetch profile image: ${response.statusCode}");
       }
@@ -150,7 +149,9 @@ class _SettingState extends State<Settings> {
                           ),
                         ],
                       ),
-                      SizedBox(width: 30,),
+                      SizedBox(
+                        width: 30,
+                      ),
                       Icon(Icons.edit)
                     ],
                   ),
@@ -565,7 +566,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   File? selectedImage;
   final imagePicker = ImagePicker();
-
+  TextEditingController ChangeUserNameController = TextEditingController();
   Future<File?> uploadImage(ImageSource source) async {
     var pickedImage = await imagePicker.pickImage(source: source);
     if (pickedImage != null) {
@@ -575,7 +576,6 @@ class ProfilePageState extends State<ProfilePage> {
       await prefs!.setString("profileImage", pickedImage.path);
       await uploadToBackend(selectedImage!);
       return File(pickedImage.path); // Return the selected image
-
     } else {
       return null;
     }
@@ -584,6 +584,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     fetchProfileImage();
+    print(prefs!.getString("userName"));
     super.initState();
   }
 
@@ -591,7 +592,7 @@ class ProfilePageState extends State<ProfilePage> {
     final uri = Uri.parse("http://127.0.0.1:8000/api/changelogo");
 
     var request = http.MultipartRequest('POST', uri);
-    request.fields['userName'] ="$userName";
+    request.fields['userName'] = "$userName";
     request.files.add(await http.MultipartFile.fromPath('image', image.path));
     request.headers['Authorization'] = 'Bearer $token';
 
@@ -625,6 +626,28 @@ class ProfilePageState extends State<ProfilePage> {
       }
     } catch (e) {
       print("Error fetching profile image: $e");
+    }
+  }
+
+  Future<void> updateUserName() async{
+    final response = await put(
+      Uri.parse("http://127.0.0.1:8000/api/updateusername"),
+      headers: {
+        'Authorization' : "Bearer $token",
+        'Content-Type': 'application/json',
+      },
+      body:jsonEncode({
+      "userName":ChangeUserNameController.text,
+    }),
+    );
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
+    var responseBody = jsonDecode(response.body);
+    if(response.statusCode==200){
+      print("Success: $responseBody");
+      prefs!.setString("userName", ChangeUserNameController.text);
+    }else{
+      print( "Failed to change User Name: ${response.reasonPhrase}");
     }
   }
 
@@ -663,12 +686,12 @@ class ProfilePageState extends State<ProfilePage> {
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.grey.shade50,
-                    radius: 80,
-                    backgroundImage: profileImageUrl != null
-                        ? NetworkImage(profileImageUrl!) // Show backend image
-                        : selectedImage != null
-                        ? FileImage(selectedImage!) // Show local image
-                        : const AssetImage('images/logo.png'),
+                  radius: 80,
+                  backgroundImage: profileImageUrl != null
+                      ? NetworkImage(profileImageUrl!) // Show backend image
+                      : selectedImage != null
+                          ? FileImage(selectedImage!) // Show local image
+                          : const AssetImage('images/logo.png'),
                 ),
                 Positioned(
                   bottom: 0,
@@ -757,6 +780,62 @@ class ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 30),
             ListTile(
+              leading: const Icon(Icons.person),
+              title: Text("User Name".tr, style: TextStyle(color: Colors.grey)),
+              trailing: IconButton(
+                  onPressed: () {
+                    Get.bottomSheet(
+                        backgroundColor: Colors.white,
+                        SizedBox(
+                          width: double.infinity,
+                          height: 200,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.only(top: 20, left: 10),
+                                  child: Center(
+                                    child: Text(
+                                      "Change User Name".tr,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    child: Form(child: TextFormField(
+                                      controller: ChangeUserNameController,
+                                       maxLength: 20,
+                                      decoration: InputDecoration(prefixIcon: Icon(Icons.perm_identity),label: Text("User Name".tr)),
+                                    ))),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      updateUserName();
+                                      Get.offAll(()=>Stores());
+                                    }, child: Text("Confirm".tr))
+                              ],
+                            ),
+                          ),
+                        ));
+                  },
+                  icon: Icon(Icons.edit)),
+              subtitle: Row(
+                children: [
+                  Text(userName ?? "", style: TextStyle(fontSize: 18)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Divider(height: 10, color: Colors.black26),
+            ListTile(
               leading: const Icon(Icons.perm_identity),
               title: Text("Name".tr, style: TextStyle(color: Colors.grey)),
               subtitle: Row(
@@ -780,7 +859,6 @@ class ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
 }
 
 class ChangePassword extends StatefulWidget {

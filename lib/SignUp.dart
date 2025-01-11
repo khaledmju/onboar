@@ -487,7 +487,6 @@ class _SignUpState extends State<SignUp> {
                               "number": numberController.text,
                               "email": emailController.text,
                               "location": "location",
-                              "logo":"http://",
                               "password": passwordController.text,
                             }),
                           );
