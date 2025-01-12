@@ -103,7 +103,7 @@ class _ProductsPage extends State<ProductsPage> {
               scrollDirection: Axis.vertical,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisExtent: 284,
+                mainAxisExtent: 300,
               ),
               itemCount: products.length,
               itemBuilder: (context, i) {
