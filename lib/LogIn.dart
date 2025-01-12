@@ -108,22 +108,22 @@ class _LogInState extends State<LogIn> {
                               borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 255, 23, 7)))),
 
-                      // validator: (val) {
-                      //   if (val!.isEmpty) {
-                      //     return "Please enter your Phone Number".tr;
-                      //   }
-                      //   else {
-                      //     if (!val.startsWith('09')) {
-                      //       return "Phone Number must be : 09XXXXXXXX".tr;
-                      //     }
-                      //     else if (val.length < 10 || val.length > 10) {
-                      //       return "Phone Number must be 10 digits".tr;
-                      //     } else if (val.hashCode.isNaN) {
-                      //       return "Phone Number must ONLY contain numbers".tr;
-                      //     }
-                      //     return null;
-                      //   }
-                      // },
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Please enter your Phone Number".tr;
+                        }
+                        else {
+                          if (!val.startsWith('09')) {
+                            return "Phone Number must be : 09XXXXXXXX".tr;
+                          }
+                          else if (val.length < 10 || val.length > 10) {
+                            return "Phone Number must be 10 digits".tr;
+                          } else if (val.hashCode.isNaN) {
+                            return "Phone Number must ONLY contain numbers".tr;
+                          }
+                          return null;
+                        }
+                      },
                     ),
                     const SizedBox(
                       height: 20,
@@ -211,7 +211,7 @@ class _LogInState extends State<LogIn> {
                                   color: Color.fromARGB(255, 255, 23, 7)))),
                       validator: (val) {
                         if (val!.isEmpty) {
-                          return "Please enter your Password".tr;
+                          return "Please enter your password".tr;
                         } else {
                           if (val.length < 8) {
                             return "Password must be at least 8 characters".tr;
@@ -257,9 +257,7 @@ class _LogInState extends State<LogIn> {
                         if (formKey.currentState!.validate()) {
                           try {
                             final response = await post(
-                              // Uri.parse("http://novacart.test/api/login"),
                               Uri.parse("http://127.0.0.1:8000/api/login"),
-                              // Uri.parse("http://192.168.1.105:8000/api/login"),// this is for phone
                               headers: {'Content-Type': 'application/json'},
                               body: jsonEncode({
                                 "number": numberController.text,

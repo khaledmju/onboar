@@ -1,59 +1,77 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'FavoritesController.dart';
 import 'ProductDetailsPage.dart';
 import 'Stores.dart';
+import 'main.dart';
 
 class ProductsPage extends StatefulWidget {
   final List<Map<String, dynamic>> products;
+  final int storeId;
 
-  const ProductsPage({super.key, required this.products});
-
+  const ProductsPage(
+      {super.key, required this.products, required this.storeId});
 
   @override
   State<ProductsPage> createState() => _ProductsPage();
 }
 
 class _ProductsPage extends State<ProductsPage> {
-  final List<Map<String, dynamic>> products = [
-    {
-      "image": "images/logo.png",
-      "title": "Apple Watch IP79",
-      "subtitle": "Electronic Smart Watch",
-      "quantity": "15",
-      "price": "180\$",
-    },
-    {
-      "image": "images/logo.png",
-      "title": "Apple Air pods Pro",
-      "subtitle": "Smart , 6 hours straight use",
-      "quantity": "15",
-      "price": "399\$",
-    },
-    {
-      "image": "images/logo.png",
-      "title": "Adidas Sneakers",
-      "subtitle": "Sport comfortable Sneakers",
-      "quantity": "15",
-      "price": "157\$",
-    },
-  ];
+  List<Map<String, dynamic>> products = [];
+
+  Future<void> getProduct() async {
+    try {
+      var response = await get(
+        Uri.parse(
+            "http://127.0.0.1:8000/api/getstoreproducts/${widget.storeId}"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+      print("Response Status: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true) {
+          setState(() {
+            products =
+                List<Map<String, dynamic>>.from(responseBody['products']);
+          });
+        } else {
+          print(
+              "Failed to fetch products: ${responseBody['message'] ?? 'Unknown error'}");
+        }
+      } else {
+        print("HTTP Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching products: $e");
+    }
+  }
+
+  String? token = prefs!.getString("token");
 
   final FavoritesController favoritesController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    favoritesController.loadFavorites(); // Load saved favorites on app start
+    getProduct();
+    favoritesController.loadFavorites();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () {
-          Get.offAll(Stores());
-        }, icon: Icon(Icons.home)),
+        leading: IconButton(
+            onPressed: () {
+              Get.offAll(Stores());
+            },
+            icon: Icon(Icons.home)),
         title: Text("Products".tr,
             textAlign: TextAlign.center,
             style: const TextStyle(
@@ -66,109 +84,115 @@ class _ProductsPage extends State<ProductsPage> {
         elevation: 4,
         shadowColor: const Color.fromARGB(255, 48, 193, 152),
         actions: [
-          IconButton(onPressed: () {
-            showSearch(context: context, delegate: SearchCustom());
-          }, icon: Icon(Icons.search))
+          IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: SearchCustom(products),
+                );
+              },
+              icon: Icon(Icons.search))
         ],
       ),
-      body: GridView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisExtent: 277,
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, i) {
-          return InkWell(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ProductDetailsPage(productData: products[i]),
-              ));
-            },
-            child: Card(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Obx(() => IconButton(
-                        onPressed: () {
-                          favoritesController.toggleFavorite(products[i]);
-                        },
-                        icon: Icon(
-                          favoritesController.isFavorite(products[i])
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: favoritesController.isFavorite(products[i])
-                              ? Colors.red
-                              : Colors.grey,
-                        ),
-                      )),
-                    ],
-                  ),
-                  Image.asset(products[i]["image"],
-                      height: 120, width: 1000, fit: BoxFit.cover),
-                  Text(products[i]["title"],
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Color.fromARGB(255, 20, 54, 64))),
-                  Text(products[i]["subtitle"],
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w300, fontSize: 14)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Quantity : ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color.fromARGB(255, 20, 54, 64))),
-                      Text(products[i]["quantity"],
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color.fromARGB(255, 20, 54, 64))),
-                    ],
-                  ),
-                  Text(products[i]["price"],
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Color.fromARGB(255, 48, 193, 152))),
-                ],
+      body: products.isEmpty
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : GridView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 284,
               ),
+              itemCount: products.length,
+              itemBuilder: (context, i) {
+                String imagePath = products[i]["image"];
+                String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          ProductDetailsPage(productData: products[i]),
+                    ));
+                  },
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Obx(() => IconButton(
+                                  onPressed: () {
+                                    favoritesController
+                                        .toggleFavorite(products[i]);
+                                  },
+                                  icon: Icon(
+                                    favoritesController.isFavorite(products[i])
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: favoritesController
+                                            .isFavorite(products[i])
+                                        ? Colors.red
+                                        : Colors.grey,
+                                  ),
+                                )),
+                          ],
+                        ),
+                        Image.network(
+                          imageUrl,
+                          height: 125,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print("Error loading image: $imageUrl");
+                            return Image.asset(
+                              'images/prod.png',
+                              height: 120,
+                              width: 160,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20,),
+                        Text(products[i]["name"],textAlign:TextAlign.center ,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Quantity : ",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 20, 54, 64))),
+                            Text(products[i]["quantity"].toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 20, 54, 64))),
+                          ],
+                        ),
+                        Text(products[i]["price"].toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 48, 193, 152))),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
 
-
 class SearchCustom extends SearchDelegate {
-  List items = [
-    {
-      "image": "images/logo.png",
-      "title": "Apple Watch IP79",
-      "subtitle": "Electronic Smart Watch",
-      "price": "\$180",
-    },
-    {
-      "image": "images/logo.png",
-      "title": "Apple Air pods Pro",
-      "subtitle": "Smart , 6 hours straight use",
-      "price": "\$399",
-    },
-    {
-      "image": "images/logo.png",
-      "title": "Adidas Sneakers",
-      "subtitle": "Sport comfortable Sneakers",
-      "price": "\$157",
-    },
-  ];
+  final List<Map<String, dynamic>> products;
+
+  SearchCustom(this.products);
 
   List? sortedItems;
 
@@ -196,60 +220,97 @@ class SearchCustom extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text(query);
+    sortedItems = products
+        .where((element) =>
+            element['name'].toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return sortedItems!.isEmpty
+        ? const Center(child: Text('No products found'))
+        : ListView.builder(
+            itemCount: sortedItems!.length,
+            itemBuilder: (context, index) {
+              String imagePath = sortedItems![index]["image"];
+              String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+              final product = sortedItems![index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProductDetailsPage(productData: product),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  leading: Image.network(
+                    imageUrl,
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'images/prod.png',
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                  title: Text(
+                    product['name'],
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              );
+            },
+          );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    sortedItems = items
+    sortedItems = products
         .where((element) =>
-        element['title'].toLowerCase().contains(query.toLowerCase()))
+        element['name'].toLowerCase().contains(query.toLowerCase()))
         .toList();
-    return ListView.builder(
+
+    return sortedItems!.isEmpty
+        ? const Center(child: Text('No suggestions available'))
+        : ListView.builder(
       itemCount: sortedItems!.length,
       itemBuilder: (context, index) {
-        return InkWell(
+        String imagePath = sortedItems![index]["image"];
+        String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+        final product = sortedItems![index];
+        return ListTile(
+          leading: Image.network(
+            imageUrl,
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'images/prod.png',
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover,
+              );
+            },
+          ),
+          title: Text(
+            product['name'],
+            style: const TextStyle(fontSize: 16),
+          ),
           onTap: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProductDetailsPage(
-                  productData: sortedItems![index],
-                ),
+                builder: (context) =>
+                    ProductDetailsPage(productData: product),
               ),
             );
           },
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        sortedItems![index]["image"],
-                        height: 50,
-                        width: 70,
-                        fit: BoxFit.fill,
-                        alignment: Alignment.centerLeft,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        "${sortedItems![index]['title']}",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 20, 54, 64),
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
         );
       },
     );

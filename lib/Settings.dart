@@ -1082,7 +1082,7 @@ class ChangePasswordState extends State<ChangePassword> {
                                             Color.fromARGB(255, 255, 23, 7)))),
                             validator: (val) {
                               if (val!.isEmpty) {
-                                return "Please enter your Password".tr;
+                                return "Please enter your password".tr;
                               } else {
                                 if (val.length < 8) {
                                   return "Password must be at least 8 characters"
@@ -1145,10 +1145,10 @@ class ChangePasswordState extends State<ChangePassword> {
                                             Color.fromARGB(255, 255, 23, 7)))),
                             validator: (val) {
                               if (val == null || val.isEmpty) {
-                                return "Please confirm your password";
+                                return "Please confirm your password".tr;
                               }
                               if (val != NewPasswordController.text) {
-                                return "Passwords do not match";
+                                return "Passwords do not match".tr;
                               }
                               return null;
                             },

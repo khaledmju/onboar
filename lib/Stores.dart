@@ -1,9 +1,12 @@
-// ignore_for_file: unused_import, file_names, use_key_in_widget_constructors, avoid_unnecessary_containers, non_constant_identifier_names, unused_local_variable
+import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:onboar/main.dart';
 import 'Cart.dart';
 import 'FavoritesController.dart';
 import 'FavoritesPage.dart';
@@ -33,74 +36,65 @@ class StoresState extends State<Stores> {
       const Settings(),
     ];
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: GetBuilder<MyLocaleController>(builder: (controller) => CurvedNavigationBar(
-        key: _bottomNavigationKey,
-        index: selectedIndex,
-        items:  <Widget>[
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.home, size: 27),
-              Text("Home".tr,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-            ],
-          ),
-          // Column(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     Icon(Icons.list, size: 27),
-          //     Text("Orders",
-          //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-          //   ],
-          // ),
-           Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.favorite, size: 27),
-              Text("Favorite".tr,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.shopping_cart, size: 27),
-              Text("Cart".tr,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.settings, size: 27),
-              Text("Setting".tr,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-            ],
-          ),
-          // Column(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     Icon(Icons.settings, size: 27),
-          //     Text("setting ",
-          //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-          //   ],
-          // ),
-        ],
-        color: const Color.fromARGB(255, 66, 252, 169),
-        buttonBackgroundColor: const Color.fromARGB(255, 66, 252, 169),
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 600),
-        backgroundColor: Colors.transparent,
-        onTap: (val) {
-          setState(() {
-            selectedIndex = val;
-          });
-        },
-        letIndexChange: (index) => true,
-      ),),
+      bottomNavigationBar: GetBuilder<MyLocaleController>(
+        builder: (controller) => CurvedNavigationBar(
+          key: _bottomNavigationKey,
+          index: selectedIndex,
+          items: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.home, size: 27),
+                Text("Home".tr,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.favorite, size: 27),
+                Text("Favorite".tr,
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.shopping_cart, size: 27),
+                Text("Cart".tr,
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.settings, size: 27),
+                Text("Setting".tr,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ],
+          color: const Color.fromARGB(255, 66, 252, 169),
+          buttonBackgroundColor: const Color.fromARGB(255, 66, 252, 169),
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 600),
+          backgroundColor: Colors.transparent,
+          onTap: (val) {
+            setState(() {
+              selectedIndex = val;
+            });
+          },
+          letIndexChange: (index) => true,
+        ),
+      ),
       body: pages[selectedIndex], // Display the selected page
     );
   }
@@ -110,49 +104,51 @@ class HomeContent extends StatefulWidget {
   @override
   State<HomeContent> createState() => _HomeContentState();
 }
+
 final FavoritesController favoritesController = Get.find();
 
 class _HomeContentState extends State<HomeContent> {
-  int currentPage = 0 ;
-  final List stores = [
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Apple Watch IP79",
-      "subtitle": "Electronic Smart Watch",
-    },
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Apple Air pods Pro",
-      "subtitle": "Smart , 6 hours straight use",
-    },
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Adidas Sneakers",
-      "subtitle": "Sport comfortable Sneakers",
-    },
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Adidas Sneakers",
-      "subtitle": "Sport comfortable Sneakers",
-    },
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Adidas Sneakers",
-      "subtitle": "Sport comfortable Sneakers",
-    },
-  ];
+  int currentPage = 0;
+
+  String? token = prefs!.getString("token");
+
+  final List stores = [];
 
   List pageviewImage = [
-    "images/image_applications.jpg",
-    "images/image_applications.jpg",
-    "images/image_applications.jpg",
+    "images/discount.jpg",
+    "images/discount2.jpg",
+    "images/discount3.jpg",
+    "images/discount4.jpg",
   ];
+
+  bool loading = false;
+
+  Future<void> getStore() async {
+    var response =
+        await get(Uri.parse("http://127.0.0.1:8000/api/getallstores"),
+          headers: {
+            'Authorization': "Bearer $token",
+            'Content-Type': 'application/json',
+          },
+        );
+    print("Response Status: ${response.statusCode}");
+
+    var responseBody = jsonDecode(response.body);
+    setState(() {
+      stores.addAll(responseBody);
+    });
+    print(stores);
+  }
 
   @override
   void initState() {
     favoritesController.loadFavorites();
+    getStore();
     super.initState();
   }
+
+  Int? storeId ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,7 +166,10 @@ class _HomeContentState extends State<HomeContent> {
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: InkWell(
                 onTap: () {
-                  showSearch(context: context, delegate: SearchCustom());
+                  showSearch(
+                    context: context,
+                    delegate: SearchCustom(stores), // Pass stores here
+                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -190,40 +189,56 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ],
       ),
-      body: Column(
-        children:[
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            child: CarouselSlider(
-              items:pageviewImage.map((e) =>Container(child: Image.asset(e,),) ,).toList(),
-              options: CarouselOptions(
-                height: 150,
-                initialPage: 0,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                autoPlayInterval: const Duration(seconds: 3),
-                enlargeFactor: 0.1,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-              ),
+      body: Column(children: [
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: CarouselSlider(
+            items: pageviewImage
+                .map(
+                  (e) => Container(
+                    child: Image.asset(
+                      e,
+                    ),
+                  ),
+                )
+                .toList(),
+            options: CarouselOptions(
+              height: 150,
+              initialPage: 0,
+              autoPlay: true,
+              enlargeCenterPage: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              enlargeFactor: 0.1,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  currentPage = index;
+                });
+              },
             ),
           ),
-          const SizedBox(height: 20,),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         buildCarouselIndicator(),
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         Expanded(
-          child: ListView.builder(
+          child: stores.isEmpty ?
+              Center(child: CircularProgressIndicator(),):
+          ListView.builder(
             itemCount: stores.length,
             itemBuilder: (context, index) {
-              var Key = stores.elementAt(index);
+              String imagePath = stores[index]["image"];
+              String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+              print("Image URL: $imageUrl");
               return InkWell(
                 onTap: () {
-                  // Navigator.of(context).pushReplacement(
-                  //     MaterialPageRoute(builder: (context) => const ProductsPage(products: [],)));
-                  Get.offAll( ProductsPage(products: [],));
+                  int storeId = stores[index]["id"];
+                   Get.offAll(ProductsPage(
+                    products: [],storeId: storeId,
+                  ));
                 },
                 child: Card(
                   color: Colors.white,
@@ -231,21 +246,30 @@ class _HomeContentState extends State<HomeContent> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: Image.asset(
-                          stores[index]['image'],
+                        child: Image.network(
+                          imageUrl,
                           height: 125,
-                          fit: BoxFit.fitHeight,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print("Error loading image: $imageUrl");
+                            return Image.asset(
+                              'images/storee.png',
+                              height: 125,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
                       Expanded(
                           flex: 2,
                           child: Container(
+                            padding: EdgeInsets.only(top: 12,bottom: 12),
                               alignment: Alignment.centerLeft,
                               child: Center(
                                 child: Column(
                                   children: [
                                     Text(
-                                      "${stores[index]['title']}",
+                                      "${stores[index]["name"]}",
                                       style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -254,9 +278,9 @@ class _HomeContentState extends State<HomeContent> {
                                               255, 48, 193, 152)),
                                     ),
                                     Text(
-                                      "${stores[index]['subtitle']}",
+                                      "${stores[index]["description"]}",
                                       style: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 13,
                                           fontWeight: FontWeight.w400,
                                           fontStyle: FontStyle.normal,
                                           color:
@@ -272,50 +296,33 @@ class _HomeContentState extends State<HomeContent> {
             },
           ),
         ),
-    ]
-      ),
-
+      ]),
     );
   }
-  buildCarouselIndicator(){
+
+  buildCarouselIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        for(int i =0;i<pageviewImage.length;i++)
-         Container(
-           margin: const EdgeInsets.all(5),
-           width:i==currentPage ?20: 5,
-           height: i==currentPage ?10: 5,
-           decoration: BoxDecoration(
-             color:i==currentPage ? Colors.greenAccent:Colors.black,
-             shape: BoxShape.circle,
-         ),)
+        for (int i = 0; i < pageviewImage.length; i++)
+          Container(
+            padding: const EdgeInsets.all(5),
+            width: i == currentPage ? 20 : 5,
+            height: i == currentPage ? 10 : 5,
+            decoration: BoxDecoration(
+              color: i == currentPage ? Colors.greenAccent : Colors.black,
+              shape: BoxShape.circle,
+            ),
+          )
       ],
     );
   }
 }
 
 class SearchCustom extends SearchDelegate {
-  final List items = [
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Apple Watch IP79",
-      "subtitle": "Electronic Smart Watch",
-      "price": "\$180",
-    },
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Apple Air pods Pro",
-      "subtitle": "Smart , 6 hours straight use",
-      "price": "\$399",
-    },
-    {
-      "image": "images/Nova_Cart.jpg",
-      "title": "Adidas Sneakers",
-      "subtitle": "Sport comfortable Sneakers",
-      "price": "\$157",
-    },
-  ];
+  final List stores;
+
+  SearchCustom(this.stores);
 
   List? sortedItems;
 
@@ -343,43 +350,46 @@ class SearchCustom extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    sortedItems = items
+    sortedItems = stores
         .where((element) =>
-        element['title'].toLowerCase().contains(query.toLowerCase()))
+        element["name"].toLowerCase().contains(query.toLowerCase()))
         .toList();
+
     return ListView.builder(
       itemCount: sortedItems!.length,
       itemBuilder: (context, index) {
+        String imagePath = sortedItems![index]["image"];
+        String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+        int storeId = sortedItems![index]["id"];
         return InkWell(
           onTap: () {
-            // Navigate to the ProductsPage with the selected product
-            // Navigator.of(context).push(MaterialPageRoute(
-            //   builder: (context) => ProductsPage(
-            //     products: [sortedItems![index]],
-            //   ),
-            // ));
-            Navigator.pushReplacement(context,MaterialPageRoute(
-              builder: (context) => ProductsPage(
-                products: [sortedItems![index]],
-              ),
-            ));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductsPage(
+                    products: [sortedItems![index]],storeId:storeId ,
+                  ),
+                ));
           },
           child: Container(
             color: Colors.white,
             child: ListTile(
-              leading: Image.asset(
-                sortedItems![index]["image"],
+              leading: Image.network(
+                imageUrl,
                 height: 50,
                 width: 50,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'images/storee.png',
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
               title: Text(
-                sortedItems![index]["title"],
+                sortedItems![index]["name"],
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -388,5 +398,53 @@ class SearchCustom extends SearchDelegate {
       },
     );
   }
-}
 
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    sortedItems = stores
+        .where((element) =>
+        element["name"].toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return ListView.builder(
+      itemCount: sortedItems!.length,
+      itemBuilder: (context, index) {
+        String imagePath = sortedItems![index]["image"];
+        String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+        int storeId = sortedItems![index]["id"];
+
+        return ListTile(
+          leading: Image.network(
+            imageUrl,
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'images/storee.png',
+                height: 90,
+                width: 90,
+                fit: BoxFit.cover,
+              );
+            },
+          ),
+          title: Center(
+            child: Text(
+              sortedItems![index]["name"],
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductsPage(
+                    products: [sortedItems![index]],storeId: storeId,
+                  ),
+                ));
+          },
+        );
+      },
+    );
+  }
+}
