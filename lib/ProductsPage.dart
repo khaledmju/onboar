@@ -95,7 +95,7 @@ class _ProductsPage extends State<ProductsPage> {
         ],
       ),
       body: products.isEmpty
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : GridView.builder(
@@ -174,11 +174,16 @@ class _ProductsPage extends State<ProductsPage> {
                                     color: Color.fromARGB(255, 20, 54, 64))),
                           ],
                         ),
-                        Text(products[i]["price"].toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 48, 193, 152))),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          Text(products[i]["price"].toString(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Color.fromARGB(255, 48, 193, 152))),
+                          Text("\$",style: TextStyle(fontSize: 18),),
+                        ],),
                       ],
                     ),
                   ),
@@ -258,9 +263,11 @@ class SearchCustom extends SearchDelegate {
                       );
                     },
                   ),
-                  title: Text(
-                    product['name'],
-                    style: const TextStyle(fontSize: 16),
+                  title: Center(
+                    child: Text(textAlign: TextAlign.center,
+                      product['name'],
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               );
@@ -298,9 +305,11 @@ class SearchCustom extends SearchDelegate {
               );
             },
           ),
-          title: Text(
-            product['name'],
-            style: const TextStyle(fontSize: 16),
+          title: Center(
+            child: Text(textAlign: TextAlign.center,
+              product['name'],
+              style: const TextStyle(fontSize: 16),
+            ),
           ),
           onTap: () {
             Navigator.push(

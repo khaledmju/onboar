@@ -33,11 +33,11 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: Text("${widget.productData['title']}",
+        title: Text("${widget.productData['name']}",
             textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Color.fromARGB(255, 20, 54, 64),
-                fontSize: 26,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontStyle: FontStyle.normal)),
         centerTitle: true,
@@ -56,106 +56,120 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
                   Image.asset(
-                    "${widget.productData['image']}",
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.fitHeight,
+                    "images/prod.png",
+                    height: 230,
+                    fit: BoxFit.cover,
                   ),
-                  const SizedBox(height: 10),
                   Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    // decoration: BoxDecoration(
-                    //   color : const Color.fromARGB(255, 66, 252, 169),
-                    //   border: Border.all(width: 2),
-                    //   borderRadius: BorderRadius.circular(10),
-                    // ),
-                    child: Text(
-                      "${widget.productData['title']}",
-                      style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 20, 54, 64)),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 66, 252, 169),
+                      border: Border.all(width: 2),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      "${widget.productData['subtitle']}",
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromARGB(255, 48, 193, 152)),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      textDirection:
-                          isArabic() ? TextDirection.ltr : TextDirection.rtl,
-                      children: [
-                        Text(
-                          "  ${widget.productData['quantity']}  ",
-                          style: TextStyle(
-                            fontSize: 20,
+                    // height: 70,
+                    child: Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        "${widget.productData['name']}",
+                        style: const TextStyle(
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        const Text(
-                          ":",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 14,
-                        ),
-                        Text(
-                          "Quantity".tr,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ],
+                            color: Color.fromARGB(255, 20, 54, 64)),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      textDirection:
-                          isArabic() ? TextDirection.ltr : TextDirection.rtl,
-                      children: [
-                        Text(
-                          "  ${widget.productData['price']}  ",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
-                        ),
-                        const Text(
-                          ":",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 14,
-                        ),
-                        Text(
-                          "Price".tr,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ],
+                    margin: EdgeInsets.only(left: 20,right: 20,top: 10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 66, 252, 169),
+                      border: Border.all(width: 2),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      "${widget.productData['description']}",
+                      style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          textDirection: isArabic()
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
+                          children: [
+                            Text(
+                              "  ${widget.productData['quantity']}  ",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                            const Text(
+                              ":",
+                              style: TextStyle(
+                                  fontSize: 23, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              width: 14,
+                            ),
+                            Text(
+                              "Quantity".tr,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          textDirection: isArabic()
+                              ? TextDirection.ltr
+                              : TextDirection.rtl,
+                          children: [
+                            Text(
+                              "\$",
+                              style: TextStyle(fontSize: 22),
+                            ),
+                            Text(
+                              "  ${widget.productData['price']}  ",
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red),
+                            ),
+                            const Text(
+                              ":",
+                              style: TextStyle(
+                                  fontSize: 23, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              width: 14,
+                            ),
+                            Text(
+                              "Price".tr,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              // const SizedBox(height: 10),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -180,14 +194,15 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {
+                        onPressed: count<widget.productData['quantity']? () {
                           setState(() {
                             count++;
                           });
-                        },
+                        }:null,
                         icon: Icon(
                           Icons.add_circle_outline,
-                          color: const Color.fromARGB(255, 66, 252, 169),
+                          color: count<widget.productData['quantity']? const Color.fromARGB(255, 66, 252, 169)
+                          : Colors.grey,
                           size: 30,
                         )),
                   ],
