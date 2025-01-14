@@ -96,7 +96,7 @@ class StoresState extends State<Stores> {
           letIndexChange: (index) => true,
         ),
       ),
-      body: pages[selectedIndex], // Display the selected page
+      body: pages[selectedIndex],
     );
   }
 }
@@ -199,7 +199,7 @@ class _HomeContentState extends State<HomeContent> {
                 onTap: () {
                   showSearch(
                     context: context,
-                    delegate: SearchCustom(stores), // Pass stores here
+                    delegate: SearchCustom(stores,storeImages), // Pass stores here
                   );
                 },
                 child: Row(
@@ -359,11 +359,11 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 }
-
 class SearchCustom extends SearchDelegate {
   final List stores;
+  final Map<int, Uint8List> storeImages; // Add a parameter for store images
 
-  SearchCustom(this.stores);
+  SearchCustom(this.stores, this.storeImages);
 
   List? sortedItems;
 
@@ -393,15 +393,15 @@ class SearchCustom extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     sortedItems = stores
         .where((element) =>
-            element["name"].toLowerCase().contains(query.toLowerCase()))
+        element["name"].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
       itemCount: sortedItems!.length,
       itemBuilder: (context, index) {
-        String imagePath = sortedItems![index]["image"];
-        String imageUrl = 'http://127.0.0.1:8000/$imagePath';
         int storeId = sortedItems![index]["id"];
+        Uint8List? imageBytes = storeImages[storeId]; // Fetch from storeImages map
+
         return InkWell(
           onTap: () {
             Navigator.pushReplacement(
@@ -416,19 +416,26 @@ class SearchCustom extends SearchDelegate {
           child: Container(
             color: Colors.white,
             child: ListTile(
-              leading: Image.network(
-                imageUrl,
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
+              leading: imageBytes != null
+                  ? Image.memory(
+                imageBytes,
+                height: 60,
+                width: 60,
+                fit: BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) {
                   return Image.asset(
-                    'images/storee.png',
+                    'images/prod.png',
                     height: 50,
                     width: 50,
                     fit: BoxFit.cover,
                   );
                 },
+              )
+                  : Image.asset(
+                'images/prod.png',
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover,
               ),
               title: Text(
                 sortedItems![index]["name"],
@@ -445,30 +452,36 @@ class SearchCustom extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     sortedItems = stores
         .where((element) =>
-            element["name"].toLowerCase().contains(query.toLowerCase()))
+        element["name"].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
       itemCount: sortedItems!.length,
       itemBuilder: (context, index) {
-        String imagePath = sortedItems![index]["image"];
-        String imageUrl = 'http://127.0.0.1:8000/$imagePath';
         int storeId = sortedItems![index]["id"];
+        Uint8List? imageBytes = storeImages[storeId]; // Fetch from storeImages map
 
         return ListTile(
-          leading: Image.network(
-            imageUrl,
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
+          leading: imageBytes != null
+              ? Image.memory(
+            imageBytes,
+            height: 60,
+            width: 60,
+            fit: BoxFit.fill,
             errorBuilder: (context, error, stackTrace) {
               return Image.asset(
                 'images/storee.png',
-                height: 90,
-                width: 90,
+                height: 50,
+                width: 50,
                 fit: BoxFit.cover,
               );
             },
+          )
+              : Image.asset(
+            'images/storee.png',
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
           ),
           title: Center(
             child: Text(
