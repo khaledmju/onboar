@@ -28,6 +28,10 @@ class FavoritesPage extends StatelessWidget {
               crossAxisCount: 2, mainAxisExtent: 220),
           itemBuilder: (context, index) {
             final product = favoritesController.favoriteProducts[index];
+            final image = product["image"] ?? 'images/prod.png';
+            final name = product["name"] ?? 'Unnamed Product';
+            final price = product["price"]?.toString() ?? 'N/A';
+
             return InkWell(
               onTap: () {
                 Get.to(() => ProductDetailsPage(productData: product));
@@ -35,10 +39,24 @@ class FavoritesPage extends StatelessWidget {
               child: Card(
                 child: Column(
                   children: [
-                    Image.asset(product["image"], width: 1000, height: 120,fit: BoxFit.cover,),
-                    Text(product["title"]),
-                    Text(product["subtitle"]),
-                    Text(product["price"]),
+                    // Image.asset(product["image"], width: 1000, height: 120,fit: BoxFit.cover,),
+                   SizedBox(height: 10,),
+                    Image.asset(
+                      image,
+                      width: 1000,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'images/prod.png',
+                          width: 1000,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                    Text(name),
+                    Text(price),
                   ],
                 ),
               ),

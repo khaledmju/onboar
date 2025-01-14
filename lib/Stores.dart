@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:onboar/main.dart';
@@ -109,11 +110,9 @@ final FavoritesController favoritesController = Get.find();
 
 class _HomeContentState extends State<HomeContent> {
   int currentPage = 0;
-
   String? token = prefs!.getString("token");
-
   final List stores = [];
-
+  final Map<int, Uint8List> storeImages = {};
   List pageviewImage = [
     "images/discount.jpg",
     "images/discount2.jpg",
@@ -122,22 +121,57 @@ class _HomeContentState extends State<HomeContent> {
   ];
 
   bool loading = false;
-
   Future<void> getStore() async {
-    var response =
-        await get(Uri.parse("http://127.0.0.1:8000/api/getallstores"),
-          headers: {
-            'Authorization': "Bearer $token",
-            'Content-Type': 'application/json',
-          },
-        );
-    print("Response Status: ${response.statusCode}");
+    try {
+      var response = await get(
+        Uri.parse("http://127.0.0.1:8000/api/getallstores"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+      print("Response Status: ${response.statusCode}");
 
-    var responseBody = jsonDecode(response.body);
-    setState(() {
-      stores.addAll(responseBody);
-    });
-    print(stores);
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        setState(() {
+          stores.addAll(responseBody);
+        });
+        for (var store in stores) {
+          int storeId = store["id"];
+          Uint8List? imageBytes = await getStoreImage(storeId);
+          if (imageBytes != null) {
+            setState(() {
+              storeImages[storeId] = imageBytes;
+            });
+          }
+        }
+      } else {
+        print("Failed to load stores.");
+      }
+    } catch (e) {
+      print("Error fetching stores: $e");
+    }
+  }
+  Future<Uint8List?> getStoreImage(int storeId) async {
+    try {
+      var response = await get(
+        Uri.parse("http://127.0.0.1:8000/api/getstoreimage/$storeId"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.bodyBytes; // Return raw image bytes
+      } else {
+        print(
+            "Failed to fetch image for store $storeId: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching image for store $storeId: $e");
+    }
+    return null;
   }
 
   @override
@@ -146,9 +180,6 @@ class _HomeContentState extends State<HomeContent> {
     getStore();
     super.initState();
   }
-
-  Int? storeId ;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,114 +220,124 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ],
       ),
-      body: Column(children: [
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          child: CarouselSlider(
-            items: pageviewImage
-                .map(
-                  (e) => Container(
-                    child: Image.asset(
-                      e,
+      body: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: CarouselSlider(
+              items: pageviewImage
+                  .map(
+                    (e) => Container(
+                      child: Image.asset(
+                        e,
+                      ),
                     ),
-                  ),
-                )
-                .toList(),
-            options: CarouselOptions(
-              height: 150,
-              initialPage: 0,
-              autoPlay: true,
-              enlargeCenterPage: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              enlargeFactor: 0.1,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  currentPage = index;
-                });
-              },
+                  )
+                  .toList(),
+              options: CarouselOptions(
+                height: 150,
+                initialPage: 0,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                enlargeFactor: 0.1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    currentPage = index;
+                  });
+                },
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        buildCarouselIndicator(),
-        const SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          child: stores.isEmpty ?
-              Center(child: CircularProgressIndicator(),):
-          ListView.builder(
-            itemCount: stores.length,
-            itemBuilder: (context, index) {
-              String imagePath = stores[index]["image"];
-              String imageUrl = 'http://127.0.0.1:8000/$imagePath';
-              print("Image URL: $imageUrl");
-              return InkWell(
-                onTap: () {
-                  int storeId = stores[index]["id"];
-                   Get.offAll(ProductsPage(
-                    products: [],storeId: storeId,
-                  ));
-                },
-                child: Card(
-                  color: Colors.white,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Image.network(
-                          imageUrl,
-                          height: 125,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            print("Error loading image: $imageUrl");
-                            return Image.asset(
-                              'images/storee.png',
-                              height: 125,
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                      ),
-                      Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: EdgeInsets.only(top: 12,bottom: 12),
-                              alignment: Alignment.centerLeft,
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "${stores[index]["name"]}",
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle: FontStyle.normal,
-                                          color: Color.fromARGB(
-                                              255, 48, 193, 152)),
-                                    ),
-                                    Text(
-                                      "${stores[index]["description"]}",
-                                      style: const TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          fontStyle: FontStyle.normal,
-                                          color:
-                                              Color.fromARGB(255, 20, 54, 64)),
-                                    ),
-                                  ],
-                                ),
-                              ))),
-                    ],
-                  ),
-                ),
-              );
-            },
+          const SizedBox(
+            height: 20,
           ),
-        ),
-      ]),
+          buildCarouselIndicator(),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: stores.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: stores.length,
+                    itemBuilder: (context, index) {
+                      int storeId = stores[index]["id"];
+                      Uint8List? imageBytes = storeImages[storeId];
+                      return InkWell(
+                        onTap: () {
+                          Get.offAll(ProductsPage(
+                            products: [],
+                            storeId: storeId,
+                          ));
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: imageBytes != null
+                                    ? Image.memory(
+                                        imageBytes,
+                                        height: 125,
+                                        fit: BoxFit.fill,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image.asset(
+                                            'images/prod.png',
+                                            height: 125,
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      )
+                                    : Image.asset(
+                                        'images/prod.png',
+                                        height: 125,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 12, bottom: 12),
+                                  alignment: Alignment.centerLeft,
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "${stores[index]["name"]}",
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle: FontStyle.normal,
+                                              color: Color.fromARGB(
+                                                  255, 48, 193, 152)),
+                                        ),
+                                        Text(
+                                          "${stores[index]["description"]}",
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            fontStyle: FontStyle.normal,
+                                            color:
+                                                Color.fromARGB(255, 20, 54, 64),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -352,7 +393,7 @@ class SearchCustom extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     sortedItems = stores
         .where((element) =>
-        element["name"].toLowerCase().contains(query.toLowerCase()))
+            element["name"].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
@@ -367,7 +408,8 @@ class SearchCustom extends SearchDelegate {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductsPage(
-                    products: [sortedItems![index]],storeId:storeId ,
+                    products: [sortedItems![index]],
+                    storeId: storeId,
                   ),
                 ));
           },
@@ -403,7 +445,7 @@ class SearchCustom extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     sortedItems = stores
         .where((element) =>
-        element["name"].toLowerCase().contains(query.toLowerCase()))
+            element["name"].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
@@ -439,7 +481,8 @@ class SearchCustom extends SearchDelegate {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductsPage(
-                    products: [sortedItems![index]],storeId: storeId,
+                    products: [sortedItems![index]],
+                    storeId: storeId,
                   ),
                 ));
           },
