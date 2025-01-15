@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:onboar/ProductDetailsPage.dart';
 import 'FavoritesController.dart';
@@ -20,7 +22,7 @@ class FavoritesPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Obx(() {
         if (favoritesController.favoriteProducts.isEmpty) {
-          return  Center(child: Text("No favorite products yet!".tr));
+          return Center(child: Text("No favorite products yet!".tr));
         }
         return GridView.builder(
           itemCount: favoritesController.favoriteProducts.length,
@@ -28,38 +30,66 @@ class FavoritesPage extends StatelessWidget {
               crossAxisCount: 2, mainAxisExtent: 220),
           itemBuilder: (context, index) {
             final product = favoritesController.favoriteProducts[index];
-            final image = product["image"] ?? 'images/prod.png';
-            final name = product["name"] ?? 'Unnamed Product';
-            final price = product["price"]?.toString() ?? 'N/A';
+            final productId = product["id"];
 
-            return InkWell(
-              onTap: () {
-                Get.to(() => ProductDetailsPage(productData: product));
-              },
-              child: Card(
-                child: Column(
-                  children: [
-                    // Image.asset(product["image"], width: 1000, height: 120,fit: BoxFit.cover,),
-                   SizedBox(height: 10,),
-                    Image.asset(
-                      image,
-                      width: 1000,
-                      height: 120,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
+            return FutureBuilder<Uint8List?>(
+              future: favoritesController.fetchProductImage(productId), // Future<Uint8List?>
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // Loading state
+                }
+                if (snapshot.hasError) {
+                  return Image.asset(
+                    'images/prod.png',
+                    width: 100,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ); // Error fallback image
+                }
+
+                Uint8List? imageBytes = snapshot.data;
+
+                return InkWell(
+                  onTap: () {
+                    Get.to(() => ProductDetailsPage(
+                      productData: favoritesController.favoriteProducts[index],
+                      productImage: imageBytes,
+                    ));
+                  },
+                  child: Card(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        imageBytes != null
+                            ? Image.memory(
+                          imageBytes,
+                          height: 150,
+                          fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'images/prod.png',
+                              width: 100,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                            : Image.asset(
                           'images/prod.png',
                           width: 1000,
                           height: 120,
                           fit: BoxFit.cover,
-                        );
-                      },
+                        ),
+                        Text(
+                          favoritesController.favoriteProducts[index]["name"] ?? "Unnamed",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    Text(name),
-                    Text(price),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             );
           },
         );

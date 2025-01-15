@@ -101,150 +101,150 @@ class _ProductsPage extends State<ProductsPage> {
     favoritesController.loadFavorites();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Get.offAll(Stores());
-            },
-            icon: Icon(Icons.home)),
-        title: Text("Products".tr,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Color.fromARGB(255, 20, 54, 64),
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.normal)),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 66, 252, 169),
-        elevation: 4,
-        shadowColor: const Color.fromARGB(255, 48, 193, 152),
-        actions: [
-          IconButton(
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
               onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: SearchCustom(products, productImages),
-                );
+                Get.offAll(Stores());
               },
-              icon: Icon(Icons.search))
-        ],
-      ),
-      body: products.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : GridView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 310,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, i) {
-                int productId = products[i]["id"];
-                Uint8List? imageBytes = productImages[productId];
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ProductDetailsPage(
-                        productData: products[i],
-                        productImage: productImages[products[i]["id"]],
-                      ),
-                    ));
-                  },
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Obx(() => IconButton(
-                                  onPressed: () {
-                                    favoritesController
-                                        .toggleFavorite(products[i]);
-                                  },
-                                  icon: Icon(
-                                    favoritesController.isFavorite(products[i])
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: favoritesController
-                                            .isFavorite(products[i])
-                                        ? Colors.red
-                                        : Colors.grey,
-                                  ),
-                                )),
-                          ],
+              icon: Icon(Icons.home)),
+          title: Text("Products".tr,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 20, 54, 64),
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal)),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 66, 252, 169),
+          elevation: 4,
+          shadowColor: const Color.fromARGB(255, 48, 193, 152),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: SearchCustom(products, productImages),
+                  );
+                },
+                icon: Icon(Icons.search))
+          ],
+        ),
+        body: products.isEmpty
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : GridView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisExtent: 310,
+                ),
+                itemCount: products.length,
+                itemBuilder: (context, i) {
+                  int productId = products[i]["id"];
+                  Uint8List? imageBytes = productImages[productId];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProductDetailsPage(
+                          productData: products[i],
+                          productImage: productImages[products[i]["id"]],
                         ),
-                        Expanded(
-                          child: imageBytes != null
-                              ? Image.memory(
-                                  imageBytes,
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.asset(
-                                  'images/prod.png',
-                                  width: 70,
-                                  height: 70,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                       const SizedBox(
-                          height: 20,
-                        ),
-                        Text(products[i]["name"],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 20, 54, 64))),
-                        const SizedBox(
-                          height: 7,
-                        ),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      ));
+                    },
+                    child: Card(
+                      child: Column(
                         children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Obx(() => IconButton(
+                                    onPressed: () {
+                                      favoritesController
+                                          .toggleFavorite(products[i]);
+                                    },
+                                    icon: Icon(
+                                      favoritesController.isFavorite(products[i])
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: favoritesController
+                                              .isFavorite(products[i])
+                                          ? Colors.red
+                                          : Colors.grey,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          Expanded(
+                            child: imageBytes != null
+                                ? Image.memory(
+                                    imageBytes,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Image.asset(
+                                    'images/prod.png',
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                         const SizedBox(
+                            height: 20,
+                          ),
+                          Text(products[i]["name"],
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color.fromARGB(255, 20, 54, 64))),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            const Text("Quantity : ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 20, 54, 64))),
-                            Text(products[i]["quantity"].toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 20, 54, 64))),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(products[i]["price"].toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 48, 193, 152))),
-                            Text(
-                              "\$",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ],),
-                      ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Quantity : ",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Color.fromARGB(255, 20, 54, 64))),
+                              Text(products[i]["quantity"].toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Color.fromARGB(255, 20, 54, 64))),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(products[i]["price"].toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 48, 193, 152))),
+                              Text(
+                                "\$",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ],),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-    );
+                  );
+                },
+              ),
+      );
+    }
   }
-}
 
 class SearchCustom extends SearchDelegate {
   final List<Map<String, dynamic>> products;
@@ -350,45 +350,50 @@ class SearchCustom extends SearchDelegate {
         Uint8List? imageBytes =
             productImages[productId]; // Fetch from storeImages map
 
-        return ListTile(
-          leading: imageBytes != null
-              ? Image.memory(
-                  imageBytes,
-                  height: 60,
-                  width: 60,
-                  fit: BoxFit.fill,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
+        return Container(
+          height: 100,
+          child: Card(
+            child: ListTile(
+              leading: imageBytes != null
+                  ? Image.memory(
+                      imageBytes,
+                      height: 60,
+                      width: 60,
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'images/prod.png',
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : Image.asset(
                       'images/prod.png',
                       height: 50,
                       width: 50,
                       fit: BoxFit.cover,
-                    );
-                  },
-                )
-              : Image.asset(
-                  'images/prod.png',
-                  height: 50,
-                  width: 50,
-                  fit: BoxFit.cover,
+                    ),
+              title: Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  sortedItems![index]["name"],
+                  style: const TextStyle(fontSize: 20),
                 ),
-          title: Center(
-            child: Text(
-              textAlign: TextAlign.center,
-              sortedItems![index]["name"],
-              style: const TextStyle(fontSize: 20),
+              ),
+              onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailsPage(
+                        productData: products[index],
+                        productImage: productImages[sortedItems![index]["id"]],
+                      ),
+                    ));
+              },
             ),
           ),
-          onTap: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailsPage(
-                    productData: products[index],
-                    productImage: productImages[sortedItems![index]["id"]],
-                  ),
-                ));
-          },
         );
       },
     );

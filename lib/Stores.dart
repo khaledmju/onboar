@@ -414,32 +414,34 @@ class SearchCustom extends SearchDelegate {
                 ));
           },
           child: Container(
-            color: Colors.white,
-            child: ListTile(
-              leading: imageBytes != null
-                  ? Image.memory(
-                imageBytes,
-                height: 60,
-                width: 60,
-                fit: BoxFit.fill,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'images/prod.png',
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
-                  );
-                },
-              )
-                  : Image.asset(
-                'images/prod.png',
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(
-                sortedItems![index]["name"],
-                style: const TextStyle(fontSize: 16),
+            height: 100,
+            child: Card(
+              child: ListTile(
+                leading: imageBytes != null
+                    ? Image.memory(
+                  imageBytes,
+                  height: 60,
+                  width: 60,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'images/prod.png',
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                )
+                    : Image.asset(
+                  'images/prod.png',
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  sortedItems![index]["name"],
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ),
@@ -461,44 +463,49 @@ class SearchCustom extends SearchDelegate {
         int storeId = sortedItems![index]["id"];
         Uint8List? imageBytes = storeImages[storeId]; // Fetch from storeImages map
 
-        return ListTile(
-          leading: imageBytes != null
-              ? Image.memory(
-            imageBytes,
-            height: 60,
-            width: 60,
-            fit: BoxFit.fill,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
+        return Container(
+          height: 100,
+          child: Card(
+            child: ListTile(
+              leading: imageBytes != null
+                  ? Image.memory(
+                imageBytes,
+                // height: 80,
+                // width:80,
+                fit: BoxFit.fill,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'images/storee.png',
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  );
+                },
+              )
+                  : Image.asset(
                 'images/storee.png',
                 height: 50,
                 width: 50,
                 fit: BoxFit.cover,
-              );
-            },
-          )
-              : Image.asset(
-            'images/storee.png',
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
-          ),
-          title: Center(
-            child: Text(
-              sortedItems![index]["name"],
-              style: const TextStyle(fontSize: 20),
+              ),
+              title: Center(
+                child: Text(
+                  sortedItems![index]["name"],
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductsPage(
+                        products: [sortedItems![index]],
+                        storeId: storeId,
+                      ),
+                    ));
+              },
             ),
           ),
-          onTap: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductsPage(
-                    products: [sortedItems![index]],
-                    storeId: storeId,
-                  ),
-                ));
-          },
         );
       },
     );
