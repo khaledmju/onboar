@@ -37,6 +37,10 @@ class CartState extends State<Cart> {
         setState(() {
           cartProducts = responseBody;
         });
+        for (var product in cartProducts) {
+          fetchImage(product);
+        }
+
       } else {
         print("Failed to load cart : ${response.statusCode}");
       }
@@ -44,6 +48,30 @@ class CartState extends State<Cart> {
       print("Error : $e");
     }
   }
+
+  Future<void> fetchImage(dynamic product) async {
+    try {
+      var response = await get(
+        Uri.parse("http://127.0.0.1:8000/api/getproductimage/${product['product_id']}"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          product['image'] = response.bodyBytes; // Store image bytes
+        });
+      } else {
+        print("Failed to fetch image: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching image: $e");
+    }
+  }
+
+
 
   Future<void> deleteCart() async {
     try {
@@ -183,7 +211,7 @@ class CartState extends State<Cart> {
                                   Expanded(
                                     flex: 1,
                                     child: cartProducts[index]['image'] != null
-                                        ? Image.network(
+                                        ? Image.memory(
                                       cartProducts[index]['image'],
                                       height: 125,
                                       fit: BoxFit.fitHeight,
@@ -201,6 +229,7 @@ class CartState extends State<Cart> {
                                           child: Center(
                                             child: Column(
                                               children: [
+
                                                 Text(
                                                   "${cartProducts[index]['product_id']}",
                                                   style: const TextStyle(
