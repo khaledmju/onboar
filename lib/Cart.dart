@@ -39,8 +39,8 @@ class CartState extends State<Cart> {
         });
         for (var product in cartProducts) {
           fetchImage(product);
+          await getProduct(product);
         }
-
       } else {
         print("Failed to load cart : ${response.statusCode}");
       }
@@ -52,7 +52,8 @@ class CartState extends State<Cart> {
   Future<void> fetchImage(dynamic product) async {
     try {
       var response = await get(
-        Uri.parse("http://127.0.0.1:8000/api/getproductimage/${product['product_id']}"),
+        Uri.parse(
+            "http://127.0.0.1:8000/api/getproductimage/${product['product_id']}"),
         headers: {
           'Authorization': "Bearer $token",
           'Content-Type': 'application/json',
@@ -71,7 +72,30 @@ class CartState extends State<Cart> {
     }
   }
 
-
+  Future<void> getProduct(dynamic product) async {
+    try {
+      var response = await get(
+        Uri.parse(
+            "http://127.0.0.1:8000/api/getproduct/${product['product_id']}"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        setState(() {
+          product['name'] =
+              responseBody['product']['name']; // Store product name
+          // Add any other product info you need, like 'description' or 'price'
+        });
+      } else {
+        print("Failed to fetch product details: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching product details: $e");
+    }
+  }
 
   Future<void> deleteCart() async {
     try {
@@ -107,28 +131,29 @@ class CartState extends State<Cart> {
   Future<void> deleteCartElement(int prodcutId) async {
     try {
       var response = await delete(
-          Uri.parse("http://127.0.0.1:8000/api/deletecart"),
-          headers: {
-            'Authorization': "Bearer $token",
-            'Content-Type': 'application/json',
-          },
+        Uri.parse("http://127.0.0.1:8000/api/deletecart"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode({
-          'product_id' :prodcutId,
+          'product_id': prodcutId,
         }),
-          );
+      );
       if (response.statusCode == 200) {
-        var responseBody =  jsonDecode(response.body);
+        var responseBody = jsonDecode(response.body);
         print(responseBody);
         setState(() {
-          cartProducts.removeWhere((product)=>product["product_id"]==prodcutId);
+          cartProducts
+              .removeWhere((product) => product["product_id"] == prodcutId);
           Get.snackbar(
             "",
             "",
             titleText: Center(
                 child: Text(
-                  "Product deleted".tr,
-                  style: TextStyle(fontSize: 20),
-                )),
+              "Product deleted".tr,
+              style: TextStyle(fontSize: 20),
+            )),
             backgroundColor: Colors.greenAccent,
           );
         });
@@ -137,6 +162,7 @@ class CartState extends State<Cart> {
       print("$e");
     }
   }
+
   double calculateTotalPrice() {
     double total = 0;
     for (var product in cartProducts) {
@@ -160,7 +186,21 @@ class CartState extends State<Cart> {
           actions: [
             IconButton(
                 onPressed: () {
-                  deleteCart();
+                  Get.defaultDialog(
+                    title: "Alert",
+                    titleStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                    middleText: "Are you sure you want to delete CART ?",
+                    middleTextStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                    onConfirm: () {
+                      deleteCart();
+                    },
+                  );
                 },
                 icon: Icon(Icons.remove_shopping_cart))
           ],
@@ -212,15 +252,15 @@ class CartState extends State<Cart> {
                                     flex: 1,
                                     child: cartProducts[index]['image'] != null
                                         ? Image.memory(
-                                      cartProducts[index]['image'],
-                                      height: 125,
-                                      fit: BoxFit.fitHeight,
-                                    )
+                                            cartProducts[index]['image'],
+                                            height: 125,
+                                            fit: BoxFit.fitHeight,
+                                          )
                                         : Image.asset(
-                                      "images/prod.png",
-                                      height: 125,
-                                      fit: BoxFit.fitHeight,
-                                    ),
+                                            "images/prod.png",
+                                            height: 125,
+                                            fit: BoxFit.fitHeight,
+                                          ),
                                   ),
                                   Expanded(
                                       flex: 2,
@@ -229,9 +269,10 @@ class CartState extends State<Cart> {
                                           child: Center(
                                             child: Column(
                                               children: [
-
                                                 Text(
-                                                  "${cartProducts[index]['product_id']}",
+                                                  textAlign: TextAlign.center,
+                                                  cartProducts[index]['name'] ??
+                                                      'Product name not available',
                                                   style: const TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:
@@ -326,7 +367,8 @@ class CartState extends State<Cart> {
                                           ))),
                                   IconButton(
                                       onPressed: () {
-                                        deleteCartElement(cartProducts[index]['product_id']);
+                                        deleteCartElement(
+                                            cartProducts[index]['product_id']);
                                       },
                                       icon: Icon(
                                         Icons.delete_forever,
@@ -380,13 +422,15 @@ class CartState extends State<Cart> {
                     SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
-                          onPressed:cartProducts.isEmpty ? null:  () {
-                            Get.to(PaymentMethod());
-                          },
+                          onPressed: cartProducts.isEmpty
+                              ? null
+                              : () {
+                                  Get.to(PaymentMethod());
+                                },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:cartProducts.isEmpty?
-                              const Color.fromARGB(255, 150, 150, 150)
-                                 : const Color.fromARGB(255, 20, 54, 64),
+                              backgroundColor: cartProducts.isEmpty
+                                  ? const Color.fromARGB(255, 150, 150, 150)
+                                  : const Color.fromARGB(255, 20, 54, 64),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 40)),
                           child: Text("Buy Now".tr,

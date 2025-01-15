@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:onboar/Stores.dart';
+
+import 'main.dart';
 
 class PaymentMethod extends StatefulWidget {
   @override
@@ -10,8 +16,69 @@ class PaymentMethod extends StatefulWidget {
 }
 
 class PaymentMethodState extends State<PaymentMethod> {
-  int selectedMethod = 0; // to know selected method
+  int selectedMethod = 0;
+  String? token = prefs!.getString("token");
 
+  Future<void> itemspurchased () async{
+    try{
+      String paymentmethod="";
+      switch(selectedMethod){
+        case 0:
+          paymentmethod = "Cash";
+          break;
+          case 1:
+          paymentmethod = "PayPal";
+          break;
+          case 2:
+          paymentmethod = "Credit Card";
+          break;
+          case 3:
+          paymentmethod = "Visa";
+          break;
+        default:
+          paymentmethod ="Cash";
+          break;
+      }
+      var response = await put(Uri.parse("http://127.0.0.1:8000/api/itemspurchased"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "deliveryFee":555,
+          "paymentMethod":paymentmethod
+        }),
+      );
+      if(response.statusCode == 200){
+        Get.snackbar(
+          "",
+          "",
+          titleText: Center(
+              child: Text(
+                "Confirm",
+                style: TextStyle(fontSize: 20),
+              )),
+          backgroundColor: Colors.greenAccent,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        print("$paymentmethod");
+      }else{
+        Get.snackbar(
+          "",
+          "",
+          titleText: Center(
+              child: Text(
+                "Error",
+                style: TextStyle(fontSize: 20),
+              )),
+          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    }catch(e){
+      print("Error : $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +127,7 @@ class PaymentMethodState extends State<PaymentMethod> {
                       btnCancelColor: Colors.red,
                       btnCancelOnPress: () {},
                       btnOkOnPress: () {
+                        itemspurchased();
                         Get.snackbar(
                           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                           backgroundColor: Colors.red,
@@ -82,6 +150,7 @@ class PaymentMethodState extends State<PaymentMethod> {
                             ),
                           ),
                         );
+                        Get.offAll(()=>Stores());
                       },
                     ).show();
                   });

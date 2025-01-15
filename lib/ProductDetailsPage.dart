@@ -57,7 +57,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
   }
 
   Future<void> addItem() async {
-    try{
+    try {
       var response = await post(Uri.parse("http://127.0.0.1:8000/api/additem"),
           headers: {
             'Authorization': "Bearer $token",
@@ -69,13 +69,23 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
       if (response.statusCode == 200) {
         print(responseBody);
         print("${widget.productData["id"]}");
-        Get.snackbar("", "",titleText: Center(child: Text("Product added to cart",style: TextStyle(fontSize: 20),)),backgroundColor: Colors.red,);
+        Get.snackbar(
+          "",
+          "",
+          titleText: Center(
+              child: Text(
+            "Product added to cart",
+            style: TextStyle(fontSize: 20),
+          )),
+          backgroundColor: Colors.greenAccent,
+          snackPosition: SnackPosition.BOTTOM,
+        );
       } else {
         Get.snackbar("Error", "Failed to add product ");
       }
-    }catch(e){
+    } catch (e) {
       Get.snackbar("Error", "An error occurred");
-      print("Error adding product : $e" );
+      print("Error adding product : $e");
     }
   }
 
