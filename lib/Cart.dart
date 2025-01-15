@@ -109,29 +109,6 @@ class CartState extends State<Cart> {
       print("$e");
     }
   }
-
-  Future<void> fetchProductImage(int productId, Map product) async {
-    try {
-      var response = await get(
-        Uri.parse("http://127.0.0.1:8000/api/getproductimage/$productId"),
-        headers: {
-          'Authorization': "Bearer $token",
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        // Assuming the API returns a URL to the image
-        setState(() {
-          product['image'] = response.body;  // Store image URL
-        });
-      } else {
-        print("Failed to fetch image for product ID $productId");
-      }
-    } catch (e) {
-      print("Error fetching product image: $e");
-    }
-  }
   double calculateTotalPrice() {
     double total = 0;
     for (var product in cartProducts) {
@@ -199,11 +176,7 @@ class CartState extends State<Cart> {
                       itemCount: cartProducts.length,
                       itemBuilder: (context, index) {
                         return InkWell(
-                            onTap: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         const ProductsPage()));
-                            },
+                            onTap: () {},
                             child: Column(children: [
                               Row(
                                 children: [
@@ -378,15 +351,16 @@ class CartState extends State<Cart> {
                     SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
-                          onPressed: () {
+                          onPressed:cartProducts.isEmpty ? null:  () {
                             Get.to(PaymentMethod());
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 20, 54, 64),
+                              backgroundColor:cartProducts.isEmpty?
+                              const Color.fromARGB(255, 150, 150, 150)
+                                 : const Color.fromARGB(255, 20, 54, 64),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 40)),
-                          child: Text("Buy Now",
+                          child: Text("Buy Now".tr,
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w400,
