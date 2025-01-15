@@ -1,16 +1,19 @@
 // ignore_for_file: unused_import, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_common/get_reset.dart';
+import 'package:http/http.dart';
 
 import 'ProductsPage.dart';
+import 'main.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final productData;
-
-  const ProductDetailsPage({super.key, this.productData});
+  final Map<String, dynamic> productData;
+  final Uint8List? productImage;
+  const ProductDetailsPage({super.key, required this.productData, this.productImage});
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPage();
@@ -21,6 +24,36 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
 
   bool isArabic() {
     return Get.locale?.languageCode == 'ar';
+  }
+  Uint8List? productImage;
+  String? token = prefs!.getString("token");
+
+  Future<void> fetchImage() async {
+    try {
+      var response = await get(
+        Uri.parse("http://127.0.0.1:8000/api/getproductimage/${widget.productData['id']}"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          productImage = response.bodyBytes;
+        });
+      } else {
+        print("Failed to fetch image: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching image: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchImage();
   }
 
   @override
@@ -56,11 +89,19 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Image.asset(
+                 const SizedBox(height: 14,),
+                  widget.productImage != null
+                      ? Image.memory(
+                    widget.productImage!,
+                    height: 230,
+                    fit: BoxFit.cover,
+                  )
+                      : Image.asset(
                     "images/prod.png",
                     height: 230,
                     fit: BoxFit.cover,
                   ),
+                  const SizedBox(height: 14,),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     padding: const EdgeInsets.symmetric(horizontal: 20),

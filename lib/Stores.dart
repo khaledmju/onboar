@@ -361,7 +361,7 @@ class _HomeContentState extends State<HomeContent> {
 }
 class SearchCustom extends SearchDelegate {
   final List stores;
-  final Map<int, Uint8List> storeImages; // Add a parameter for store images
+  final Map<int, Uint8List> storeImages;
 
   SearchCustom(this.stores, this.storeImages);
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'FavoritesController.dart';
@@ -21,6 +22,7 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPage extends State<ProductsPage> {
   List<Map<String, dynamic>> products = [];
+  Map<int, Uint8List> productImages = {};
 
   Future<void> getProduct() async {
     try {
@@ -32,14 +34,28 @@ class _ProductsPage extends State<ProductsPage> {
           'Content-Type': 'application/json',
         },
       );
+
       print("Response Status: ${response.statusCode}");
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body);
         if (responseBody['success'] == true) {
+          List<Map<String, dynamic>> fetchedProducts =
+              List<Map<String, dynamic>>.from(responseBody['products']);
+
           setState(() {
-            products =
-                List<Map<String, dynamic>>.from(responseBody['products']);
+            products = fetchedProducts;
           });
+
+          // Fetch product images
+          for (var product in products) {
+            int productId = product["id"];
+            Uint8List? imageBytes = await fetchProductImage(productId);
+            if (imageBytes != null) {
+              setState(() {
+                productImages[productId] = imageBytes;
+              });
+            }
+          }
         } else {
           print(
               "Failed to fetch products: ${responseBody['message'] ?? 'Unknown error'}");
@@ -50,6 +66,28 @@ class _ProductsPage extends State<ProductsPage> {
     } catch (e) {
       print("Error fetching products: $e");
     }
+  }
+
+  Future<Uint8List?> fetchProductImage(int productId) async {
+    try {
+      var response = await get(
+        Uri.parse("http://127.0.0.1:8000/api/getproductimage/$productId"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.bodyBytes; // Return raw image bytes
+      } else {
+        print(
+            "Failed to fetch image for product $productId: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching image for product $productId: $e");
+    }
+    return null;
   }
 
   String? token = prefs!.getString("token");
@@ -88,7 +126,7 @@ class _ProductsPage extends State<ProductsPage> {
               onPressed: () {
                 showSearch(
                   context: context,
-                  delegate: SearchCustom(products),
+                  delegate: SearchCustom(products, productImages),
                 );
               },
               icon: Icon(Icons.search))
@@ -104,19 +142,18 @@ class _ProductsPage extends State<ProductsPage> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisExtent: 310,
-                // mainAxisSpacing: 10,
-                // crossAxisSpacing: 10,
-                // childAspectRatio: 2/3.5,
               ),
               itemCount: products.length,
               itemBuilder: (context, i) {
-                String imagePath = products[i]["image"];
-                String imageUrl = 'http://127.0.0.1:8000/$imagePath';
+                int productId = products[i]["id"];
+                Uint8List? imageBytes = productImages[productId];
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          ProductDetailsPage(productData: products[i]),
+                      builder: (context) => ProductDetailsPage(
+                        productData: products[i],
+                        productImage: productImages[products[i]["id"]],
+                      ),
                     ));
                   },
                   child: Card(
@@ -142,26 +179,33 @@ class _ProductsPage extends State<ProductsPage> {
                                 )),
                           ],
                         ),
-                        Image.network(
-                          imageUrl,
-                          height: 125,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            print("Error loading image: $imageUrl");
-                            return Image.asset(
-                              'images/prod.png',
-                              height: 120,
-                              width: 160,
-                              fit: BoxFit.cover,
-                            );
-                          },
+                        Expanded(
+                          child: imageBytes != null
+                              ? Image.memory(
+                                  imageBytes,
+                                  fit: BoxFit.fill,
+                                )
+                              : Image.asset(
+                                  'images/prod.png',
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
-                        SizedBox(height: 20,),
-                        Text(products[i]["name"],textAlign:TextAlign.center ,
+                       const SizedBox(
+                          height: 20,
+                        ),
+                        Text(products[i]["name"],
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: Color.fromARGB(255, 20, 54, 64))),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -180,13 +224,18 @@ class _ProductsPage extends State<ProductsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          Text(products[i]["price"].toString(),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Color.fromARGB(255, 48, 193, 152))),
-                          Text("\$",style: TextStyle(fontSize: 18),),
-                        ],),
+                            Text(products[i]["price"].toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 48, 193, 152))),
+                            Text(
+                              "\$",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ],),
                       ],
                     ),
                   ),
@@ -199,8 +248,9 @@ class _ProductsPage extends State<ProductsPage> {
 
 class SearchCustom extends SearchDelegate {
   final List<Map<String, dynamic>> products;
+  final Map<int, Uint8List> productImages;
 
-  SearchCustom(this.products);
+  SearchCustom(this.products, this.productImages);
 
   List? sortedItems;
 
@@ -233,95 +283,111 @@ class SearchCustom extends SearchDelegate {
             element['name'].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
-    return sortedItems!.isEmpty
-        ? const Center(child: Text('No products found'))
-        : ListView.builder(
-            itemCount: sortedItems!.length,
-            itemBuilder: (context, index) {
-              String imagePath = sortedItems![index]["image"];
-              String imageUrl = 'http://127.0.0.1:8000/$imagePath';
-              final product = sortedItems![index];
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProductDetailsPage(productData: product),
-                    ),
-                  );
-                },
-                child: ListTile(
-                  leading: Image.network(
-                    imageUrl,
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'images/prod.png',
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      );
-                    },
-                  ),
-                  title: Center(
-                    child: Text(textAlign: TextAlign.center,
-                      product['name'],
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
+    return ListView.builder(
+      itemCount: sortedItems!.length,
+      itemBuilder: (context, index) {
+        int productId = sortedItems![index]["id"];
+        Uint8List? imageBytes = productImages[productId];
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailsPage(
+                  productData: sortedItems![index],
+                  productImage: productImages[sortedItems![index]["id"]],
                 ),
-              );
-            },
-          );
+              ),
+            );
+          },
+          child: Container(
+            color: Colors.white,
+            child: ListTile(
+              leading: imageBytes != null
+                  ? Image.memory(
+                      imageBytes,
+                      height: 60,
+                      width: 60,
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'images/prod.png',
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : Image.asset(
+                      'images/prod.png',
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+              title: Text(
+                textAlign: TextAlign.center,
+                sortedItems![index]["name"],
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     sortedItems = products
         .where((element) =>
-        element['name'].toLowerCase().contains(query.toLowerCase()))
+            element['name'].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
-    return sortedItems!.isEmpty
-        ? const Center(child: Text('No suggestions available'))
-        : ListView.builder(
+    return ListView.builder(
       itemCount: sortedItems!.length,
       itemBuilder: (context, index) {
-        String imagePath = sortedItems![index]["image"];
-        String imageUrl = 'http://127.0.0.1:8000/$imagePath';
-        final product = sortedItems![index];
+        int productId = sortedItems![index]["id"];
+        Uint8List? imageBytes =
+            productImages[productId]; // Fetch from storeImages map
+
         return ListTile(
-          leading: Image.network(
-            imageUrl,
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                'images/prod.png',
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-              );
-            },
-          ),
+          leading: imageBytes != null
+              ? Image.memory(
+                  imageBytes,
+                  height: 60,
+                  width: 60,
+                  fit: BoxFit.fill,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'images/prod.png',
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                )
+              : Image.asset(
+                  'images/prod.png',
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                ),
           title: Center(
-            child: Text(textAlign: TextAlign.center,
-              product['name'],
-              style: const TextStyle(fontSize: 16),
+            child: Text(
+              textAlign: TextAlign.center,
+              sortedItems![index]["name"],
+              style: const TextStyle(fontSize: 20),
             ),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ProductDetailsPage(productData: product),
-              ),
-            );
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsPage(
+                    productData: products[index],
+                    productImage: productImages[sortedItems![index]["id"]],
+                  ),
+                ));
           },
         );
       },
