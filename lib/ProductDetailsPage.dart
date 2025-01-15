@@ -1,5 +1,7 @@
 // ignore_for_file: unused_import, file_names
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -13,7 +15,9 @@ class ProductDetailsPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final Map<String, dynamic> productData;
   final Uint8List? productImage;
-  const ProductDetailsPage({super.key, required this.productData, this.productImage});
+
+  const ProductDetailsPage(
+      {super.key, required this.productData, this.productImage});
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPage();
@@ -25,13 +29,15 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
   bool isArabic() {
     return Get.locale?.languageCode == 'ar';
   }
+
   Uint8List? productImage;
   String? token = prefs!.getString("token");
 
   Future<void> fetchImage() async {
     try {
       var response = await get(
-        Uri.parse("http://127.0.0.1:8000/api/getproductimage/${widget.productData['id']}"),
+        Uri.parse(
+            "http://127.0.0.1:8000/api/getproductimage/${widget.productData['id']}"),
         headers: {
           'Authorization': "Bearer $token",
           'Content-Type': 'application/json',
@@ -47,6 +53,29 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
       }
     } catch (e) {
       print("Error fetching image: $e");
+    }
+  }
+
+  Future<void> addItem() async {
+    try{
+      var response = await post(Uri.parse("http://127.0.0.1:8000/api/additem"),
+          headers: {
+            'Authorization': "Bearer $token",
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(
+              {"product_id": widget.productData["id"], "quantity": count}));
+      var responseBody = response.body;
+      if (response.statusCode == 200) {
+        print(responseBody);
+        print("${widget.productData["id"]}");
+        Get.snackbar("", "",titleText: Center(child: Text("Product added to cart",style: TextStyle(fontSize: 20),)),backgroundColor: Colors.red,);
+      } else {
+        Get.snackbar("Error", "Failed to add product ");
+      }
+    }catch(e){
+      Get.snackbar("Error", "An error occurred");
+      print("Error adding product : $e" );
     }
   }
 
@@ -89,19 +118,23 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                 const SizedBox(height: 14,),
+                  const SizedBox(
+                    height: 14,
+                  ),
                   widget.productImage != null
                       ? Image.memory(
-                    widget.productImage!,
-                    height: 230,
-                    fit: BoxFit.cover,
-                  )
+                          widget.productImage!,
+                          height: 230,
+                          fit: BoxFit.cover,
+                        )
                       : Image.asset(
-                    "images/prod.png",
-                    height: 230,
-                    fit: BoxFit.cover,
+                          "images/prod.png",
+                          height: 230,
+                          fit: BoxFit.cover,
+                        ),
+                  const SizedBox(
+                    height: 14,
                   ),
-                  const SizedBox(height: 14,),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -123,7 +156,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 20,right: 20,top: 10),
+                    margin: EdgeInsets.only(left: 20, right: 20, top: 10),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 66, 252, 169),
                       border: Border.all(width: 2),
@@ -134,8 +167,9 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                       textAlign: TextAlign.center,
                       "${widget.productData['description']}",
                       style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400,),
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   Row(
@@ -235,15 +269,18 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                       ),
                     ),
                     IconButton(
-                        onPressed: count<widget.productData['quantity']? () {
-                          setState(() {
-                            count++;
-                          });
-                        }:null,
+                        onPressed: count < widget.productData['quantity']
+                            ? () {
+                                setState(() {
+                                  count++;
+                                });
+                              }
+                            : null,
                         icon: Icon(
                           Icons.add_circle_outline,
-                          color: count<widget.productData['quantity']? const Color.fromARGB(255, 66, 252, 169)
-                          : Colors.grey,
+                          color: count < widget.productData['quantity']
+                              ? const Color.fromARGB(255, 66, 252, 169)
+                              : Colors.grey,
                           size: 30,
                         )),
                   ],
@@ -253,7 +290,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                 child: ElevatedButton(
                     onPressed: count > 0
                         ? () {
-                            // Add to cart logic
+                            addItem();
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
