@@ -214,7 +214,7 @@ class _ProductsPage extends State<ProductsPage> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: Color.fromARGB(255, 20, 54, 64))),
-                              Text(products[i]["quantity"].toString(),
+                              Text((products[i]["quantity"] <1 ?0: products[i]["quantity"]).toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,

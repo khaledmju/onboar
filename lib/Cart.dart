@@ -86,8 +86,7 @@ class CartState extends State<Cart> {
         var responseBody = jsonDecode(response.body);
         setState(() {
           product['name'] =
-              responseBody['product']['name']; // Store product name
-          // Add any other product info you need, like 'description' or 'price'
+              responseBody['product']['name'];
         });
       } else {
         print("Failed to fetch product details: ${response.statusCode}");

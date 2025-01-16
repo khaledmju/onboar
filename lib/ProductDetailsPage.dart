@@ -194,7 +194,7 @@ class _ProductDetailsPage extends State<ProductDetailsPage> {
                               : TextDirection.rtl,
                           children: [
                             Text(
-                              "  ${widget.productData['quantity']}  ",
+                              "  ${widget.productData['quantity']<1?0:widget.productData['quantity']}  ",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
