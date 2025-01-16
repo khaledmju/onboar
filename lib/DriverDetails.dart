@@ -202,6 +202,11 @@ class _DriverDetailsState extends State<DriverDetails> {
                                             color: Colors.red,
                                           ),
                                         ),
+                                        SizedBox(height: 10),
+                                        Container(
+                                            alignment: Alignment.center,
+                                            child: const Text(
+                                                " ____  ____  ____  ____  ____  ____ ")),
                                       ],
                                     );
                                   },

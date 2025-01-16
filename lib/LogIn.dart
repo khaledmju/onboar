@@ -80,6 +80,7 @@ class _LogInState extends State<LogIn> {
                 child: Column(
                   children: [
                     TextFormField(
+                      maxLength: 10,
                       controller: numberController,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       cursorColor: const Color.fromARGB(255, 20, 54, 64),

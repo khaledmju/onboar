@@ -253,6 +253,7 @@ class _SignUpState extends State<SignUp> {
                     height: 20,
                   ),
                   TextFormField(
+                    maxLength: 10,
                     controller: numberController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color.fromARGB(255, 20, 54, 64),

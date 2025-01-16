@@ -867,7 +867,9 @@ class ChangePassword extends StatefulWidget {
 }
 
 class ChangePasswordState extends State<ChangePassword> {
-  var isobs;
+  var isobs1;
+  var isobs2;
+  var isobs3;
   GlobalKey<FormState> ChangePasswordFormKey = GlobalKey();
   final TextEditingController NewPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -876,7 +878,9 @@ class ChangePasswordState extends State<ChangePassword> {
 
   @override
   void initState() {
-    isobs = true;
+    isobs1 = true;
+    isobs2 = true;
+    isobs3 = true;
     super.initState();
   }
 
@@ -977,7 +981,7 @@ class ChangePasswordState extends State<ChangePassword> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             maxLength: 35,
-                            obscureText: isobs,
+                            obscureText: isobs1,
                             obscuringCharacter: '*',
                             keyboardType: TextInputType.visiblePassword,
                             decoration: InputDecoration(
@@ -992,10 +996,10 @@ class ChangePasswordState extends State<ChangePassword> {
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      isobs = !isobs;
+                                      isobs1 = !isobs1;
                                     });
                                   },
-                                  icon: isobs
+                                  icon: isobs1
                                       ? const Icon(Icons.remove_red_eye)
                                       : const Icon(Icons.visibility_off),
                                 ),
@@ -1038,7 +1042,7 @@ class ChangePasswordState extends State<ChangePassword> {
                                 AutovalidateMode.onUserInteraction,
                             cursorColor: const Color.fromARGB(255, 20, 54, 64),
                             maxLength: 35,
-                            obscureText: isobs,
+                            obscureText: isobs2,
                             obscuringCharacter: '*',
                             keyboardType: TextInputType.visiblePassword,
                             decoration: InputDecoration(
@@ -1053,10 +1057,10 @@ class ChangePasswordState extends State<ChangePassword> {
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      isobs = !isobs;
+                                      isobs2 = !isobs2;
                                     });
                                   },
-                                  icon: isobs
+                                  icon: isobs2
                                       ? const Icon(Icons.remove_red_eye)
                                       : const Icon(Icons.visibility_off),
                                 ),
@@ -1101,7 +1105,7 @@ class ChangePasswordState extends State<ChangePassword> {
                                 AutovalidateMode.onUserInteraction,
                             cursorColor: const Color.fromARGB(255, 20, 54, 64),
                             maxLength: 35,
-                            obscureText: isobs,
+                            obscureText: isobs3,
                             obscuringCharacter: '*',
                             keyboardType: TextInputType.visiblePassword,
                             decoration: InputDecoration(
@@ -1116,10 +1120,10 @@ class ChangePasswordState extends State<ChangePassword> {
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      isobs = !isobs;
+                                      isobs3 = !isobs3;
                                     });
                                   },
-                                  icon: isobs
+                                  icon: isobs3
                                       ? const Icon(Icons.remove_red_eye)
                                       : const Icon(Icons.visibility_off),
                                 ),

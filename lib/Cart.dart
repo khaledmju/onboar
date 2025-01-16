@@ -321,7 +321,6 @@ class CartState extends State<Cart> {
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 10),
                                                 Container(
                                                   padding:
                                                       const EdgeInsets.all(10),
@@ -360,7 +359,6 @@ class CartState extends State<Cart> {
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 10),
                                               ],
                                             ),
                                           ))),
@@ -381,7 +379,7 @@ class CartState extends State<Cart> {
                                   alignment: Alignment.center,
                                   child: const Text(
                                       " ____  ____  ____  ____  ____  ____ ")),
-                              const SizedBox(height: 20)
+                              const SizedBox(height: 20),
                             ]));
                       })),
               Expanded(
