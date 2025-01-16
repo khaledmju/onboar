@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import 'main.dart';
@@ -15,10 +16,9 @@ class DriverDetails extends StatefulWidget {
 
 class _DriverDetailsState extends State<DriverDetails> {
   String? token = prefs!.getString("token");
-  // Fetch product name by product ID
+
   Future<String> fetchProductName(String productId) async {
     try {
-      print("Fetching product for ID: $productId");
       var response = await http.get(
         Uri.parse("http://127.0.0.1:8000/api/getproduct/$productId"),
         headers: {
@@ -27,19 +27,35 @@ class _DriverDetailsState extends State<DriverDetails> {
         },
       );
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         return data['product']['name'] ?? "Unknown Product";
       } else {
-        print("Failed to fetch product. Status code: ${response.statusCode}");
         return "Unknown Product";
       }
     } catch (e) {
-      print("Error fetching product: $e");
       return "Error fetching product";
+    }
+  }
+
+  Future<Uint8List?> fetchImage(String productId) async {
+    try {
+      var response = await http.get(
+        Uri.parse("http://127.0.0.1:8000/api/getproductimage/$productId"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.bodyBytes; // Return the image as bytes
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching image: $e");
+      return null;
     }
   }
 
@@ -94,70 +110,126 @@ class _DriverDetailsState extends State<DriverDetails> {
                 itemCount: content.length,
                 itemBuilder: (context, index) {
                   var product = content[index];
-
-                  return Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Image.asset(
-                              "images/prod.png", // Replace with actual image logic if available.
-                              height: 125,
-                              fit: BoxFit.fitHeight,
+                  // Fetch the image for each product.
+                  return FutureBuilder<Uint8List?>(
+                    future: fetchImage(product['product_id'].toString()),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Center(child: CircularProgressIndicator()),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: FutureBuilder<String>(
-                                future: fetchProductName(
-                                    product['product_id'].toString()),
-                                builder: (context, snapshot) {
-                                  var productName =
-                                      snapshot.data ?? "Loading...";
-                                  return Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Product Name: $productName",
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(
-                                              255, 48, 193, 152),
-                                        ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Loading Product...",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 48, 193, 152),
                                       ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Quantity: ${product['quantity']}",
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Price: \$${product['price']}",
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const Divider(color: Colors.grey, height: 30),
-                    ],
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Icon(Icons.error, color: Colors.red),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text("Error fetching image"),
+                            ),
+                          ],
+                        );
+                      } else if (snapshot.hasData && snapshot.data != null) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Image.memory(
+                                snapshot.data!, // Render the fetched image
+                                height: 125,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: FutureBuilder<String>(
+                                  future: fetchProductName(
+                                      product['product_id'].toString()),
+                                  builder: (context, snapshot) {
+                                    var productName = snapshot.data ?? "Loading...";
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Product Name: $productName",
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(255, 48, 193, 152),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Quantity: ${product['quantity']}",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Price: \$${product['price']}",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        // Fallback case
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Image.asset(
+                                "images/prod.png", // Fallback image
+                                height: 125,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text("No Image Available"),
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   );
                 },
               ),
