@@ -49,7 +49,7 @@ class _DriverDetailsState extends State<DriverDetails> {
       );
 
       if (response.statusCode == 200) {
-        return response.bodyBytes; // Return the image as bytes
+        return response.bodyBytes;
       } else {
         return null;
       }
@@ -61,7 +61,7 @@ class _DriverDetailsState extends State<DriverDetails> {
 
   @override
   Widget build(BuildContext context) {
-    var content = jsonDecode(widget.order['content']); // Parse product content.
+    var content = jsonDecode(widget.order['content']);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
@@ -110,7 +110,6 @@ class _DriverDetailsState extends State<DriverDetails> {
                 itemCount: content.length,
                 itemBuilder: (context, index) {
                   var product = content[index];
-                  // Fetch the image for each product.
                   return FutureBuilder<Uint8List?>(
                     future: fetchImage(product['product_id'].toString()),
                     builder: (context, snapshot) {
@@ -161,7 +160,7 @@ class _DriverDetailsState extends State<DriverDetails> {
                             Expanded(
                               flex: 1,
                               child: Image.memory(
-                                snapshot.data!, // Render the fetched image
+                                snapshot.data!,
                                 height: 125,
                                 fit: BoxFit.cover,
                               ),
@@ -176,9 +175,10 @@ class _DriverDetailsState extends State<DriverDetails> {
                                   builder: (context, snapshot) {
                                     var productName = snapshot.data ?? "Loading...";
                                     return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Text(
+                                          textAlign: TextAlign.center,
                                           "Product Name: $productName",
                                           style: const TextStyle(
                                             fontSize: 20,
@@ -196,7 +196,7 @@ class _DriverDetailsState extends State<DriverDetails> {
                                         ),
                                         const SizedBox(height: 10),
                                         Text(
-                                          "Price: \$${product['price']}",
+                                          "Price: ${product['price']}\$",
                                           style: const TextStyle(
                                             fontSize: 18,
                                             color: Colors.red,
@@ -243,7 +243,7 @@ class _DriverDetailsState extends State<DriverDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Total Price: \$${widget.order['totalPrice']}",
+                        "Total Price: ${widget.order['totalPrice']}\$",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -257,7 +257,7 @@ class _DriverDetailsState extends State<DriverDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Delivery Fee: \$${widget.order['deliveryFee']}",
+                        "Delivery Fee: ${widget.order['deliveryFee']}\$",
                         style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black54,

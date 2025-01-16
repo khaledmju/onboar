@@ -45,7 +45,7 @@ class PaymentMethodState extends State<PaymentMethod> {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          "deliveryFee":555,
+          "deliveryFee":20,
           "paymentMethod":paymentmethod
         }),
       );
