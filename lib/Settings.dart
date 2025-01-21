@@ -51,8 +51,11 @@ class _SettingState extends State<Settings> {
     print(prefs!.getString("password"));
     print(prefs!.getInt("userId"));
     fetchProfileImage();
+    loadProfileImage();
     super.initState();
   }
+
+
 
   String? profileImageUrl;
   String? token = prefs!.getString("token");
@@ -69,6 +72,7 @@ class _SettingState extends State<Settings> {
 
       if (response.statusCode == 200) {
         setState(() {
+
           profileImageUrl = uri.toString();
         });
         await prefs!.setString('profileImageUrl', profileImageUrl!);
@@ -79,7 +83,18 @@ class _SettingState extends State<Settings> {
       print("Error fetching profile image: $e");
     }
   }
+  Future<void> loadProfileImage() async {
+    String? savedImagePath = prefs!.getString("profileImage");
 
+    if (savedImagePath != null) {
+      setState(() {
+        profileImage = File(savedImagePath);
+      });
+    } else {
+      // If no local image, fetch it from the backend
+      await fetchProfileImage();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,8 +115,9 @@ class _SettingState extends State<Settings> {
           child: ListView(
             children: [
               InkWell(
-                onTap: () {
+                onTap: () async {
                   Get.to(const ProfilePage());
+                  await loadProfileImage();
                 },
                 child: Container(
                   decoration: const BoxDecoration(
@@ -123,8 +139,9 @@ class _SettingState extends State<Settings> {
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.grey.shade100,
-                        // backgroundImage: const AssetImage("images/logo.png"),
-                        backgroundImage: profileImageUrl != null
+                        backgroundImage: profileImage != null
+                            ? FileImage(profileImage!)
+                            : profileImageUrl != null
                             ? NetworkImage(profileImageUrl!)
                             : const AssetImage("images/logo.png"),
                         radius: 45,
@@ -351,7 +368,7 @@ class _SettingState extends State<Settings> {
                     btnOkOnPress: () async {
                       logOut();
                       prefs!.setBool('showHome', false);
-
+                      prefs!.clear();
                       final favoritesController =
                           Get.find<FavoritesController>();
                       await favoritesController.clearFavorites();
@@ -611,6 +628,13 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchProfileImage() async {
+    String? savedImagePath = prefs!.getString("profileImage");
+    if (savedImagePath != null) {
+      setState(() {
+        selectedImage = File(savedImagePath);
+      });
+    }
+
     final uri = Uri.parse("http://127.0.0.1:8000/getuserimage/$userId");
     try {
       final response = await http.get(uri, headers: {
@@ -687,14 +711,15 @@ class ProfilePageState extends State<ProfilePage> {
                 CircleAvatar(
                   backgroundColor: Colors.grey.shade50,
                   radius: 80,
-                  backgroundImage: profileImageUrl != null
-                      ? NetworkImage(profileImageUrl!) // Show backend image
-                      : selectedImage != null
-                          ? FileImage(selectedImage!) // Show local image
-                          : const AssetImage('images/logo.png'),
+                  backgroundImage: selectedImage != null
+                      ? FileImage(selectedImage!)
+                      : profileImageUrl != null
+                      ? NetworkImage(profileImageUrl!)
+                      : const AssetImage('images/logo.png') as ImageProvider,
                 ),
                 Positioned(
                   bottom: 0,
+                  right: 0,
                   child: CircleAvatar(
                     radius: 25,
                     backgroundColor: Colors.greenAccent,
@@ -727,7 +752,8 @@ class ProfilePageState extends State<ProfilePage> {
                                           await uploadToBackend(
                                               image); // Upload the image after selecting
                                         }
-                                        Get.back();
+                                        // Get.back();
+                                        Get.offAll(()=>Stores());
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.all(20),
@@ -752,7 +778,8 @@ class ProfilePageState extends State<ProfilePage> {
                                           await uploadToBackend(
                                               image); // Upload the image after selecting
                                         }
-                                        Get.back();
+                                        // Get.back();
+                                        Get.offAll(()=>Stores());
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.all(20),

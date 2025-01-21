@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
 import 'DriverDetails.dart';
 import 'main.dart';
@@ -13,6 +14,7 @@ class Driver extends StatefulWidget {
     return DriverState();
   }
 }
+
 class DriverState extends State<Driver> {
   List orders = [];
   String? token = prefs!.getString("token");
@@ -68,6 +70,33 @@ class DriverState extends State<Driver> {
     }
   }
 
+  Future<String> fetchUserLocation(String userId) async {
+    try {
+      var response = await http.get(
+        Uri.parse("http://127.0.0.1:8000/api/getusers"),
+        headers: {
+          'Authorization': "Bearer $token",
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var user = data['data'].firstWhere(
+            (user) => user['id'].toString() == userId,
+            orElse: () => null);
+        return user != null
+            ? user['location'] ?? "Unknown Location"
+            : "Unknown Location";
+      } else {
+        print("Failed to fetch users: ${response.statusCode}");
+        return "Unknown Location";
+      }
+    } catch (e) {
+      print("Error fetching user location: $e");
+      return "Unknown Location";
+    }
+  }
 
   @override
   void initState() {
@@ -109,141 +138,167 @@ class DriverState extends State<Driver> {
         child: orders.isEmpty
             ? Center(child: CircularProgressIndicator())
             : ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            var order = orders[index];
-            var content = jsonDecode(order['content']);
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  var order = orders[index];
+                  var content = jsonDecode(order['content']);
 
-            return InkWell(
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DriverDetails(order: order),
-                  ),
-                );
-              },
-              child: Card(
-                elevation: 6,
-                shadowColor: Color.fromARGB(255, 66, 252, 169),
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Order number: ${order['id']}",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 20, 54, 64),
+                  return InkWell(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DriverDetails(order: order),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      );
+                    },
+                    child: Card(
+                      elevation: 6,
+                      shadowColor: Color.fromARGB(255, 66, 252, 169),
+                      color: Colors.white,
                       child: Column(
-                        children: content.map<Widget>((product) {
-                          return FutureBuilder<String>(
-                            future: fetchProductName(
-                                product['product_id'].toString()),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              }
-                              var productName = snapshot.data ?? "Loading...";
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    "Name: $productName, ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color.fromARGB(
-                                          255, 20, 54, 64),
-                                    ),
-                                  ),
-                                  Text(
-                                    "Quantity: ${product['quantity']}, ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color.fromARGB(
-                                          255, 20, 54, 64),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "Payment Method: ${order['paymentMethod']}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 20, 54, 64),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FutureBuilder<String>(
+                              future: fetchUserLocation(
+                                  order['user_id'].toString()),
+                              builder: (context, snapshot) {
+                                var location = snapshot.data ?? "Loading...";
+                                return Text(
+                                  "Order number: ${order['id']}\nLocation: $location",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 20, 54, 64),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: content.map<Widget>((product) {
+                                return FutureBuilder<String>(
+                                  future: fetchProductName(
+                                      product['product_id'].toString()),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    }
+                                    var productName =
+                                        snapshot.data ?? "Loading...";
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          textAlign: TextAlign.center,
+                                          "Name: $productName, ",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                Color.fromARGB(255, 20, 54, 64),
+                                          ),
+                                        ),
+                                        Text(
+                                          "Quantity: ${product['quantity']}, ",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                Color.fromARGB(255, 20, 54, 64),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Payment Method: ${order['paymentMethod']}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 20, 54, 64),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Total Price: \$${order['totalPrice']}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 20, 54, 64),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  "Delivery Fee: \$${order['deliveryFee']}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 20, 54, 64),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DriverDetails(order: order),
+                                    ),
+                                  );
+                                },
+                                child:const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Show Details", style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                      fontStyle: FontStyle.normal,
+                                      color: Color.fromARGB(255, 66, 252, 169),
+                                    )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(Icons.arrow_circle_right_outlined,color:Color.fromARGB(255, 66, 252, 169) ,)
+                                  ],
+                                ),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 20, 54, 64),
+                                  padding:
+                                  const EdgeInsets.symmetric(horizontal: 40)),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Total Price: \$${order['totalPrice']}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 20, 54, 64),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Delivery Fee: \$${order['deliveryFee']}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 20, 54, 64),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            // Mark the order as accepted (or any other action)
-                          });
-                        },
-                        icon: Icon(
-                          Icons.check_circle_outline_rounded,
-                          size: 30,
-                          color: Color.fromARGB(255, 66, 252, 169),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

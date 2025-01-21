@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +12,7 @@ import 'AddImageProfile.dart';
 import 'LogIn.dart';
 import 'Stores.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:geocoding/geocoding.dart';
 import 'main.dart';
 
 class SignUp extends StatefulWidget {
@@ -29,6 +30,60 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  // String userLocation = "";
+
+  // Future<void> _getLocation() async {
+  //   try {
+  //     // Check if location permission is granted
+  //     LocationPermission permission = await Geolocator.checkPermission();
+  //
+  //     // If permission is denied, request permission
+  //     if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+  //       permission = await Geolocator.requestPermission();
+  //     }
+  //
+  //     // If permission is granted (either "while in use" or "always")
+  //     if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+  //       Position position = await Geolocator.getCurrentPosition(
+  //         locationSettings: LocationSettings(
+  //           accuracy: LocationAccuracy.high, // Specify the desired accuracy
+  //         ),
+  //       );
+  //       userLocation = "${position.latitude}, ${position.longitude}";
+  //       print("User Location: $userLocation"); // Debugging
+  //
+  //       // Reverse geocoding to get location name (address)
+  //       List<Placemark> placemarks = await GeocodingPlatform.instance!.placemarkFromCoordinates(
+  //         position.latitude,
+  //         position.longitude,
+  //       );
+  //
+  //       if (placemarks.isNotEmpty) {
+  //         // Get the first placemark (location)
+  //         Placemark placemark = placemarks[0];
+  //         String locationName = placemark.locality ?? placemark.country ?? 'Unknown location';
+  //         print("Location Name: $locationName");
+  //
+  //         // Display the name of the location in a Snackbar
+  //         Get.snackbar(
+  //           "Location Retrieved",
+  //           locationName,
+  //           snackPosition: SnackPosition.BOTTOM,
+  //           backgroundColor: Colors.green,
+  //           colorText: Colors.white,
+  //         );
+  //       } else {
+  //         print("No location name found");
+  //       }
+  //     } else {
+  //       userLocation = "Permission denied";
+  //     }
+  //   } catch (e) {
+  //     userLocation = "Error retrieving location: $e";
+  //   }
+  // }
+
   File? selectedImage;
 
   final imagePicker = ImagePicker();
@@ -203,6 +258,47 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: locationController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color.fromARGB(255, 20, 54, 64),
+                    obscureText: false,
+                    // onSaved: (val){phoneNumber = val;},
+                    decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.location_on_outlined, size: 30),
+                        prefixIconColor:
+                        const Color.fromARGB(255, 165, 165, 165),
+                        labelText: "Location".tr,
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 165, 165, 165)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 66, 252, 169))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 20, 54, 64))),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 255, 23, 7)))),
+
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter your User location".tr;
+                      }
+                      return null;
+                    },
+                  ),
+
                   const SizedBox(
                     height: 20,
                   ),
@@ -469,6 +565,39 @@ class _SignUpState extends State<SignUp> {
                       )
                     ],
                   ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     await _getLocation();
+                  //     if (userLocation.isNotEmpty && userLocation != "Permission denied") {
+                  //       Get.snackbar(
+                  //         "Location Retrieved",
+                  //         userLocation,
+                  //         snackPosition: SnackPosition.BOTTOM,
+                  //         backgroundColor: Colors.green,
+                  //         colorText: Colors.white,
+                  //       );
+                  //     } else {
+                  //       Get.snackbar(
+                  //         "Location Error",
+                  //         userLocation,
+                  //         snackPosition: SnackPosition.BOTTOM,
+                  //         backgroundColor: Colors.red,
+                  //         colorText: Colors.white,
+                  //       );
+                  //     }
+                  //   },
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.blueAccent,
+                  //     padding: EdgeInsets.symmetric(horizontal: 100),
+                  //   ),
+                  //   child: Text(
+                  //     "Get Location",
+                  //     style: TextStyle(fontSize: 20, color: Colors.white),
+                  //   ),
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -477,7 +606,7 @@ class _SignUpState extends State<SignUp> {
                       if (formKey.currentState!.validate()) {
                         try {
                           final response = await post(
-                            Uri.parse("http://novacart.test/api/signup"),
+                            Uri.parse("http://127.0.0.1:8000/api/signup"),
                             headers: {
                               'Content-Type': 'application/json',
                             },
@@ -487,7 +616,8 @@ class _SignUpState extends State<SignUp> {
                               "userName": userNameController.text,
                               "number": numberController.text,
                               "email": emailController.text,
-                              "location": "location",
+                              // "location": userLocation,
+                              "location": locationController.text,
                               "password": passwordController.text,
                             }),
                           );

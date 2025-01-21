@@ -93,6 +93,7 @@ class MyLocal implements Translations {
           "Change User Name":"تغير اسم المستخدم",
           "Passwords do not match":"كلمة السر غير متطابقة",
           "Please confirm your password":"قم بتأكيد كلمة السر",
+          "Please enter your User location":"ادخل الموقع الخاص بك",
         },
         "en": {
           "Setting":"Setting",
@@ -182,6 +183,7 @@ class MyLocal implements Translations {
           "Change User Name":"Change User Name",
           "Passwords do not match":"Passwords do not match",
           "Please confirm your password":"Please confirm your password",
+          "Please enter your User location":"Please enter your User location",
         },
       };
 }

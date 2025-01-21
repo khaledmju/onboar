@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+
+import 'Driver.dart';
 import 'main.dart';
 
 class DriverDetails extends StatefulWidget {
@@ -57,6 +60,11 @@ class _DriverDetailsState extends State<DriverDetails> {
       print("Error fetching image: $e");
       return null;
     }
+  }
+  @override
+  void initState() {
+    print(token);
+    super.initState();
   }
 
   @override
@@ -274,22 +282,47 @@ class _DriverDetailsState extends State<DriverDetails> {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add any action for completing the order.
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 20, 54, 64),
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-              ),
-              child: const Text(
-                "Complete Order",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  color: Color.fromARGB(255, 66, 252, 169),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Get.offAll(() => Driver());
+                    print("Delivery confirmed for Order #${widget.order['id']}");
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green, // Confirm button color
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                  ),
+                  child: const Text(
+                    "Confirm Delivery",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+                ElevatedButton(
+                  onPressed: () {
+
+                    print("Delivery refused for Order #${widget.order['id']}");
+                    Get.offAll(() => Driver());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Refuse button color
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                  ),
+                  child: const Text(
+                    "Refuse Delivery",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 30),
           ],

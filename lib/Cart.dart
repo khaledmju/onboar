@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class Cart extends StatefulWidget {
 
 class CartState extends State<Cart> {
   List<dynamic> cartProducts = [];
+  // int newCount = 1;
 
   bool isArabic() {
     return Get.locale?.languageCode == 'ar';
@@ -85,8 +87,7 @@ class CartState extends State<Cart> {
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body);
         setState(() {
-          product['name'] =
-              responseBody['product']['name'];
+          product['name'] = responseBody['product']['name'];
         });
       } else {
         print("Failed to fetch product details: ${response.statusCode}");
@@ -198,6 +199,7 @@ class CartState extends State<Cart> {
                         fontWeight: FontWeight.bold),
                     onConfirm: () {
                       deleteCart();
+                      Get.back();
                     },
                   );
                 },
@@ -364,14 +366,120 @@ class CartState extends State<Cart> {
                                           ))),
                                   IconButton(
                                       onPressed: () {
-                                        deleteCartElement(
-                                            cartProducts[index]['product_id']);
+                                        Get.defaultDialog(
+                                          title: "Alert",
+                                          titleStyle: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold),
+                                          middleText: "Are you sure you want to delete Product ?",
+                                          middleTextStyle: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                          onConfirm: () {
+                                            deleteCartElement(
+                                                cartProducts[index]['product_id']);
+                                            Get.back();
+                                          },
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.delete_forever,
                                         size: 30,
                                         color: Colors.red,
-                                      ))
+                                      )),
+                                  IconButton(
+                                    onPressed: () {
+                                      int newCount = cartProducts[index]['quantity']; // Initialize with current quantity
+                                      Get.bottomSheet(
+                                        StatefulBuilder(
+                                          builder: (BuildContext context, StateSetter setState) {
+                                            return Container(
+                                              height: 200,
+                                              width: double.infinity,
+                                              color: Colors.white,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Edit Quantity",
+                                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            if (newCount > 1) newCount--; // Decrease quantity
+                                                          });
+                                                          print("Decreased Quantity: $newCount");
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.remove_circle_outline,
+                                                          size: 35,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "$newCount", // Display updated quantity
+                                                        style: TextStyle(fontSize: 30),
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            newCount++; // Increase quantity
+                                                          });
+                                                          print("Increased Quantity: $newCount");
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.add_circle_outline,
+                                                          size: 35,
+                                                          color: Colors.green,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () async{
+                                                      setState(() {
+                                                        cartProducts[index]['quantity'] = newCount; // Update data model
+                                                        print("Final Quantity Updated: $newCount");
+                                                      });
+                                                      try{
+                                                        var response = await put(Uri.parse("http://127.0.0.1:8000/api/updateorder"),
+                                                            headers: {
+                                                              'Authorization': "Bearer $token",
+                                                              'Content-Type': 'application/json',
+                                                            },
+                                                          body: jsonEncode({
+                                                            "newQuantity":newCount,
+                                                            "product_id":cartProducts[index]['product_id'],
+                                                          }),
+
+                                                        );
+                                                        var responseBody = response.body;
+                                                        print(responseBody);
+
+                                                      }catch($e){
+                                                        print("$e");
+                                                      }
+                                                      Get.back();
+                                                      getCart();
+                                                    },
+                                                    child: Text("Done"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.edit),
+                                  ),
+
                                 ],
                               ),
                               SizedBox(height: 10),
