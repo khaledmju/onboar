@@ -240,7 +240,19 @@ class CartState extends State<Cart> {
               SizedBox(height: 40),
               Expanded(
                   flex: 3,
-                  child: ListView.builder(
+                  child:
+                      cartProducts.isEmpty ? Center(child:SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Your cart is empty".tr,
+                              style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
+                            ),
+                            Image.asset("images/emptyCart.png",height: 240,),
+                          ],
+                        ),
+                      ),):
+                  ListView.builder(
                       physics: AlwaysScrollableScrollPhysics(),
                       itemCount: cartProducts.length,
                       itemBuilder: (context, index) {

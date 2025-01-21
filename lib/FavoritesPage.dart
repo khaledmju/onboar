@@ -11,18 +11,36 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
-        title: Text(
-          "Favorite Products".tr,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back),
         ),
+        title: Text("Favorite Products".tr,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Color.fromARGB(255, 20, 54, 64),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.normal)),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
+        elevation: 4,
+        shadowColor: const Color.fromARGB(255, 48, 193, 152),
       ),
       backgroundColor: Colors.white,
       body: Obx(() {
         if (favoritesController.favoriteProducts.isEmpty) {
-          return Center(child: Text("No favorite products yet!".tr));
+          return Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("No favorite products yet!".tr,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+              Image.asset("images/noFav.png",height: 240,),
+            ],
+          ));
         }
         return GridView.builder(
           itemCount: favoritesController.favoriteProducts.length,

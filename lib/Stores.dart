@@ -185,6 +185,8 @@ class _HomeContentState extends State<HomeContent> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 66, 252, 169),
+        elevation: 4,
+        shadowColor: const Color.fromARGB(255, 48, 193, 152),
         actions: [
           const SizedBox(width: 20),
           Container(
